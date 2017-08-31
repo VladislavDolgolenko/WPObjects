@@ -17,6 +17,8 @@ abstract class AdminPage implements \WPObjects\EventManager\ListenerInterface
     protected $title = null;
     protected $permission = null;
     protected $id = null;
+    protected $position = null;
+    protected $icon_url = null;
     
     /**
      * @return \WPObjects\Page\AdminPage
@@ -45,7 +47,9 @@ abstract class AdminPage implements \WPObjects\EventManager\ListenerInterface
                 $this->menu_name, 
                 $this->permission, 
                 $this->id, 
-                array($this, 'render')
+                array($this, 'render'),
+                $this->icon_url,
+                $this->position
             );
         
         } else {

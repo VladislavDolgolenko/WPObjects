@@ -12,6 +12,21 @@ namespace WPObjects\PostType;
 
 class PostType implements \WPObjects\EventManager\ListenerInterface
 {
+    private static $_instances = array();
+    
+    /**
+     * @return \WPObjects\PostType\PostType
+     */
+    static public function getInstance()
+    {
+        $class = get_called_class();
+        if (!isset(self::$_instances[$class])) {
+            self::$_instances[$class] = new $class();
+        }
+        
+        return self::$_instances[$class];
+    }
+    
     protected $id = null;
     protected $config = array();
     
