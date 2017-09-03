@@ -27,6 +27,11 @@ class PostType implements \WPObjects\EventManager\ListenerInterface
         return self::$_instances[$class];
     }
     
+    public function __construct($id = null)
+    {
+        $this->id = $id;
+    }
+    
     protected $id = null;
     protected $config = array();
     

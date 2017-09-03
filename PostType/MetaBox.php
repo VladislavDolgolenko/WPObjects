@@ -18,9 +18,10 @@ abstract class MetaBox implements \WPObjects\EventManager\ListenerInterface
     protected $priotity = null;
     protected $PostType = null;
     
-    public function __construct(PostType $PostType)
+    public function __construct(PostType $PostType, $title = null)
     {
         $this->PostType = $PostType;
+        $this->title = $title;
     }
     
     public function attach()
@@ -81,8 +82,6 @@ abstract class MetaBox implements \WPObjects\EventManager\ListenerInterface
     {
         
     }
-    
-    
     
     public function setId($int)
     {
