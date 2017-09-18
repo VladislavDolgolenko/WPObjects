@@ -89,8 +89,13 @@ abstract class AdminPage implements \WPObjects\EventManager\ListenerInterface
     
     public function getUrl($get_params = null)
     {
-        $base = \menu_page_url($this->id, false);
-        if (!$get_params) {
+        if (is_null($this->perent_menu_id)) {
+            $base = admin_url( 'admin.php?page=' . $this->id );
+        } else {
+            $base = admin_url( add_query_arg( 'page', $this->id, $this->perent_menu_id ) );
+        }
+        
+        if (is_null($get_params)) {
             return $base;
         }
         
