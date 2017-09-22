@@ -8,8 +8,6 @@
  * @support      support@torbara.com
  */
 
-namespace WPObjects\PostType;
-
 abstract class MetaBox implements \WPObjects\EventManager\ListenerInterface
 {
     protected $id = null;

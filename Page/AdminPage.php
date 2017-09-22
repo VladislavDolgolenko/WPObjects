@@ -6,8 +6,6 @@
  * @license http://codecanyon.net/licenses/standard?ref=torbara
  */
 
-namespace WPObjects\Page;
-
 abstract class AdminPage implements \WPObjects\EventManager\ListenerInterface
 {
     private static $_instances = array();

@@ -8,8 +8,6 @@
  * @support      support@torbara.com
  */
 
-namespace WPObjects\FileSystem;
-
 if (!function_exists('\WP_Filesystem')) {
     require_once ABSPATH . '/wp-admin/includes/file.php';
 }

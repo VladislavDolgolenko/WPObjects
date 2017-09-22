@@ -8,8 +8,6 @@
  * @support      support@torbara.com
  */
 
-namespace WPObjects\PostType;
-
 class PostType implements \WPObjects\EventManager\ListenerInterface
 {
     private static $_instances = array();
