@@ -8,6 +8,8 @@
  * @support      support@torbara.com
  */
 
+namespace WPObjects\AjaxController;
+
 abstract class Controller implements \WPObjects\EventManager\ListenerInterface
 {
     protected $id = null;

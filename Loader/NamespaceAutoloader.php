@@ -55,10 +55,13 @@ class NamespaceAutoloader
     {
         $pathParts = explode('\\', $class);
         $Namespace = null;
-        $serach = '';
+        $serach = $class;
+        
         for ($i = 0; $i < count($pathParts); $i++) {
-            $serach .= $serach !== '' ? '\\' : '';
-            $serach .= $pathParts[$i];
+            $pos = strrpos($serach, '\\');
+            if ($pos !== false) {
+                $serach = substr($serach, 0, $pos);
+            } 
             if (isset($this->namespacesMap[$serach])) {
                 $Namespace = $this->namespacesMap[$serach];
                 break;
@@ -75,7 +78,8 @@ class NamespaceAutoloader
         return new \ArrayObject(array(
             'namespace_path' => $Namespace['path'],
             'class_file_path' => $system_class_path, 
-            'dynamic' => $Namespace['dynamic']
+            'dynamic' => $Namespace['dynamic'],
+            'main_namespace' => $serach
         ), \ArrayObject::ARRAY_AS_PROPS);
     }
 
@@ -111,11 +115,14 @@ class NamespaceAutoloader
         if (!$class_name || !$Namespace) {
             return false;
         }
-
+        
         if (file_exists($Namespace->class_file_path)) {
 
             if ($Namespace->dynamic && $class_namespace) {
-                eval("namespace $class_namespace {?>" . file_get_contents($Namespace->class_file_path) . '}');
+                $code = file_get_contents($Namespace->class_file_path);
+                $code = str_replace("WPObjects\\", $Namespace->main_namespace . "\\", $code);
+                $code = "?>" . $code . '';
+                eval($code);
             } else {
                 include $Namespace->class_file_path;
             }

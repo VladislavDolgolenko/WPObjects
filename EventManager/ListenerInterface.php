@@ -8,6 +8,8 @@
  * @support      support@torbara.com
  */
 
+namespace WPObjects\EventManager;
+
 interface ListenerInterface
 {
     public function attach();
