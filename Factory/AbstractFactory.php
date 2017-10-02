@@ -10,7 +10,9 @@
 
 namespace WPObjects\Factory;
 
-abstract class AbstractFactory implements FactoryInrerface
+abstract class AbstractFactory implements 
+    FactoryInterface,
+    AutocompeleInterface
 {
     protected $model_type = null;
     protected $model_class_name = '\WPObjects\Model\AbstractModel';
@@ -31,7 +33,7 @@ abstract class AbstractFactory implements FactoryInrerface
      * @param mixed
      * @return \WPObjects\Model\AbstractModel
      */
-    protected function initModel($post)
+    public function initModel($post)
     {
         $model_class = $this->model_class_name;
         return new $model_class($post);
@@ -61,6 +63,24 @@ abstract class AbstractFactory implements FactoryInrerface
         }
         
         return $this->model_type;
+    }
+    
+    /**
+     * @param string $string
+     * @return array()
+     */
+    static public function prepareMetaValue($string)
+    {
+        if (is_array($string)) {
+            return $string;
+        }
+
+        $values = explode(', ', $string);
+        if (is_array($values) && count($values) !== 0) {
+            return $values;
+        }
+
+        return array();
     }
     
     /**

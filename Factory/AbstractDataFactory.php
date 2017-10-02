@@ -25,9 +25,38 @@ abstract class AbstractDataFactory extends AbstractFactory
     
     protected $result_data = null;
     
+    protected $id_key = 'id';
+    
     public function __construct()
     {
         $this->Data = new Data();
+    }
+    
+    public function get($id, $filters = array())
+    {
+        $this->query(array_merge(array($this->id_key => $id), $filters));
+        return count($this->getResult()) > 1 ? $this->getResult() : current($this->getResult());
+    }
+    
+    /**
+     * Return array with compatible elements for autocompele selector in Visual Composer Addons.
+     * @return array
+     */
+    function getForVCAutocompele()
+    {
+        /* @var $Object WPObjects\Model\AbstractModel */
+        
+        $result = array();
+        foreach ($this->getResult() as $Object) {
+
+            $result[] = array(
+                'label' => $Object->getName(),
+                'value' => $Object->$this->id_key,
+            );
+            
+        }
+
+        return $result;
     }
     
     public function query($filters = array(), $result_as_object = false)
@@ -72,14 +101,14 @@ abstract class AbstractDataFactory extends AbstractFactory
     
     protected function sorting()
     {
-        if (!isset($this->filters['id']) || !is_array($this->filters['id'])) {
+        if (!isset($this->filters[$this->id_key]) || !is_array($this->filters[$this->id_key])) {
             return $this;
         }
         
         $result = array();
-        foreach ($this->filters['id'] as $id) {
+        foreach ($this->filters[$this->id_key] as $id) {
             foreach ($this->result_data as $data) {
-                if ($data['id'] == $id) {
+                if ($data[$this->id_key] == $id) {
                     $result[] = $data;
                 }
             }

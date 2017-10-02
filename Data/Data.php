@@ -31,12 +31,13 @@ class Data {
     }
     
     /**
-     * @return MSP_data
+     * @return \MSP\Data\Data
      */
     static public function getInstance()
     {
+        $class = get_called_class();
         if (is_null(self::$_instance)) {
-            self::$_instance = new self();
+            self::$_instance = new $class();
         }
         
         return self::$_instance;
@@ -60,7 +61,7 @@ class Data {
         $datas = $this->getActiveDatas($datas_type_id);
         $result = array();
         foreach ($datas as $data) {
-            $result[] = new ArrayObject($data, ArrayObject::ARRAY_AS_PROPS);
+            $result[] = new \ArrayObject($data, \ArrayObject::ARRAY_AS_PROPS);
         }
 
         $this->active_datas_objects[$datas_type_id] = $result;
@@ -124,7 +125,7 @@ class Data {
         $datas = $this->getDatas($datas_type_id);
         $result = array();
         foreach ($datas as $data) {
-            $result[] = new ArrayObject($data, ArrayObject::ARRAY_AS_PROPS);
+            $result[] = new \ArrayObject($data, \ArrayObject::ARRAY_AS_PROPS);
         }
 
         $this->datas_objects[$datas_type_id] = $result;
@@ -142,10 +143,11 @@ class Data {
         return $datas;
     }
     
-        private function extractDatas($datas_type)
+        protected function extractDatas($datas_type)
         {
+            // Что это блять за функция
             $data_type = msp__get_data_type_by_id($datas_type);
-            $build_in = (include $this->datas_path . '/' . $datas_type . '.php');
+            $build_in =  (include $this->getDatasPath() . '/' . $datas_type . '.php' );
             foreach ($build_in as $key => $data) {
                 $build_in[$key]['build_in'] = true;
 
@@ -203,7 +205,7 @@ class Data {
 
             $result = array();
             foreach ($datas as $data) {
-                $result[] = new ArrayObject($data, ArrayObject::ARRAY_AS_PROPS);
+                $result[] = new \ArrayObject($data, \ArrayObject::ARRAY_AS_PROPS);
             }
 
             return $result;
@@ -222,17 +224,17 @@ class Data {
         return false;
     }
     
-    static public function getDataTypeWpOptionKey($datas_type_id)
+    public function getDataTypeWpOptionKey($datas_type_id)
     {
         return $this->wp_option_prefix . '_data_' . $datas_type_id;
     }
     
-    static public function getDataTypeWpOptionKeyDelete($datas_type_id)
+    public function getDataTypeWpOptionKeyDelete($datas_type_id)
     {
         return $this->wp_option_prefix . '_data_' . $datas_type_id . '_delete';
     }
     
-    static public function getDataTypeWpOptionKeyDisables($datas_type_id)
+    public function getDataTypeWpOptionKeyDisables($datas_type_id)
     {
         return $this->wp_option_prefix . '_data_' . $datas_type_id . '_disables';
     }

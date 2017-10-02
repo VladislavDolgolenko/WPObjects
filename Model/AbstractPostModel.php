@@ -27,6 +27,16 @@ abstract class AbstractPostModel extends AbstractModel
         $this->initFromPost($data);
     }
     
+    public function getId()
+    {
+        return $this->ID;
+    }
+    
+    public function getName()
+    {
+        return $this->getTitle();
+    }
+    
     protected function initFromPost(\WP_Post $post)
     {
         $this->post = $post;

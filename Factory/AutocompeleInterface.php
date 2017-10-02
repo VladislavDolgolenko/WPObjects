@@ -8,17 +8,9 @@
  * @support      support@torbara.com
  */
 
-namespace WPObjects\Model;
+namespace WPObjects\Factory;
 
-interface ModelInterface
+interface AutocompeleInterface
 {
-    public function __construct($data);
-    
-    public function getId();
-    
-    public function getName();
-    
-    public function getMeta($key, $single = true);
-    
-    public function getModelType();
+    public function getForVCAutocompele();
 }

@@ -18,14 +18,42 @@ abstract class AbstractPostFactory extends AbstractFactory
     
     protected $filters = array();
     
+    protected $context_models_methods = array();
+    
     /**
      * @param $id string || integer || array
      * @return \MSP\Model\AbstractModel || null
      */
-    public function get($id)
+    public function get($id = null, $filters = array())
     {
-        $this->query(array('id' => $id));
+        global $post;
+        
+        if ($id && $id instanceof \WP_Post) {
+            $id = $id->ID;
+        }
+        
+        $this->query(array_merge(array('id' => $id ? $id : $post->ID), $filters));
         return count($this->getResult()) > 1 ? $this->getResult() : current($this->getResult());
+    }
+    
+    /**
+     * Return array with compatible elements for autocompele selector in Visual Composer Addons.
+     * @return array
+     */
+    function getForVCAutocompele()
+    {
+        /* @var $Object WPObjects\Model\AbstractModel */
+        
+        $result = array();
+        foreach ($this->getResult() as $Object) {
+
+            $result[] = array(
+                'label' => $Object->post_title,
+                'value' => $Object->ID,
+            );
+        }
+
+        return $result;
     }
     
     /**
@@ -64,10 +92,23 @@ abstract class AbstractPostFactory extends AbstractFactory
         
         foreach ($this->getContextTypes() as $type) {
             if (get_post_type($post->ID) == $type) {
-                $attr = $this->getSpecializationAttrName($type);
-                $this->filters[$attr] = $post->ID;
+                $this->setIdsFromContext($post, $type);
                 return $this;
             }
+        }
+        
+        return $this;
+    }
+    
+    protected function setIdsFromContext($post, $type)
+    {
+        $attr = $this->getSpecializationAttrName($type);
+        if (!isset($this->context_models_methods[$type])) {
+            $this->filters[$attr] = $post->ID;
+        } else {
+            $method = $this->context_models_methods[$type];
+            $ids = $this->$method($post);
+            $this->filters['post__in'] = $ids;
         }
         
         return $this;
@@ -78,7 +119,7 @@ abstract class AbstractPostFactory extends AbstractFactory
         $this->query = array();
         $this->meta_query = array('relation' => 'AND');
         $this->query = array(
-            'post_type' => 'players',
+            'post_type' => $this->getModelType(),
             'post_status' => 'publish',
             'meta_query' => &$this->meta_query,
             'numberposts' => -1
@@ -86,6 +127,18 @@ abstract class AbstractPostFactory extends AbstractFactory
         
         if (isset($this->filters['numberposts'])) {
             $this->query['numberposts'] = (int)$this->filters['numberposts'];
+        }
+        
+        if (isset($this->filters['id']) && $this->filters['id']) {
+            $this->query['post__in'] = $this->prepareMetaValue($this->filters['id']);
+            $this->query['orderby'] = 'post__in';
+        }
+        
+        if (isset($this->filters['_thumbnail_id']) && $this->filters['_thumbnail_id']) {
+            $this->meta_query[] = array(
+                'key' => '_thumbnail_id',
+                'compare' => 'EXISTS'
+            );
         }
         
         return $this;
@@ -107,6 +160,7 @@ abstract class AbstractPostFactory extends AbstractFactory
     protected function buildOrdering()
     {
         if (!isset($this->filters['orderby']) || !$this->filters['orderby']) {
+            $this->buildDefaultOrgering();
             return $this;
         }
         
@@ -123,6 +177,11 @@ abstract class AbstractPostFactory extends AbstractFactory
         return $this;
     }
     
+    protected function buildDefaultOrgering()
+    {
+        return;
+    }
+    
     protected function buildMetaQuery()
     {
         foreach ($this->relative_models_types as $type) {
@@ -137,21 +196,14 @@ abstract class AbstractPostFactory extends AbstractFactory
             );
         }
         
+        $this->buildSpecialMetaQuery();
+        
         return $this;
     }
     
-    static public function prepareMetaValue($string)
+    protected function buildSpecialMetaQuery()
     {
-        if (is_array($string)) {
-            return $string;
-        }
-
-        $values = explode(', ', $string);
-        if (is_array($values) && count($values) !== 0) {
-            return $values;
-        }
-
-        return array();
+        return;
     }
     
     protected function sendQuery()

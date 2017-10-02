@@ -10,17 +10,19 @@
 
 namespace WPObjects\Factory;
 
-interface FactoryInrerface
+interface FactoryInterface
 {
-    public function get($id);
+    public function get($id = null, $filters = array());
 
     public function query($filters = array(), $result_as_object = false);
     
-    public function prepareMetaValue($value);
+    static public function prepareMetaValue($value);
     
     public function getResult();
     
-    public function getSpecializationAttrName($type);
+    public function initModel($post);
+    
+    static public function getSpecializationAttrName($type);
     
     public function getModelType();
 }
