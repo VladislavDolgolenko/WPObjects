@@ -23,4 +23,14 @@ abstract class AbstractDataModel extends AbstractModel
     {
         return $this->$key;
     }
+    
+    public function setMeta($key, $value, $prev = null)
+    {
+        return $this->$key = $value;
+    }
+    
+    public function save()
+    {
+        return;
+    }
 }

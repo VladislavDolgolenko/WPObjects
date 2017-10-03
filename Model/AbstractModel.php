@@ -17,6 +17,11 @@ abstract class AbstractModel implements ModelInterface
     protected $model_type = null;
     
     /**
+     * @var \WPObjects\Model\AbstractModel in array
+     */
+    protected $relatives = array();
+    
+    /**
      * @param AbstractFactory $Factory
      * @return \WPObjects\Model\AbstractModel || array
      */

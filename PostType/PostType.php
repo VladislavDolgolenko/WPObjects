@@ -14,6 +14,10 @@ class PostType implements \WPObjects\EventManager\ListenerInterface
 {
     private static $_instances = array();
     
+    protected $id = null;
+    protected $config = array();
+    protected $model_class = '\WPObjects\Model\AbstractPostModel';
+    
     /**
      * @return \WPObjects\PostType\PostType
      */
@@ -32,17 +36,16 @@ class PostType implements \WPObjects\EventManager\ListenerInterface
         $this->id = $id;
     }
     
-    protected $id = null;
-    protected $config = array();
-    
     public function attach()
     {
+        \add_action('save_post', array($this, 'savePost'), 10, 3);
         \add_action('init', array($this, 'register'));
     }
     
     public function detach()
     {
         \remove_action('init', array($this, 'register'));
+        \remove_action('save_post', array($this, 'savePost'));
     }
     
     public function register()
@@ -50,9 +53,48 @@ class PostType implements \WPObjects\EventManager\ListenerInterface
         \register_post_type($this->getId(), $this->getConfig());
     }
     
+    public function savePost($post_id, $post, $update)
+    {
+        global $_POST;
+        if (!isset($_POST['post_type'])) {
+            return;
+        }
+
+        if (defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE || 
+            $_POST['post_type'] !== $this->getId()) {
+            return;
+        }
+        
+        $model_class = $this->getModelClass();
+        $Post = new $model_class($post);
+        foreach ($_POST as $attr => $value) {
+            $Post->setMeta($attr, self::sanitizeValue($value));
+        }
+        
+        $Post->save();
+        return $this;
+    }
+    
+    static public function sanitizeValue($values)
+    {
+        if (is_array($values)) {
+            foreach ($values as $key => $value) {
+                if (!$value || $value == " ") {
+                    unset($values[$key]);
+                } else {
+                    $values[$key] = self::sanitizeValue($value);
+                }
+            }
+        } else {
+            return \sanitize_text_field($values);
+        }
+    }
+    
     public function setId($int)
     {
         $this->id = $int;
+        
+        return $this;
     }
     
     public function getId()
@@ -60,9 +102,28 @@ class PostType implements \WPObjects\EventManager\ListenerInterface
         return $this->id;
     }
     
+    public function getModelClass()
+    {
+        $config = $this->getConfig();
+        if (isset($config['model_class']) && class_exists($config['model_class'])) {
+            $this->model_class = $config['model_class'];
+        }
+        
+        return $this->model_class;
+    }
+    
+    public function setModelClass($class_name)
+    {
+        $this->model_class = $class_name;
+        
+        return $this;
+    }
+    
     public function setConfig($config)
     {
         $this->config = $config;
+        
+        return $this;
     }
     
     public function getConfig()

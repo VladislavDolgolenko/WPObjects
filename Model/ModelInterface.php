@@ -20,5 +20,9 @@ interface ModelInterface
     
     public function getMeta($key, $single = true);
     
+    public function setMeta($key, $value, $prev = null);
+    
     public function getModelType();
+    
+    public function save();
 }
