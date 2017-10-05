@@ -24,7 +24,7 @@ abstract class AbstractPostFactory extends AbstractFactory
      * @param $id string || integer || array
      * @return \MSP\Model\AbstractModel || null
      */
-    public function get($id = null, $filters = array())
+    public function get($id = null, $filters = array(), $single = true)
     {
         global $post;
         
@@ -33,7 +33,12 @@ abstract class AbstractPostFactory extends AbstractFactory
         }
         
         $this->query(array_merge(array('id' => $id ? $id : $post->ID), $filters));
-        return count($this->getResult()) > 1 ? $this->getResult() : current($this->getResult());
+        
+        if ($single) {
+            return current($this->getResult());
+        } else {
+            return $this->getResult();
+        }
     }
     
     /**

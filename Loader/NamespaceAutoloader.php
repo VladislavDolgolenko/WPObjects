@@ -122,7 +122,14 @@ class NamespaceAutoloader
                 $code = file_get_contents($Namespace->class_file_path);
                 $code = str_replace("WPObjects\\", $Namespace->main_namespace . "\\", $code);
                 $code = "?>" . $code . '';
-                eval($code);
+                
+                try {
+                    eval($code);
+                } catch (\ParseError $e) {
+                    echo $e->getMessage();
+                    echo $e->getTrace();
+                }
+                
             } else {
                 include $Namespace->class_file_path;
             }

@@ -18,9 +18,9 @@ interface ModelInterface
     
     public function getName();
     
-    public function getMeta($key, $single = true);
+    public function getMeta($key);
     
-    public function setMeta($key, $value, $prev = null);
+    public function setMeta($key, $value);
     
     public function getModelType();
     

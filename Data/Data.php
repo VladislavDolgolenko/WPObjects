@@ -103,7 +103,7 @@ class Data {
     public function isActiveData($datas_type_id, $data_id)
     {
         $activity = $this->getDataDisables($datas_type_id);
-        $data_type = msp__get_data_type_by_id($datas_type_id);
+        $data_type = $this->getDataTypeById($datas_type_id);
 
         if (!isset($data_type->activity) && !in_array($data_id, $activity)) {
             return true;
@@ -146,7 +146,7 @@ class Data {
         protected function extractDatas($datas_type)
         {
             // Что это блять за функция
-            $data_type = msp__get_data_type_by_id($datas_type);
+            $data_type = $this->getDataTypeById($datas_type);
             $build_in =  (include $this->getDatasPath() . '/' . $datas_type . '.php' );
             foreach ($build_in as $key => $data) {
                 $build_in[$key]['build_in'] = true;
@@ -189,7 +189,18 @@ class Data {
 
             return $disable_datas_keys;
         }
-    
+        
+    public function getDataTypeById($id)
+    {
+        foreach ($this->getDataTypes() as $DataType) {
+            if ($DataType->id === $id) {
+                return $DataType;
+            }
+        }
+        
+        return null;
+    }
+        
     public function getDataTypes()
     {
         if (is_null($this->data_types)) {

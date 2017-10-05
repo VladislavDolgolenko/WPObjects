@@ -22,6 +22,7 @@ abstract class AbstractPostModel extends AbstractModel
     protected $metas = array();
     
     protected $defaults_attrs = array(
+        'ID',
         'post_author',
         'post_date',
         'post_date_gmt',
@@ -44,6 +45,7 @@ abstract class AbstractPostModel extends AbstractModel
 
     public function __construct($data)
     {
+        parent::__construct($data);
         $this->initFromPost($data);
     }
     
@@ -58,15 +60,22 @@ abstract class AbstractPostModel extends AbstractModel
             $this->$key = $value;
         }
         
+        $all_metas = \get_post_meta($post->ID);
+        foreach ($all_metas as $key => $value) {
+            $this->setMeta($key, $value);
+        }
+        
         return $this;
     }
     
     public function save()
     {
         if (isset($this->ID)) {
-            wp_update_post( $this->exchangeToPostArray() );
+            \wp_update_post( $this->exchangeToPostArray() );
         } else {
-            wp_insert_post( $this->exchangeToPostArray() );
+            $post_id = \wp_insert_post( $this->exchangeToPostArray() );
+            $post = \get_post($post_id);
+            $this->initFromPost($post);
         }
         
         $this->saveMetas();
@@ -77,7 +86,8 @@ abstract class AbstractPostModel extends AbstractModel
     public function saveMetas()
     {
         foreach ($this->getRegisterMetas() as $meta_name) {
-            $this->saveMeta($key, $value);
+            $value = $this->getMeta($meta_name);
+            $this->saveMeta($meta_name, $value);
         }
         
         return $this;
@@ -135,21 +145,14 @@ abstract class AbstractPostModel extends AbstractModel
         return \get_the_title($this->ID);
     }
     
-    // ПРИ ИНИЦИЛИЗАЦИИ ВЫТЯГИВАЕМ ВСЕ МЕТА ДАННЫЕ!!!!
-    public function getMeta($key, $single = true)
+    public function getMeta($key)
     {
-        $result = array();
-        foreach ($this->metas as $meta) {
-            if ($meta['key'] == $key) {
-                $result[] = $meta['value'];
-            }
+        if (!isset($this->metas[$key])) {
+            return null;
         }
         
-        if ($single) {
-            return current($result) ? current($result) : null;
-        } else {
-            return $result;
-        }
+        $result = $this->metas[$key];
+        return $result;
     }
     
     public function setMeta($key, $value)
@@ -162,11 +165,7 @@ abstract class AbstractPostModel extends AbstractModel
             return $this;
         }
         
-        $this->metas[] = array(
-            'key' => $key,
-            'value' => $value
-        );
-        
+        $this->metas[$key] = $value;
         return $this;
     }
     

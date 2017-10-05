@@ -71,7 +71,7 @@ class PostType implements \WPObjects\EventManager\ListenerInterface
             $Post->setMeta($attr, self::sanitizeValue($value));
         }
         
-        $Post->save();
+        $Post->saveMetas();
         return $this;
     }
     

@@ -12,7 +12,7 @@ namespace WPObjects\Factory;
 
 interface FactoryInterface
 {
-    public function get($id = null, $filters = array());
+    public function get($id = null, $filters = array(), $single = true);
 
     public function query($filters = array(), $result_as_object = false);
     

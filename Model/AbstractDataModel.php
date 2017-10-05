@@ -12,19 +12,21 @@ namespace WPObjects\Model;
 
 abstract class AbstractDataModel extends AbstractModel
 {
+    /**
+     * @param array $data
+     */
     public function __construct($data)
     {
-        foreach ($data as $key => $value) {
-            $this->$key = $value;
-        }
+        parent::__construct($data);
+        $this->exchangeArray($data);
     }
     
-    public function getMeta($key, $single = true)
+    public function getMeta($key)
     {
         return $this->$key;
     }
     
-    public function setMeta($key, $value, $prev = null)
+    public function setMeta($key, $value)
     {
         return $this->$key = $value;
     }

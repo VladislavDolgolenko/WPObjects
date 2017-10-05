@@ -32,10 +32,14 @@ abstract class AbstractDataFactory extends AbstractFactory
         $this->Data = new Data();
     }
     
-    public function get($id, $filters = array())
+    public function get($id = null, $filters = array(), $single = true)
     {
         $this->query(array_merge(array($this->id_key => $id), $filters));
-        return count($this->getResult()) > 1 ? $this->getResult() : current($this->getResult());
+        if ($single) {
+            return current($this->getResult());
+        } else {
+            return $this->getResult();
+        }
     }
     
     /**
@@ -61,7 +65,7 @@ abstract class AbstractDataFactory extends AbstractFactory
     
     public function query($filters = array(), $result_as_object = false)
     {
-        $this->filters = $filters;
+        $this->filters = array_merge($this->getDefaultFilters(), $filters);
         $this->result_as_object = $result_as_object;
         $this->result = null;
         $this->result_data = array();
@@ -73,6 +77,13 @@ abstract class AbstractDataFactory extends AbstractFactory
         return $this;
     }
     
+    protected function getDefaultFilters()
+    {
+        return array(
+            
+        );
+    }
+    
     protected function filter()
     {
         $data = $this->pull();
@@ -82,10 +93,14 @@ abstract class AbstractDataFactory extends AbstractFactory
             foreach ($this->filters as $name => $value) {
                 if (!isset($model[$name])) {
                     $confirm = false;
-                } else if (!is_array($value) && $model[$name] != $value){
-                    $confirm = false;
-                } else if (is_array($value) && !in_array($model[$name], $value)) {
-                    $confirm = false;
+                    break;
+                }
+                
+                $model_value = $model[$name];
+                if (is_array($model_value)) {
+                    $confirm = $this->filterArray($model_value, $value);
+                } else {
+                    $confirm = $this->filterValue($model_value, $value);
                 }
             }
             
@@ -98,6 +113,28 @@ abstract class AbstractDataFactory extends AbstractFactory
         
         return $this;
     }
+    
+        protected function filterArray($model_array_values, $value)
+        {
+            foreach ($model_array_values as $model_value) {
+                if ($this->filterValue($model_value, $value) === true) {
+                    return true;
+                }
+            }
+            
+            return false;
+        }
+        
+        protected function filterValue($model_value, $value)
+        {
+            if (!is_array($value) && $model_value != $value){
+                return false;
+            } else if (is_array($value) && !in_array($model_value, $value)) {
+                return false;
+            }
+            
+            return true;
+        }
     
     protected function sorting()
     {

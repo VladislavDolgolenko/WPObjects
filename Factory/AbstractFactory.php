@@ -46,6 +46,16 @@ abstract class AbstractFactory implements
         return $this;
     }
     
+    public function getResultIds()
+    {
+        $result_ids = array();
+        foreach ($this->getResult() as $Model) {
+            $result_ids[] = $Model->getId();
+        }
+        
+        return $result_ids;
+    }
+    
     public function getResult()
     {
         return $this->result;

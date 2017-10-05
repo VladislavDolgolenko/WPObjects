@@ -12,7 +12,7 @@ namespace WPObjects\Model;
 
 use WPObjects\Factory\AbstractFactory;
 
-abstract class AbstractModel implements ModelInterface
+abstract class AbstractModel extends \ArrayObject implements ModelInterface
 {
     protected $model_type = null;
     
@@ -20,6 +20,11 @@ abstract class AbstractModel implements ModelInterface
      * @var \WPObjects\Model\AbstractModel in array
      */
     protected $relatives = array();
+    
+    public function __construct($data)
+    {
+        parent::__construct(array(), self::ARRAY_AS_PROPS, "ArrayIterator");
+    }
     
     /**
      * @param AbstractFactory $Factory
@@ -32,21 +37,21 @@ abstract class AbstractModel implements ModelInterface
             return $this->relatives[$model_type_id];
         }
         
-        $relative_model_id = $this->getRelativeId($Factory, $single);
+        $relative_model_id = $this->getRelativeId($Factory);
         if (!$relative_model_id) {
             return null;
         }
         
-        $Model = $Factory->get($relative_model_id, $filters);
+        $Model = $Factory->get($relative_model_id, $filters, $single);
         $this->relatives[$model_type_id] = $Model;
         return $Model;
     }
     
-    protected function getRelativeId(\WPObjects\Factory\AbstractFactory $Factory, $single = true)
+    protected function getRelativeId(\WPObjects\Factory\AbstractFactory $Factory)
     {
         $model_type_id = $Factory->getModelType();
         $attr = AbstractFactory::getSpecializationAttrName($model_type_id);
-        $relative_model_id = $this->getMeta($attr, $single);
+        $relative_model_id = $this->getMeta($attr);
         
         return $relative_model_id ? $relative_model_id : null;
     }
