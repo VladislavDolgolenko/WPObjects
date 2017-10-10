@@ -10,7 +10,10 @@
 
 namespace WPObjects\PostType;
 
-class PostType implements \WPObjects\EventManager\ListenerInterface
+use WPObjects\Model\AbstractModelType;
+
+class PostType extends AbstractModelType implements 
+    \WPObjects\EventManager\ListenerInterface
 {
     private static $_instances = array();
     
@@ -100,6 +103,14 @@ class PostType implements \WPObjects\EventManager\ListenerInterface
     public function getId()
     {
         return $this->id;
+    }
+    
+    public function getName()
+    {
+        $config = $this->getConfig();
+        $labels = isset($config['labels']) ? $config['labels'] : array();
+        $name = isset($labels['name']) ? $labels['name'] : ucfirst($this->id);
+        return $name;
     }
     
     public function getModelClass()

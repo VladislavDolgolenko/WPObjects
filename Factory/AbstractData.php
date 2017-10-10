@@ -12,12 +12,20 @@ namespace WPObjects\Factory;
 
 use WPObjects\Data\Data;
 
-abstract class AbstractDataFactory extends AbstractFactory
+abstract class AbstractData extends AbstractFactory implements
+    \WPObjects\Data\StorageInterface
 {
+    protected $id_key = 'id';
+    
     /**
      * @var \WPObjects\Data\Data
      */
     protected $Data = null;
+    
+    /**
+     * @var \WPObjects\Data\Storage
+     */
+    protected $Storage = null;
     
     protected $pull = null;
     
@@ -25,11 +33,19 @@ abstract class AbstractDataFactory extends AbstractFactory
     
     protected $result_data = null;
     
-    protected $id_key = 'id';
-    
     public function __construct()
     {
         $this->Data = new Data();
+    }
+    
+    public function setStorage(\WPObjects\Data\Storage $Storage)
+    {
+        $this->Storage = $Storage;
+    }
+    
+    public function getStorage()
+    {
+        return $this->Storage;
     }
     
     public function get($id = null, $filters = array(), $single = true)
@@ -173,7 +189,7 @@ abstract class AbstractDataFactory extends AbstractFactory
     protected function pull()
     {
         if (is_null($this->pull)) {
-            $this->pull = $this->getData()->getActiveDatas($this->getModelType());
+            $this->pull = $this->getData()->getActiveDatas($this->getStorage());
         }
         
         return $this->pull;

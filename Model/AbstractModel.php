@@ -10,75 +10,31 @@
 
 namespace WPObjects\Model;
 
-use WPObjects\Factory\AbstractFactory;
-
 abstract class AbstractModel extends \ArrayObject implements ModelInterface
 {
-    protected $model_type = null;
-    
-    /**
-     * @var \WPObjects\Model\AbstractModel in array
-     */
-    protected $relatives = array();
-    
     public function __construct($data)
     {
         parent::__construct(array(), self::ARRAY_AS_PROPS, "ArrayIterator");
+        $this->exchange($data);
     }
     
-    /**
-     * @param AbstractFactory $Factory
-     * @return \WPObjects\Model\AbstractModel || array
-     */
-    protected function getRelative(\WPObjects\Factory\AbstractFactory $Factory, $filters = array(), $single = true)
+    public function exchange($data)
     {
-        $model_type_id = $Factory->getModelType();
-        if (isset($this->relatives[$model_type_id])) {
-            return $this->relatives[$model_type_id];
+        if (is_array($data)) {
+            $this->exchangeArray($data);
+        } else if (is_object($data)) {
+            $this->exchangeObject($data);
+        } else {
+            throw new \Exception('Undefined model echanged data type, must be array or object.');
         }
-        
-        $relative_model_id = $this->getRelativeId($Factory);
-        if (!$relative_model_id) {
-            return null;
-        }
-        
-        $Model = $Factory->get($relative_model_id, $filters, $single);
-        $this->relatives[$model_type_id] = $Model;
-        return $Model;
     }
     
-    protected function getRelativeId(\WPObjects\Factory\AbstractFactory $Factory)
+    protected function exchangeObject($data)
     {
-        $model_type_id = $Factory->getModelType();
-        $attr = AbstractFactory::getSpecializationAttrName($model_type_id);
-        $relative_model_id = $this->getMeta($attr);
-        
-        return $relative_model_id ? $relative_model_id : null;
+        foreach (\get_object_vars($data) as $key => $value) {
+            $this->$key = $value;
+        }
     }
     
-    protected function getInRelative(\WPObjects\Factory\AbstractFactory $Factory, $filters = array())
-    {
-        $model_type_id = $Factory->getModelType();
-        if (isset($this->parent_relatives[$model_type_id])) {
-            return $this->parent_relatives[$model_type_id];
-        }
-        
-        $attr = AbstractFactory::getSpecializationAttrName($this->getModelType());
-        $Factory->query(array_merge(array(
-            $attr => $this->getId()
-        )), $filters);
-        
-        $this->parent_relatives[$model_type_id] = $Factory->getResult();
-        return $this->parent_relatives[$model_type_id];
-    }
-    
-    public function getModelType()
-    {
-        if (!$this->model_type) {
-            throw new \Exception('Undefined model type');
-        }
-        
-        return $this->model_type;
-    }
 }
 

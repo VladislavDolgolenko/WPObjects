@@ -52,36 +52,36 @@ class Data {
         $this->data_disables = null;
     }
     
-    public function getActiveDatasObjects($datas_type_id)
+    public function getActiveDatasObjects(\WPObjects\Data\Storage $Storage)
     {
-        if (isset($this->active_datas_objects[$datas_type_id])) {
-            return $this->active_datas_objects[$datas_type_id];
+        if (isset($this->active_datas_objects[$Storage->getId()])) {
+            return $this->active_datas_objects[$Storage->getId()];
         }
         
-        $datas = $this->getActiveDatas($datas_type_id);
+        $datas = $this->getActiveDatas($Storage);
         $result = array();
         foreach ($datas as $data) {
             $result[] = new \ArrayObject($data, \ArrayObject::ARRAY_AS_PROPS);
         }
 
-        $this->active_datas_objects[$datas_type_id] = $result;
+        $this->active_datas_objects[$Storage->getId()] = $result;
         return $result;
     }
     
-    public function getActiveDatas($datas_type_id)
+    public function getActiveDatas(\WPObjects\Data\Storage $Storage)
     {
-        if (isset($this->active_datas[$datas_type_id])) {
-            return $this->active_datas[$datas_type_id];
+        if (isset($this->active_datas[$Storage->getId()])) {
+            return $this->active_datas[$Storage->getId()];
         }
         
-        $datas = $this->extractActiveDatas($datas_type_id);
-        $this->active_datas[$datas_type_id] = $datas;
+        $datas = $this->extractActiveDatas($Storage);
+        $this->active_datas[$Storage->getId()] = $datas;
         return $datas;
     }
     
-        private function extractActiveDatas($datas_type_id)
+        private function extractActiveDatas(\WPObjects\Data\Storage $Storage)
         {
-            $datas = $this->getDatas($datas_type_id);
+            $datas = $this->getDatas($Storage);
             if (count($datas) === 0) {
                 return array();
             }
@@ -91,7 +91,7 @@ class Data {
             $result_datas = array();
             foreach ($datas as $data) {
 
-                if ( $this->isActiveData($datas_type_id, $data[$key]) === true ) {
+                if ( $this->isActiveData($Storage->getId(), $data[$key]) === true ) {
                     $result_datas[] = $data;
                 }
 
@@ -116,56 +116,43 @@ class Data {
         return false;
     }
 
-    public function getDatasObjects($datas_type_id)
+    public function getDatasObjects(\WPObjects\Data\Storage $Storage)
     {
-        if (isset($this->datas_objects[$datas_type_id])) {
-            return $this->datas_objects[$datas_type_id];
+        if (isset($this->datas_objects[$Storage->getId()])) {
+            return $this->datas_objects[$Storage->getId()];
         }
         
-        $datas = $this->getDatas($datas_type_id);
+        $datas = $this->getDatas($Storage);
         $result = array();
         foreach ($datas as $data) {
             $result[] = new \ArrayObject($data, \ArrayObject::ARRAY_AS_PROPS);
         }
 
-        $this->datas_objects[$datas_type_id] = $result;
+        $this->datas_objects[$Storage->getId()] = $result;
         return $result;
     }
     
-    public function getDatas($datas_type)
+    public function getDatas(\WPObjects\Data\Storage $Storage)
     {
-        if (isset($this->datas[$datas_type])) {
-            return $this->datas[$datas_type];
+        if (isset($this->datas[$Storage->getId()])) {
+            return $this->datas[$Storage->getId()];
         }
         
-        $datas = $this->extractDatas($datas_type);
-        $this->datas[$datas_type] = $datas;
+        $datas = $this->extractDatas($Storage);
+        $this->datas[$Storage->getId()] = $datas;
         return $datas;
     }
     
-        protected function extractDatas($datas_type)
+        protected function extractDatas(\WPObjects\Data\Storage $Storage)
         {
-            // Что это блять за функция
-            $data_type = $this->getDataTypeById($datas_type);
-            $build_in =  (include $this->getDatasPath() . '/' . $datas_type . '.php' );
+            $build_in = (include $Storage->getFilePath());
             foreach ($build_in as $key => $data) {
                 $build_in[$key]['build_in'] = true;
-
-                if (isset($data_type->has_images) && $data_type->has_images) {
-                    $identety_key = $this->getDataIdentetyKey($data);
-                    $build_in[$key]['img_url'] = $this->getDataTypeImageUrl((string)$data_type->id, $data[$identety_key]);
-                    $build_in[$key]['img_url_mini'] = $this->getDataTypeImageUrl((string)$data_type->id, $data[$identety_key], 'mini');
-                }
             }
 
-            $custom = get_option($this->wp_option_prefix . '_data_' . $datas_type, array());
+            $custom = get_option($this->wp_option_prefix . '_data_' . $Storage->getId(), array());
 
             return array_merge($custom, $build_in);
-        }
-        
-        static public function getDataTypeImageUrl($data_type_id, $data_id, $size = '')
-        {
-            return null;
         }
     
     public function getDataDisables($datas_type)

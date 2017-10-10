@@ -10,11 +10,7 @@
 
 namespace WPObjects\Model;
 
-interface ModelInterface
+abstract class AbstractModelType extends AbstractModel
 {
-    public function exchange($data);
-    
-    public function getId();
-    
-    public function getName();
+    abstract public function getModelClassName();
 }

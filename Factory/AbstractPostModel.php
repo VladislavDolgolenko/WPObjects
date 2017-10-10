@@ -41,6 +41,13 @@ abstract class AbstractPostFactory extends AbstractFactory
         }
     }
     
+    protected function initModel($post)
+    {
+        $class = $this->getModelType()->getModelClassName();
+        return new $class($post, $this->getModelType());
+    }
+
+
     /**
      * Return array with compatible elements for autocompele selector in Visual Composer Addons.
      * @return array

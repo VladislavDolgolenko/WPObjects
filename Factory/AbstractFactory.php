@@ -14,9 +14,6 @@ abstract class AbstractFactory implements
     FactoryInterface,
     AutocompeleInterface
 {
-    protected $model_type = null;
-    protected $model_class_name = '\WPObjects\Model\AbstractModel';
-    
     /**
      * If relative model is 'organisation' in query this as metaquery '_organisation_id'
      * @var type 
@@ -28,16 +25,6 @@ abstract class AbstractFactory implements
     protected $result_as_object = false;
     
     protected $result = null;
-    
-    /**
-     * @param mixed
-     * @return \WPObjects\Model\AbstractModel
-     */
-    public function initModel($post)
-    {
-        $model_class = $this->model_class_name;
-        return new $model_class($post);
-    }
     
     protected function setResult($result)
     {

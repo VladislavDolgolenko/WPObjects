@@ -8,13 +8,24 @@
  * @support      support@torbara.com
  */
 
-namespace WPObjects\Model;
+namespace WPObjects\Data;
 
-interface ModelInterface
+use WPObjects\Model\AbstractModel;
+
+class Storage extends AbstractModel
 {
-    public function exchange($data);
+    public function getId()
+    {
+        return $this->id;
+    }
     
-    public function getId();
+    public function getName()
+    {
+        return $this->id;
+    }
     
-    public function getName();
+    public function getFilePath()
+    {
+        return $this->include;
+    }
 }

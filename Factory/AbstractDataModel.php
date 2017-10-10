@@ -8,13 +8,13 @@
  * @support      support@torbara.com
  */
 
-namespace WPObjects\Model;
+namespace WPObjects\Factory;
 
-interface ModelInterface
+class AbstractDataModel extends AbstractData
 {
-    public function exchange($data);
-    
-    public function getId();
-    
-    public function getName();
+    protected function initModel($post)
+    {
+        $class = $this->getModelType()->getModelClassName();
+        return new $class($post, $this->getModelType());
+    }
 }

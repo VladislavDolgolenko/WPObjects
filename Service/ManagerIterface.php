@@ -8,13 +8,11 @@
  * @support      support@torbara.com
  */
 
-namespace WPObjects\Model;
+namespace WPObjects\Service;
 
-interface ModelInterface
+interface ManagerInterface
 {
-    public function exchange($data);
+    public function setServiceManager(\WPObjects\Service\Manager $ServiceManager);
     
-    public function getId();
-    
-    public function getName();
+    public function getServiceManager();
 }

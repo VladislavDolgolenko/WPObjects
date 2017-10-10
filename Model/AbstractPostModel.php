@@ -10,17 +10,26 @@
 
 namespace WPObjects\Model;
 
-abstract class AbstractPostModel extends AbstractModel
+abstract class AbstractPostModel extends AbstractTypicalModel
 {
     /**
      * @var \WP_Post
      */
     protected $post = null;
     
+    /**
+     * @var array
+     */
     protected $register_metas = array();
     
+    /**
+     * @var array
+     */
     protected $metas = array();
     
+    /**
+     * @var array
+     */
     protected $defaults_attrs = array(
         'ID',
         'post_author',
@@ -43,13 +52,7 @@ abstract class AbstractPostModel extends AbstractModel
         'comment_count'
     );
 
-    public function __construct($data)
-    {
-        parent::__construct($data);
-        $this->initFromPost($data);
-    }
-    
-    protected function initFromPost(\WP_Post $post)
+    protected function exchangeObject(\WP_Post $post)
     {
         $this->post = $post;
         $register_atts = $this->getDefaultAttrs();
@@ -166,12 +169,13 @@ abstract class AbstractPostModel extends AbstractModel
         }
         
         $this->metas[$key] = $value;
+        
         return $this;
     }
     
     public function getRegisterAttrs()
     {
-        array_merge($this->getRegisterMetas(), $this->getDefaultAttrs());
+        return array_merge($this->getRegisterMetas(), $this->getDefaultAttrs());
     }
     
     public function getDefaultAttrs()

@@ -8,13 +8,16 @@
  * @support      support@torbara.com
  */
 
-namespace WPObjects\Model;
+namespace WPObjects\Data;
 
-interface ModelInterface
+use WPObjects\Factory\AbstractData;
+use WPObjects\Data\DataType as DataTypeModel;
+
+class DataTypeFactory extends AbstractData
 {
-    public function exchange($data);
-    
-    public function getId();
-    
-    public function getName();
+    public function initModel($post)
+    {
+        $Model = new DataTypeModel($post);
+        return $Model;
+    }
 }

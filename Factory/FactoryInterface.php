@@ -16,14 +16,14 @@ interface FactoryInterface
 
     public function query($filters = array(), $result_as_object = false);
     
-    static public function prepareMetaValue($value);
-    
     public function getResult();
     
     public function initModel($post);
     
+    public function getModelType();
+    
     static public function getSpecializationAttrName($type);
     
-    public function getModelType();
+    static public function prepareMetaValue($value);
 }
 

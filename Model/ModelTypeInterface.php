@@ -10,11 +10,7 @@
 
 namespace WPObjects\Model;
 
-interface ModelInterface
+interface ModelTypeInterface
 {
-    public function exchange($data);
-    
-    public function getId();
-    
-    public function getName();
+    public function getModelType();
 }

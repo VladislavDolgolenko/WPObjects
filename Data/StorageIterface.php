@@ -8,13 +8,14 @@
  * @support      support@torbara.com
  */
 
-namespace WPObjects\Model;
+namespace WPObjects\Data;
 
-interface ModelInterface
+interface StorageInterface
 {
-    public function exchange($data);
+    /**
+     * @return \WPObjects\Data\Storage
+     */
+    public function getStorage();
     
-    public function getId();
-    
-    public function getName();
+    public function setStorage(\WPObjects\Data\Storage $Storage);
 }

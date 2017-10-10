@@ -8,13 +8,3 @@
  * @support      support@torbara.com
  */
 
-namespace WPObjects\Model;
-
-interface ModelInterface
-{
-    public function exchange($data);
-    
-    public function getId();
-    
-    public function getName();
-}

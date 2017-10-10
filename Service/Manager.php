@@ -16,6 +16,11 @@ class Manager
     
     protected $config = array();
     
+    /**
+     * @var \WPObjects\Service\DI
+     */
+    protected $DI = null;
+    
     private static $_instance = null;
     
     /**
@@ -34,6 +39,7 @@ class Manager
     public function __construct($config)
     {
         $this->addConfig($config);
+        $this->initialized['ServiceManager'] = $this;
     }
     
     public function addConfig($config)
@@ -55,16 +61,35 @@ class Manager
         
         $service_factory = $this->config[$name];
         if (is_callable($service_factory)) {
-            $this->initialized[$name] = $service_factory($this);
-        } else if (class_exists($service_factory)) {
-            $this->initialized[$name] = new $service_factory($this);
-        } else {
-            throw new \Exception('Incorrect service factory');
+            $Object = $service_factory($this);
+        } else if (is_string($service_factory)) {
+            $Object = new $service_factory();
         }
         
+        // Service manager injection
+        if ($Object instanceof \WPObjects\Service\ManagerInterface) {
+            $Object->setServiceManager($this);
+        }
+        
+        $DI = $this->getDI();
+        if ($DI instanceof \WPObjects\Service\DI) {
+            $Object = $DI->inject($Object);
+        }
+        
+        $this->initialized[$name] = $Object;
         return $this->initialized[$name];
     }
     
+    public function getDI()
+    {
+        return $this->DI;
+    }
+    
+    public function setDI(\WPObjects\Service\DI $DI)
+    {
+        $this->DI = $DI;
+    }
+
     public function set($name, $value)
     {
         $this->initialized[$name] = $value;
