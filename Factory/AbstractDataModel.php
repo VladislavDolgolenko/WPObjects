@@ -10,8 +10,25 @@
 
 namespace WPObjects\Factory;
 
-class AbstractDataModel extends AbstractData
+class AbstractDataModel extends AbstractData implements
+    \WPObjects\Model\ModelTypeInterface
 {
+    protected $ModelType = null;
+    
+    public function getModelType()
+    {
+        if (is_null($this->ModelType)) {
+            throw new \Exception('Undefiend model type!');
+        }
+        
+        return $this->ModelType;
+    }
+    
+    public function setModelType(\WPObjects\Model\AbstractModelType $ModelType)
+    {
+        $this->ModelType = $ModelType;
+    }
+    
     protected function initModel($post)
     {
         $class = $this->getModelType()->getModelClassName();

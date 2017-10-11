@@ -10,53 +10,23 @@
 
 namespace WPObjects\PostType;
 
-use WPObjects\PostType\PostType;
-
 class Manager implements \WPObjects\EventManager\ListenerInterface
 {
     /**
-     * @var \WPObjects\PostType\PostType
+     * @var \WPObjects\PostType\PostTypeFactory
      */
-    protected $PostTypes = array();
+    protected $Factory = null;
     
     /**
-     * @var array
+     * @param \WPObjects\PostType\PostTypeFactory $Factory 
      */
-    protected $config = array();
-    
-    public function __construct($config = array())
+    public function __construct(\WPObjects\PostType\PostTypeFactory $Factory)
     {
-        $this->setConfig($config);
+        $this->Factory = $Factory;
     }
     
     /**
-     * @return $this
-     */
-    public function init()
-    {
-        $this->PostTypes = array();
-        foreach ($this->getConfig() as $id => $config) {
-            $PostType = new PostType($id);
-            $PostType->setConfig($config);
-            $this->PostTypes[] = $PostType;
-        }
-        
-        return $this;
-    }
-    
-    /**
-     * @return $this
-     */
-    public function add(\WPObjects\PostType\PostType $PostType)
-    {
-        if (!$this->get($PostType->getId())) {
-            $this->PostTypes[] = $PostType;
-        }
-        
-        return $this;
-    }
-    
-    /**
+     * Attach all post-types
      * @return $this
      */
     public function attach()
@@ -69,6 +39,7 @@ class Manager implements \WPObjects\EventManager\ListenerInterface
     }
     
     /**
+     * Detach all post-types
      * @return $this
      */
     public function detach()
@@ -80,17 +51,12 @@ class Manager implements \WPObjects\EventManager\ListenerInterface
         return $this;
     }
     
-    public function setConfig($config)
-    {
-        $this->config = $config;
-    }
-    
     /**
-     * @return array
+     * @return \WPObjects\PostType\PostType
      */
-    public function getConfig()
+    public function get($id)
     {
-        return $this->config;
+        return $this->getFactory()->get($id);
     }
     
     /**
@@ -98,21 +64,15 @@ class Manager implements \WPObjects\EventManager\ListenerInterface
      */
     public function getAll()
     {
-        return $this->PostTypes;
+        return $this->getFactory()->query()->getResult();
     }
     
     /**
-     * @return \WPObjects\PostType\PostType
+     * @return \WPObjects\PostType\PostTypeFactory
      */
-    public function get($id)
+    public function getFactory()
     {
-        foreach ($this->getPostTypes() as $PostType) {
-            if ($id === $PostType->getId()) {
-                return $PostType;
-            }
-        }
-        
-        return null;
+        return $this->Factory;
     }
     
 }

@@ -18,21 +18,38 @@ abstract class AbstractData extends AbstractFactory implements
     protected $id_key = 'id';
     
     /**
+     * Data access object
      * @var \WPObjects\Data\Data
      */
     protected $Data = null;
     
     /**
+     * Storage object for forward data access object
      * @var \WPObjects\Data\Storage
      */
     protected $Storage = null;
     
+    /**
+     * All active data from Storage via data access object
+     * @var array
+     */
     protected $pull = null;
     
+    /**
+     * Query filters
+     * @var array
+     */
     protected $filters = null;
     
+    /**
+     * Last query results as source data arrays
+     * @var array
+     */
     protected $result_data = null;
     
+    /**
+     * Initialize data access object
+     */
     public function __construct()
     {
         $this->Data = new Data();

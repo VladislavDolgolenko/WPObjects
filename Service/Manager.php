@@ -36,9 +36,12 @@ class Manager
         return self::$_instance;
     }
     
-    public function __construct($config)
+    public function __construct($config = null)
     {
-        $this->addConfig($config);
+        if (!is_null($config) && is_array($config)) {
+            $this->addConfig($config);
+        }
+        
         $this->initialized['ServiceManager'] = $this;
     }
     
@@ -87,6 +90,7 @@ class Manager
     
     public function setDI(\WPObjects\Service\DI $DI)
     {
+        $DI->setServiceManager($this);
         $this->DI = $DI;
     }
 

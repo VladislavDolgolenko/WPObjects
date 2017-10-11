@@ -36,5 +36,12 @@ abstract class AbstractModel extends \ArrayObject implements ModelInterface
         }
     }
     
+    public function exchangeArray($data)
+    {
+        foreach ($data as $key => $value) {
+            $this->$key = $value;
+        }
+    }
+    
 }
 

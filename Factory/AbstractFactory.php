@@ -22,8 +22,16 @@ abstract class AbstractFactory implements
     
     protected $context_models_types = array();
     
+    /**
+     * Query flag. How to create result object. If true, result must be instance of \WP_Query
+     * @var boolean
+     */
     protected $result_as_object = false;
     
+    /**
+     * Last query results as initialized objects 
+     * @var array
+     */
     protected $result = null;
     
     protected function setResult($result)
@@ -51,15 +59,6 @@ abstract class AbstractFactory implements
     protected function getContextTypes()
     {
         return $this->context_models_types;
-    }
-    
-    public function getModelType()
-    {
-        if (is_null($this->model_type)) {
-            throw new \Exception('Undefiend model type!');
-        }
-        
-        return $this->model_type;
     }
     
     /**

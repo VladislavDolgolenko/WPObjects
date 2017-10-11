@@ -19,7 +19,6 @@ class PostType extends AbstractModelType implements
     
     protected $id = null;
     protected $config = array();
-    protected $model_class = '\WPObjects\Model\AbstractPostModel';
     
     /**
      * @return \WPObjects\PostType\PostType
@@ -34,9 +33,24 @@ class PostType extends AbstractModelType implements
         return self::$_instances[$class];
     }
     
-    public function __construct($id = null)
+    public function __construct($data)
     {
-        $this->id = $id;
+        if (!is_array($data)) {
+            $data = array(
+                'id' => $data
+            );
+        }
+        
+        parent::__construct($data);
+    }
+    
+    public function getModelClassName()
+    {
+        if (!isset($this->model_class_name)) {
+            throw new \Exception('Undefined data type mode class name');
+        }
+        
+        return $this->model_class_name;
     }
     
     public function attach()
@@ -111,23 +125,6 @@ class PostType extends AbstractModelType implements
         $labels = isset($config['labels']) ? $config['labels'] : array();
         $name = isset($labels['name']) ? $labels['name'] : ucfirst($this->id);
         return $name;
-    }
-    
-    public function getModelClass()
-    {
-        $config = $this->getConfig();
-        if (isset($config['model_class']) && class_exists($config['model_class'])) {
-            $this->model_class = $config['model_class'];
-        }
-        
-        return $this->model_class;
-    }
-    
-    public function setModelClass($class_name)
-    {
-        $this->model_class = $class_name;
-        
-        return $this;
     }
     
     public function setConfig($config)

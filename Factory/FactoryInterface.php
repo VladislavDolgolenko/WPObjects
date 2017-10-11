@@ -20,8 +20,6 @@ interface FactoryInterface
     
     public function initModel($post);
     
-    public function getModelType();
-    
     static public function getSpecializationAttrName($type);
     
     static public function prepareMetaValue($value);

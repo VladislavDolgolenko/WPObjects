@@ -8,3 +8,16 @@
  * @support      support@torbara.com
  */
 
+namespace WPObjects\PostType;
+
+use WPObjects\Factory\AbstractData;
+use WPObjects\PostType\PostType as PostTypeModel;
+
+class PostTypeFactory extends AbstractData
+{
+    public function initModel($post)
+    {
+        $Model = new PostTypeModel($post);
+        return $Model;
+    }
+}

@@ -2,7 +2,7 @@
 
 /**
  * @encoding     UTF-8
- * @copyright    Copyright (C) 2016 Torbara (http://torbara.com). All rights reserved.
+ * @copyright    Copyright (C) 2017 Torbara (http://torbara.com). All rights reserved.
  * @license      Envato Standard License http://themeforest.net/licenses/standard?ref=torbara
  * @author       Vladislav Dolgolenko (vladislavdolgolenko.com)
  * @support      support@torbara.com
@@ -10,15 +10,39 @@
 
 namespace WPObjects\Factory;
 
-abstract class AbstractPostFactory extends AbstractFactory
+abstract class AbstractPostFactory extends AbstractFactory implements
+    \WPObjects\Model\ModelTypeInterface
 {
+    /**
+     * Main query array for \WP_Query object
+     * @var array
+     */
     protected $query = array();
     
+    /**
+     * Meta query array for \WP_Query object.
+     * At query preparation linked to $this->query['meta_query']
+     * @var array
+     */
     protected $meta_query = array();
     
+    /**
+     * Query filters, using for build query 
+     * @var type 
+     */
     protected $filters = array();
     
+    /**
+     * Register filters as types of classes by qualifier objects
+     * @var array
+     */
     protected $context_models_methods = array();
+    
+    /**
+     * Object ModelType of current factory objects
+     * @var \WPObjects\Model\AbstractModelType
+     */
+    protected $ModelType = null;
     
     /**
      * @param $id string || integer || array
@@ -41,15 +65,8 @@ abstract class AbstractPostFactory extends AbstractFactory
         }
     }
     
-    protected function initModel($post)
-    {
-        $class = $this->getModelType()->getModelClassName();
-        return new $class($post, $this->getModelType());
-    }
-
-
     /**
-     * Return array with compatible elements for autocompele selector in Visual Composer Addons.
+     * Return array with compatible elements for autocompele selector in Visual Composer.
      * @return array
      */
     function getForVCAutocompele()
@@ -70,7 +87,8 @@ abstract class AbstractPostFactory extends AbstractFactory
     
     /**
      * Build, send query and set results.
-     * If result_as_object is true, result will be instance of \WP_Query
+     * @param boolean $result_as_object Query flag. How to create result object. 
+     * If true, result must be instance of \WP_Query
      * @return \MSP\Model\AbstractModel
      */
     public function query($filters = array(), $result_as_object = false)
@@ -131,7 +149,7 @@ abstract class AbstractPostFactory extends AbstractFactory
         $this->query = array();
         $this->meta_query = array('relation' => 'AND');
         $this->query = array(
-            'post_type' => $this->getModelType(),
+            'post_type' => $this->getModelType()->getId(),
             'post_status' => 'publish',
             'meta_query' => &$this->meta_query,
             'numberposts' => -1
@@ -250,6 +268,29 @@ abstract class AbstractPostFactory extends AbstractFactory
         return $this;
     }
     
+    protected function initModel($post)
+    {
+        $class = $this->getModelType()->getModelClassName();
+        return new $class($post, $this->getModelType());
+    }
     
+    /**
+     * @return \WPObjects\Model\AbstractModelType
+     */
+    public function getModelType()
+    {
+        if (is_null($this->ModelType)) {
+            throw new \Exception('Undefiend model type!');
+        }
+        
+        return $this->ModelType;
+    }
+    
+    public function setModelType(\WPObjects\Model\AbstractModelType $ModelType)
+    {
+        $this->ModelType = $ModelType;
+        
+        return $this;
+    }
     
 }
