@@ -10,14 +10,9 @@
 
 namespace WPObjects\Factory;
 
-interface FactoryInterface
+use WPObjects\Model\ModelTypeInterface;
+
+interface TypicalModelFactoryInterface extends ModelTypeInterface
 {
-    public function get($id = null, $filters = array(), $single = true);
-
-    public function query($filters = array(), $result_as_object = false);
-    
-    public function getResult();
-    
-    public function getResultIds();
+    public function getQualifiersFilters();
 }
-

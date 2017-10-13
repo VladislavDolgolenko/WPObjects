@@ -8,16 +8,16 @@
  * @support      support@torbara.com
  */
 
-namespace WPObjects\Factory;
+namespace WPObjects\Model;
 
-interface FactoryInterface
+use WPObjects\Factory\FactoriesAggregator;
+
+class ModelTypeFactory extends FactoriesAggregator
 {
-    public function get($id = null, $filters = array(), $single = true);
-
-    public function query($filters = array(), $result_as_object = false);
-    
-    public function getResult();
-    
-    public function getResultIds();
+    public function getAgregators(\WPObjects\Model\AbstractModelType $ModelType)
+    {
+        return $this->query(array(
+            'qualifiers' => $ModelType->getId()
+        ));
+    }
 }
-

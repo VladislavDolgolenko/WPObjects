@@ -17,7 +17,7 @@ class DI implements ManagerInterface
     /**
      * Config structure:
      *      array(
-     *          target_class_name => array (
+     *          class_name => array (
      *              dependeciend_service_name => setter_method_name
      *          )
      *          ...
@@ -29,22 +29,18 @@ class DI implements ManagerInterface
     
     public function inject($Object)
     {
-        $class_name = get_class($Object);
-        if (strpos('\\', $class_name) === 0) {
-            $class_name = substr($class_name, 1);
-        }
-        
-        if (!isset($this->config[$class_name])) {
-            return $Object;
-        }
-        
-        $deps = $this->config[$class_name];
-        foreach ($deps as $service_name => $setter_mathod) {
-            $Service = $this->getServiceManager()->get($service_name);
-            if (!$Service) {
-                throw new \Exception("Undefined service $service_name for $class_name.");
+        foreach ($this->config as $class => $deps) {
+            if (!$Object instanceof $class) {
+                continue;
             }
-            $Object->$setter_mathod($Service);
+            
+            foreach ($deps as $service_name => $setter_mathod) {
+                $Service = $this->getServiceManager()->get($service_name);
+                if (!$Service) {
+                    throw new \Exception("Undefined service $service_name for $class_name.");
+                }
+                $Object->$setter_mathod($Service);
+            }
         }
         
         return $Object;

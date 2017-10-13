@@ -13,49 +13,21 @@ namespace WPObjects\Model;
 abstract class AbstractPostModel extends AbstractTypicalModel
 {
     /**
+     * WordPress post object of current object
      * @var \WP_Post
      */
     protected $post = null;
     
     /**
-     * @var array
-     */
-    protected $register_metas = array();
-    
-    /**
+     * Initialize meta data of current object
      * @var array
      */
     protected $metas = array();
-    
-    /**
-     * @var array
-     */
-    protected $defaults_attrs = array(
-        'ID',
-        'post_author',
-        'post_date',
-        'post_date_gmt',
-        'post_content',
-        'post_title',
-        'post_excerpt',
-        'post_status',
-        'comment_status',
-        'ping_status',
-        'post_password',
-        'post_name',
-        'to_ping',
-        'pinged',
-        'guid',
-        'menu_order',
-        'post_type',
-        'post_mime_type',
-        'comment_count'
-    );
 
     protected function exchangeObject(\WP_Post $post)
     {
         $this->post = $post;
-        $register_atts = $this->getDefaultAttrs();
+        $register_atts = $this->getModelType()->getDefaultAttrs();
         foreach (\get_object_vars($post) as $key => $value) {
             if (count($register_atts) && !in_array($key, $register_atts)) {
                 continue;
@@ -160,7 +132,7 @@ abstract class AbstractPostModel extends AbstractTypicalModel
     
     public function setMeta($key, $value)
     {
-        if (!in_array($key, $this->getRegisterMetas())) {
+        if (!in_array($key, $this->getModelType()->getRegisterMetas())) {
             return $this;
         }
         
@@ -173,18 +145,5 @@ abstract class AbstractPostModel extends AbstractTypicalModel
         return $this;
     }
     
-    public function getRegisterAttrs()
-    {
-        return array_merge($this->getRegisterMetas(), $this->getDefaultAttrs());
-    }
     
-    public function getDefaultAttrs()
-    {
-        return $this->defaults_attrs;
-    }
-    
-    public function getRegisterMetas()
-    {
-        return $this->register_metas;
-    }
 }

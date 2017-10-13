@@ -10,8 +10,8 @@
 
 namespace WPObjects\Factory;
 
-abstract class AbstractPostFactory extends AbstractFactory implements
-    \WPObjects\Model\ModelTypeInterface
+abstract class AbstractPostFactory extends AbstractModelFactory implements
+    \WPObjects\Factory\TypicalModelFactoryInterface
 {
     /**
      * Main query array for \WP_Query object
@@ -31,12 +31,6 @@ abstract class AbstractPostFactory extends AbstractFactory implements
      * @var type 
      */
     protected $filters = array();
-    
-    /**
-     * Register filters as types of classes by qualifier objects
-     * @var array
-     */
-    protected $context_models_methods = array();
     
     /**
      * Object ModelType of current factory objects
@@ -107,43 +101,6 @@ abstract class AbstractPostFactory extends AbstractFactory implements
         return $this;
     }
     
-    protected function readContext()
-    {
-        global $post;
-        
-        if (!isset($this->filters['page_context'])) {
-            return $this;
-        }
-        
-        if (get_post_type($post->ID) === $this->getModelType()) {
-            $this->filters['id'] = $post->ID;
-            return $this;
-        }
-        
-        foreach ($this->getContextTypes() as $type) {
-            if (get_post_type($post->ID) == $type) {
-                $this->setIdsFromContext($post, $type);
-                return $this;
-            }
-        }
-        
-        return $this;
-    }
-    
-    protected function setIdsFromContext($post, $type)
-    {
-        $attr = $this->getSpecializationAttrName($type);
-        if (!isset($this->context_models_methods[$type])) {
-            $this->filters[$attr] = $post->ID;
-        } else {
-            $method = $this->context_models_methods[$type];
-            $ids = $this->$method($post);
-            $this->filters['post__in'] = $ids;
-        }
-        
-        return $this;
-    }
-    
     protected function buildQuery()
     {
         $this->query = array();
@@ -160,7 +117,7 @@ abstract class AbstractPostFactory extends AbstractFactory implements
         }
         
         if (isset($this->filters['id']) && $this->filters['id']) {
-            $this->query['post__in'] = $this->prepareMetaValue($this->filters['id']);
+            $this->query['post__in'] = $this->prepareStringToArray($this->filters['id']);
             $this->query['orderby'] = 'post__in';
         }
         
@@ -214,15 +171,14 @@ abstract class AbstractPostFactory extends AbstractFactory implements
     
     protected function buildMetaQuery()
     {
-        foreach ($this->relative_models_types as $type) {
-            $attr = $this->getSpecializationAttrName($type);
+        foreach ($this->getQualifiersFilters() as $attr) {
             if (!isset($this->filters[$attr]) || !$this->filters[$attr]) {
                 continue;
             }
             
             $this->meta_query[] = array(
                 'key' => $attr,
-                'value' => $this->prepareMetaValue($this->filters[$attr])
+                'value' => $this->prepareStringToArray($this->filters[$attr])
             );
         }
         
@@ -271,7 +227,8 @@ abstract class AbstractPostFactory extends AbstractFactory implements
     protected function initModel($post)
     {
         $class = $this->getModelType()->getModelClassName();
-        return new $class($post, $this->getModelType());
+        $Model = new $class($post, $this->getModelType());
+        return $this->getServiceManager()->inject($Model);
     }
     
     /**
@@ -293,4 +250,8 @@ abstract class AbstractPostFactory extends AbstractFactory implements
         return $this;
     }
     
+    public function getQualifiersFilters()
+    {
+        return $this->getModelType()->getRegisterQualifiersAttrs();
+    }
 }

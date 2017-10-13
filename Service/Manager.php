@@ -45,11 +45,14 @@ class Manager
         $this->initialized['ServiceManager'] = $this;
     }
     
-    public function addConfig($config)
+    public function getDI()
     {
-        $this->config = array_merge($this->config, $config);
-        
-        return $this;
+        return $this->get('DI');
+    }
+    
+    public function setDI(\WPObjects\Service\DI $DI)
+    {
+        $this->set('DI', $DI);
     }
     
     public function get($name)
@@ -65,8 +68,28 @@ class Manager
         $service_factory = $this->config[$name];
         if (is_callable($service_factory)) {
             $Object = $service_factory($this);
-        } else if (is_string($service_factory)) {
+        } else if (class_exists($service_factory, true)) {
             $Object = new $service_factory();
+        } else {
+            throw new \Exception("Invoke undefined service: $name.");
+        }
+        
+        $this->set($name, $Object);
+        return $this->initialized[$name];
+    }
+    
+    public function set($name, $value)
+    {
+        $this->initialized[$name] = $value;
+        $this->inject($value);
+        
+        return $this;
+    }
+    
+    public function inject($Object)
+    {
+        if (!is_object($Object)) {
+            return $this;
         }
         
         // Service manager injection
@@ -78,25 +101,6 @@ class Manager
         if ($DI instanceof \WPObjects\Service\DI) {
             $Object = $DI->inject($Object);
         }
-        
-        $this->initialized[$name] = $Object;
-        return $this->initialized[$name];
-    }
-    
-    public function getDI()
-    {
-        return $this->DI;
-    }
-    
-    public function setDI(\WPObjects\Service\DI $DI)
-    {
-        $DI->setServiceManager($this);
-        $this->DI = $DI;
-    }
-
-    public function set($name, $value)
-    {
-        $this->initialized[$name] = $value;
         
         return $this;
     }
@@ -117,4 +121,13 @@ class Manager
         
         return $this;
     }
+    
+    public function addConfig($config)
+    {
+        $this->config = array_merge($this->config, $config);
+        
+        return $this;
+    }
+    
+    
 }

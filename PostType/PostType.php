@@ -17,8 +17,49 @@ class PostType extends AbstractModelType implements
 {
     private static $_instances = array();
     
+    /**
+     * Identity of ModelType and WordPress post-type object when register
+     * @var type 
+     */
     protected $id = null;
+    
+    /**
+     * Configuration for WordPress post-type object
+     * @var type 
+     */
     protected $config = array();
+    
+    /**
+     * Register custom meta attributes
+     * @var array
+     */
+    protected $register_metas = array();
+    
+    /**
+     * Default object attributes
+     * @var array
+     */
+    protected $defaults_attrs = array(
+        'ID',
+        'post_author',
+        'post_date',
+        'post_date_gmt',
+        'post_content',
+        'post_title',
+        'post_excerpt',
+        'post_status',
+        'comment_status',
+        'ping_status',
+        'post_password',
+        'post_name',
+        'to_ping',
+        'pinged',
+        'guid',
+        'menu_order',
+        'post_type',
+        'post_mime_type',
+        'comment_count'
+    );
     
     /**
      * @return \WPObjects\PostType\PostType
@@ -33,6 +74,10 @@ class PostType extends AbstractModelType implements
         return self::$_instances[$class];
     }
     
+    /**
+     * Initialization PostType as \WPObjects DataType model
+     * @param array|string $data
+     */
     public function __construct($data)
     {
         if (!is_array($data)) {
@@ -125,6 +170,16 @@ class PostType extends AbstractModelType implements
         $labels = isset($config['labels']) ? $config['labels'] : array();
         $name = isset($labels['name']) ? $labels['name'] : ucfirst($this->id);
         return $name;
+    }
+    
+    public function getDefaultAttrs()
+    {
+        return $this->defaults_attrs;
+    }
+    
+    public function getRegisterMetas()
+    {
+        return array_merge($this->register_metas, $this->getRegisterQualifiersAttrs());
     }
     
     public function setConfig($config)

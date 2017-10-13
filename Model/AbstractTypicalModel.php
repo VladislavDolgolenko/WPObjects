@@ -13,7 +13,6 @@ namespace WPObjects\Model;
 abstract class AbstractTypicalModel extends AbstractModel implements
     ModelTypeInterface
 {
-    
     /**
      * @var \WPObjects\Model\AbstractModelType
      */
@@ -28,16 +27,6 @@ abstract class AbstractTypicalModel extends AbstractModel implements
     {
         parent::__construct($data);
         $this->ModelType = $ModelType;
-    }
-    
-    static public function getQualifierAttrName($object_type)
-    {
-        $last_char = substr($object_type, -1);
-        if ($last_char === 's') {
-            $object_type = substr($object_type, 0, -1);
-        }
-        
-        return '_' . $object_type . '_id';
     }
     
     abstract public function getMeta($key);
@@ -92,6 +81,9 @@ abstract class AbstractTypicalModel extends AbstractModel implements
         return $this->parent_relatives[$model_type_id];
     }
     
+    /**
+     * @return \WPObjects\Model\AbstractModelType
+     */
     public function getModelType()
     {
         if (!$this->ModelType) {

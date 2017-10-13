@@ -32,6 +32,9 @@ class AbstractDataModel extends AbstractData implements
     protected function initModel($post)
     {
         $class = $this->getModelType()->getModelClassName();
-        return new $class($post, $this->getModelType());
+        $Model = new $class($post, $this->getModelType());
+        return $this->getServiceManager()->inject($Model);
     }
+    
+    
 }

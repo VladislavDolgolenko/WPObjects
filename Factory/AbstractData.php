@@ -12,7 +12,7 @@ namespace WPObjects\Factory;
 
 use WPObjects\Data\Data;
 
-abstract class AbstractData extends AbstractFactory implements
+abstract class AbstractData extends AbstractModelFactory implements
     \WPObjects\Data\StorageInterface
 {
     protected $id_key = 'id';
