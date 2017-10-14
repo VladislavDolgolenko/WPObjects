@@ -20,4 +20,12 @@ class ModelTypeFactory extends FactoriesAggregator
             'qualifiers' => $ModelType->getId()
         ));
     }
+    
+    public function getAgregator(\WPObjects\Model\AbstractModelType $ModelType, $agregator_id)
+    {
+        return $this->query(array(
+            'id' => $agregator_id,
+            'qualifiers' => $ModelType->getId()
+        ));
+    }
 }

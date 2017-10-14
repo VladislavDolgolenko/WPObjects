@@ -20,19 +20,30 @@ abstract class AbstractModelFactory implements
      */
     protected $ServiceManager = null;
     
-    protected $context_models_types = array();
-    
     /**
-     * Register filters as types of classes by qualifier objects
-     * @var array
+     * Register special methods for reading global WordPress page context 
+     * as object of model type. Methods must return ids of current model type.
+     * @var array of callable functions
      */
-    protected $context_models_methods = array();
+    protected $context_methods_reading = array();
     
     /**
      * Query flag. How to create result object. If true, result must be instance of \WP_Query
      * @var boolean
      */
     protected $result_as_object = false;
+    
+    /**
+     * Query filters, using for build query 
+     * @var type 
+     */
+    protected $filters = array();
+    
+    /**
+     * Object ModelType of current factory objects
+     * @var \WPObjects\Model\AbstractModelType
+     */
+    protected $ModelType = null;
     
     /**
      * Last query results as initialized objects 
@@ -50,14 +61,15 @@ abstract class AbstractModelFactory implements
             return $this;
         }
         
+        // Own context if first rule
         if (\get_post_type($post->ID) === $this->getModelType()) {
             $this->filters['id'] = $post->ID;
             return $this;
         }
         
-        foreach ($this->getQualifiersFilters() as $type) {
-            if (get_post_type($post->ID) == $type) {
-                $this->setIdsFromContext($post, $type);
+        foreach ($this->getContextModelTypes() as $type_id) {
+            if (get_post_type($post->ID) == $type_id) {
+                $this->setIdsFromContext($post, $type_id);
                 return $this;
             }
         }
@@ -65,23 +77,106 @@ abstract class AbstractModelFactory implements
         return $this;
     }
     
-    protected function setIdsFromContext($post, $type)
+    protected function setContext($post, $type)
     {
         $attr = $this->getSpecializationAttrName($type);
-        if (!isset($this->context_models_methods[$type])) {
+        
+        if (!isset($this->context_methods_reading[$type]) && is_callable($this->context_methods_reading[$type])) {
             $this->filters[$attr] = $post->ID;
         } else {
-            $method = $this->context_models_methods[$type];
-            $ids = $this->$method($post);
-            $this->filters['post__in'] = $ids;
+            $method = $this->context_methods_reading[$type];
+            $method->bindTo($this);
+            $this->filters['post__in'] = $method($post);
         }
         
         return $this;
     }
     
-    public function getQualifiersFilters()
+    protected function getContextModelTypes()
+    {
+        return array_merge($this->getQualifiersIds(), $this->getAgregatorsIds());
+    }
+    
+    /**
+     * Build filters by aggregators of current model type.
+     */
+    protected function buildfilterByAgregators()
+    {
+        $filters = $this->filters;
+        $ModelType = $this->getModelType();
+        if (!$ModelType instanceof \WPObjects\Model\AbstractModelType) {
+            throw new \Exception('Undefined ModelType of current query objects');
+        }
+        
+        foreach ($filters as $model_type_id => $value) {
+            $AgregatorType = $this->getAgregatorType($model_type_id);
+            if (!$AgregatorType) {
+                continue;
+            }
+            
+            $Factory = $AgregatorType->getFactory();
+            if (!$Factory instanceof \WPObjects\Factory\AbstractModelFactory) {
+                throw new \Exception('Undefined factory of agregator type');
+            }
+            
+            $filter_ids = array();
+            $AgregatorsObjects = $Factory->get($value);
+            $qualifier_attr_name = $ModelType->getOwnQualifierAttrName();
+            foreach ($AgregatorsObjects as $AgregatorObject) {
+                $ids = $AgregatorObject->getMeta($qualifier_attr_name);
+                if (!is_array($ids)) {
+                    $ids = array($ids);
+                }
+                $filter_ids[] = $ids;
+            }
+            
+            // Это пизда post__in
+            $this->filters['id'] = array_filter($filter_ids);
+        }
+        
+        return $this;
+    }
+    
+    /**
+     * Return aggregators type by own qualifier attr
+     * @param string $id
+     * @return \WPObjects\Model\AbstractModelType
+     */
+    protected function getAgregatorType($agregator_id)
+    {
+        return $this->getModelType()->getAgregator($agregator_id);
+    }
+    
+    /**
+     * Return ids qualifiers types
+     * @return array
+     */
+    protected function getQualifiersIds()
     {
         return array();
+    }
+    
+    protected function getAgregatorsIds()
+    {
+        return array();
+    }
+
+    /**
+     * @return \WPObjects\Model\AbstractModelType
+     */
+    protected function getQualifiers()
+    {
+        return array();
+    }
+    
+    protected function getQualifiersAttrsNames()
+    {
+        $result = array();
+        foreach ($this->getQualifiers() as $QualifierModelType) {
+            $result[] = $QualifierModelType->getOwnQualifierAttrName();
+        }
+        
+        return $result;
     }
     
     public function getResultIds()
@@ -116,12 +211,22 @@ abstract class AbstractModelFactory implements
     }
     
     /**
-     * Return registered context models types
-     * @return array
+     * @return \WPObjects\Model\AbstractModelType
      */
-    protected function getContextTypes()
+    public function getModelType()
     {
-        return $this->context_models_types;
+        if (is_null($this->ModelType)) {
+            throw new \Exception('Undefiend model type!');
+        }
+        
+        return $this->ModelType;
+    }
+    
+    public function setModelType(\WPObjects\Model\AbstractModelType $ModelType)
+    {
+        $this->ModelType = $ModelType;
+        
+        return $this;
     }
     
     public function setServiceManager(\WPObjects\Service\Manager $ServiceManager)

@@ -43,6 +43,11 @@ abstract class AbstractModel extends \ArrayObject implements ModelInterface
         }
     }
     
+    public function getOwnQualifierAttrName()
+    {
+        return self::getQualifierAttrName($this->getId());
+    }
+    
     static public function getQualifierAttrName($object_type)
     {
         $last_char = substr($object_type, -1);

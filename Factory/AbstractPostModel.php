@@ -27,18 +27,6 @@ abstract class AbstractPostFactory extends AbstractModelFactory implements
     protected $meta_query = array();
     
     /**
-     * Query filters, using for build query 
-     * @var type 
-     */
-    protected $filters = array();
-    
-    /**
-     * Object ModelType of current factory objects
-     * @var \WPObjects\Model\AbstractModelType
-     */
-    protected $ModelType = null;
-    
-    /**
      * @param $id string || integer || array
      * @return \MSP\Model\AbstractModel || null
      */
@@ -91,8 +79,7 @@ abstract class AbstractPostFactory extends AbstractModelFactory implements
         $this->filters = $filters;
         $this->result_as_object = $result_as_object;
         
-        $this->readContext()
-             ->buildQuery()
+        $this->buildQuery()
              ->buildPagination()
              ->buildOrdering()
              ->buildMetaQuery()
@@ -171,7 +158,7 @@ abstract class AbstractPostFactory extends AbstractModelFactory implements
     
     protected function buildMetaQuery()
     {
-        foreach ($this->getQualifiersFilters() as $attr) {
+        foreach ($this->getQualifiersAttrsNames() as $attr) {
             if (!isset($this->filters[$attr]) || !$this->filters[$attr]) {
                 continue;
             }
@@ -232,22 +219,17 @@ abstract class AbstractPostFactory extends AbstractModelFactory implements
     }
     
     /**
-     * @return \WPObjects\Model\AbstractModelType
+     * Return ids qualifiers types
+     * @return array
      */
-    public function getModelType()
+    protected function getQualifiersIds()
     {
-        if (is_null($this->ModelType)) {
-            throw new \Exception('Undefiend model type!');
-        }
-        
-        return $this->ModelType;
+        return $this->getModelType()->getQualifiersIds();
     }
     
-    public function setModelType(\WPObjects\Model\AbstractModelType $ModelType)
+    protected function getAgregatorsIds()
     {
-        $this->ModelType = $ModelType;
-        
-        return $this;
+        return $this->getModelType()->getAgregatorsIds();
     }
     
     public function getQualifiersFilters()

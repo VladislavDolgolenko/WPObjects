@@ -36,12 +36,6 @@ abstract class AbstractData extends AbstractModelFactory implements
     protected $pull = null;
     
     /**
-     * Query filters
-     * @var array
-     */
-    protected $filters = null;
-    
-    /**
      * Last query results as source data arrays
      * @var array
      */
@@ -218,5 +212,19 @@ abstract class AbstractData extends AbstractModelFactory implements
     public function getData()
     {
         return $this->Data;
+    }
+    
+    /**
+     * Return ids qualifiers types
+     * @return array
+     */
+    protected function getQualifiersIds()
+    {
+        return $this->getModelType()->getQualifiersIds();
+    }
+    
+    protected function getAgregatorsIds()
+    {
+        return $this->getModelType()->getAgregatorsIds();
     }
 }

@@ -18,6 +18,12 @@ abstract class AbstractModelType extends AbstractModel
     protected $ModelTypeFactory = null;
     
     /**
+     * Factory of current model type
+     * @var \WPObjects\Factory\AbstractModelFactory
+     */
+    protected $Factory = null;
+    
+    /**
      * Qualifiers for object classes, 
      * there as qualifier meta attribute of current class object.
      * Qualifiers - is UML2 type of association (current object to other object)
@@ -41,14 +47,37 @@ abstract class AbstractModelType extends AbstractModel
         return $result;
     }
     
-    public function getQualifiers()
+    public function getQualifiersIds()
     {
         return $this->qualifiers;
     }
     
-    public function getAgregators()
+    public function getQualifiers()
+    {
+        return $this->getModelTypeFactory()->get($this->getQualifiersIds());
+    }
+    
+    public function getAgregatorsIds()
     {
         return $this->getModelTypeFactory()->getAgregators($this)->getResultIds();
+    }
+    
+    public function getAgregator($agregator_id)
+    {
+        $Result = $this->getModelTypeFactory()->getAgregator($this, $agregator_id)->getResult();
+        return current($Result);
+    }
+    
+    public function getFactory()
+    {
+        return $this->Factory;
+    }
+    
+    public function setFactory(\WPObjects\Factory\AbstractModelFactory $Factory)
+    {
+        $this->Factory = $Factory;
+        
+        return $this;
     }
     
     public function getModelTypeFactory()
