@@ -179,7 +179,7 @@ class PostType extends AbstractModelType implements
     
     public function getRegisterMetas()
     {
-        return array_merge($this->register_metas, $this->getRegisterQualifiersAttrs());
+        return array_merge($this->register_metas, $this->getQualifiersAttrsNames());
     }
     
     public function setConfig($config)

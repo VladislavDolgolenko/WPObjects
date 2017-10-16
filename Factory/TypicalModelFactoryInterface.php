@@ -14,5 +14,5 @@ use WPObjects\Model\ModelTypeInterface;
 
 interface TypicalModelFactoryInterface extends ModelTypeInterface
 {
-    public function getQualifiersFilters();
+    // Nothing
 }

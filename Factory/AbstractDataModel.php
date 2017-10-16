@@ -13,8 +13,15 @@ namespace WPObjects\Factory;
 class AbstractDataModel extends AbstractData implements
     \WPObjects\Model\ModelTypeInterface
 {
+    /**
+     * Object ModelType of current factory objects
+     * @var \WPObjects\Model\AbstractModelType
+     */
     protected $ModelType = null;
     
+    /**
+    * @return \WPObjects\Model\AbstractModelType
+    */
     public function getModelType()
     {
         if (is_null($this->ModelType)) {
@@ -27,13 +34,13 @@ class AbstractDataModel extends AbstractData implements
     public function setModelType(\WPObjects\Model\AbstractModelType $ModelType)
     {
         $this->ModelType = $ModelType;
+        
+        return $this;
     }
     
     protected function initModel($post)
     {
-        $class = $this->getModelType()->getModelClassName();
-        $Model = new $class($post, $this->getModelType());
-        return $this->getServiceManager()->inject($Model);
+        return $this->getModelType()->initModel($post);
     }
     
     

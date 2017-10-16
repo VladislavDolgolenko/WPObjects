@@ -14,6 +14,12 @@ abstract class AbstractPostFactory extends AbstractModelFactory implements
     \WPObjects\Factory\TypicalModelFactoryInterface
 {
     /**
+     * Object ModelType of current factory objects
+     * @var \WPObjects\Model\AbstractModelType
+     */
+    protected $ModelType = null;
+    
+    /**
      * Main query array for \WP_Query object
      * @var array
      */
@@ -75,8 +81,7 @@ abstract class AbstractPostFactory extends AbstractModelFactory implements
      */
     public function query($filters = array(), $result_as_object = false)
     {
-        $this->result = null;
-        $this->filters = $filters;
+        $this->setFilters($filters);
         $this->result_as_object = $result_as_object;
         
         $this->buildQuery()
@@ -158,7 +163,7 @@ abstract class AbstractPostFactory extends AbstractModelFactory implements
     
     protected function buildMetaQuery()
     {
-        foreach ($this->getQualifiersAttrsNames() as $attr) {
+        foreach ($this->getModelType()->getQualifiersAttrsNames() as $attr) {
             if (!isset($this->filters[$attr]) || !$this->filters[$attr]) {
                 continue;
             }
@@ -213,27 +218,26 @@ abstract class AbstractPostFactory extends AbstractModelFactory implements
     
     protected function initModel($post)
     {
-        $class = $this->getModelType()->getModelClassName();
-        $Model = new $class($post, $this->getModelType());
-        return $this->getServiceManager()->inject($Model);
+        return $this->getModelType()->initModel($post);
     }
     
     /**
-     * Return ids qualifiers types
-     * @return array
-     */
-    protected function getQualifiersIds()
+    * @return \WPObjects\Model\AbstractModelType
+    */
+    public function getModelType()
     {
-        return $this->getModelType()->getQualifiersIds();
+        if (is_null($this->ModelType)) {
+            throw new \Exception('Undefiend model type!');
+        }
+        
+        return $this->ModelType;
     }
     
-    protected function getAgregatorsIds()
+    public function setModelType(\WPObjects\Model\AbstractModelType $ModelType)
     {
-        return $this->getModelType()->getAgregatorsIds();
+        $this->ModelType = $ModelType;
+        
+        return $this;
     }
     
-    public function getQualifiersFilters()
-    {
-        return $this->getModelType()->getRegisterQualifiersAttrs();
-    }
 }

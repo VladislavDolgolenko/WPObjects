@@ -10,6 +10,10 @@
 
 namespace WPObjects\EventManager;
 
+/**
+ * Default listener aggregator interface
+ * Using for attach listeners to WordPress actions
+ */
 interface ListenerInterface
 {
     public function attach();

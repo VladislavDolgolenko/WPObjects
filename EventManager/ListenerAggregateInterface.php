@@ -8,16 +8,11 @@
  * @support      support@torbara.com
  */
 
-namespace WPObjects\Data;
+namespace WPObjects\EventManager;
 
-use WPObjects\Factory\AbstractData;
-use WPObjects\Data\DataType as DataTypeModel;
-
-class DataTypeFactory extends AbstractData
+interface ListenerAggregateInterface extends ListenerInterface
 {
-    public function initModel($post)
-    {
-        $Model = new DataTypeModel($post);
-        return $this->getServiceManager()->inject($Model);
-    }
+    public function attach(\WPObjects\EventManager\Manager $EventManager);
+    
+    public function detach(\WPObjects\EventManager\Manager $EventManager);
 }

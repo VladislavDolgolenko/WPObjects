@@ -10,51 +10,88 @@
 
 namespace WPObjects\Factory\FilterHandler;
 
-class WordPressContext
+class WordPressContext implements
+    \WPObjects\EventManager\ListenerAggregateInterface
 {
-    protected $Factory =  null;
+    /**
+     * @var \WPObjects\Factory\AbstractModelFactory
+     */
+    protected $Factory = null;
+    
+    /**
+     * @var array
+     */
+    protected $filters = null;
     
     protected function attach(\WPObjects\EventManager\Manager $EventManager)
     {
-        $EventManager->addListener('prepare_filters', array($this, $this->readContext));
+        $EventManager->attach('prepare_filters', array($this, 'handler'));
     }
     
-    public function readContext(Factory $Factory)
+    protected function detach(\WPObjects\EventManager\Manager $EventManager)
     {
-        global $post;
-        
+        $EventManager->detach('prepare_filters', array($this, 'handler'));
+    }
+    
+    public function handler(\WPObjects\Factory\AbstractModelFactory $Factory)
+    {
         $this->Factory = $Factory;
-        $query = $Factory->getFilters();
+        $this->filters = $Factory->getFilters();
         
         if (!isset($this->filters['page_context'])) {
             return;
         }
         
-        // Own context if first rule
-        if (\get_post_type($post->ID) === $this->getModelType()) {
-            $query['id'] = $post->ID;
+        $ContextModel = $this->getContextTypicalModel();
+        
+        // If own context
+        if ($ContextModel->getModelType()->getId() === $this->getFactory()->getModelType()->getId()) {
+            $this->filters[$this->getFactory()->getIdAttrName()] = $ContextModel->getId();
+        } else {
+            $this->setUpContextToFilters($ContextModel);
         }
         
-        foreach ($this->getContextModelTypes() as $type_id) {
-            if (get_post_type($post->ID) == $type_id) {
-                $this->setUpQueryContext($query, $post, $type_id);
-            }
+        $this->getFactory()->updateFilters($this->filters);
+    }
+    
+    /**
+     * @global \WP_Post $post
+     * @return \WPObjects\Model\AbstractTypicalModel
+     */
+    protected function getContextTypicalModel()
+    {
+        global $post;
+        $ModelType = $this->getModelType()->getContextModelType($post);
+        return $ModelType->initModel($post);
+    }
+    
+    protected function setUpContextToFilters(\WPObjects\Model\AbstractTypicalModel $ContextModel)
+    {
+        $attr = $this->getModelType()->getQualifierAttrName($ContextModel->getModelType()->getId());
+        $callable_methods = $this->getModelType()->getContextMethodReading($ContextModel->getModelType()->getId());
+        
+        if (!is_callable($callable_methods)) {
+            $this->filters[$attr] = $ContextModel->getId();
+        } else {
+            $result = call_user_func($callable_methods, $ContextModel);
+            $this->filters[$this->getFactory()->getIdAttrName()] = $result;
         }
     }
     
-    protected function setUpQueryContext($post, $type)
+    /**
+     * @return \WPObjects\Factory\AbstractModelFactory
+     */
+    protected function getFactory()
     {
-        $attr = $this->getSpecializationAttrName($type);
-        $query = $this->Factory->getFilters();
-        
-        if (!isset($this->context_methods_reading[$type]) && is_callable($this->context_methods_reading[$type])) {
-            $query[$attr] = $post->ID;
-        } else {
-            $method = $this->context_methods_reading[$type];
-            $method->bindTo($this);
-            $query['post__in'] = $method($post);
-        }
-        
-        $this->Factory->setFilters($query);
+        return $this->Factory;
     }
+    
+    /**
+     * @return \WPObjects\Model\AbstractModelType
+     */
+    protected function getModelType()
+    {
+        return $this->getFactory()->getModelType();
+    }
+    
 }

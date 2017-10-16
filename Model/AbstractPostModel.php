@@ -145,5 +145,28 @@ abstract class AbstractPostModel extends AbstractTypicalModel
         return $this;
     }
     
+    /**
+     * Get associated model identities
+     * @param string $model_type_id
+     */
+    public function getQualifierId($model_type_id)
+    {
+        $attr_name = $this->getModelType()->getQualifierAttrName($model_type_id);
+        return $this->getMeta($attr_name);
+    }
+    
+    /**
+     * Set association with other typical model instance 
+     * @param string $model_type_id
+     * @param int $model_id
+     * @return $this
+     */
+    public function setQualifierId($model_type_id, $model_id)
+    {
+        $attr_name = $this->getModelType()->getQualifierAttrName($model_type_id);
+        $this->setMeta($attr_name, $model_id);
+        
+        return $this;
+    }
     
 }

@@ -18,6 +18,6 @@ class PostTypeFactory extends AbstractData
     public function initModel($post)
     {
         $Model = new PostTypeModel($post);
-        return $Model;
+        return $this->getServiceManager()->inject($Model);
     }
 }

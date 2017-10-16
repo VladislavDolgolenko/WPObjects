@@ -10,20 +10,28 @@
 
 namespace WPObjects\Factory\FilterHandler;
 
-class Agregators
+class Agregators implements
+    \WPObjects\EventManager\ListenerAggregateInterface
 {
+    
     protected function attach(\WPObjects\EventManager\Manager $EventManager)
     {
-        $EventManager->addListener('prepare_filters', array($this, $this->setUpQueryByAgregators));
+        $EventManager->attach('prepare_filters', array($this, 'handler'));
     }
     
-    protected function setUpQueryByAgregators($Factory)
+    protected function detach(\WPObjects\EventManager\Manager $EventManager)
+    {
+        $EventManager->detach('prepare_filters', array($this, 'handler'));
+    }
+    
+    protected function handler(\WPObjects\Factory\AbstractModelFactory $Factory)
     {
         $ModelType = $Factory->getModelType();
         $filters = $Factory->getFilters();
         
+        // Filter name as model type id
         foreach ($filters as $model_type_id => $value) {
-            $AgregatorType = $this->getAgregatorType($model_type_id);
+            $AgregatorType = $ModelType->getAgregator($model_type_id);
             if (!$AgregatorType) {
                 continue;
             }
@@ -35,9 +43,8 @@ class Agregators
             
             $filter_ids = array();
             $AgregatorsObjects = $Factory->get($value);
-            $qualifier_attr_name = $ModelType->getOwnQualifierAttrName();
             foreach ($AgregatorsObjects as $AgregatorObject) {
-                $ids = $AgregatorObject->getMeta($qualifier_attr_name);
+                $ids = $AgregatorObject->getQualifierId($ModelType->getId());
                 if (!is_array($ids)) {
                     $ids = array($ids);
                 }
@@ -45,9 +52,10 @@ class Agregators
             }
             
             // Это пизда post__in
-            $filters['id'] = array_filter($filter_ids);
+            $filters[$Factory->getIdAttrName()] = array_filter($filter_ids);
         }
         
-        $Factory->setFilters($filters);
+        $Factory->updateFilters($filters);
     }
+    
 }

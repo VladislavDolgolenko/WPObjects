@@ -25,62 +25,53 @@ abstract class AbstractTypicalModel extends AbstractModel implements
     
     public function __construct($data, \WPObjects\Model\AbstractModelType $ModelType)
     {
-        parent::__construct($data);
         $this->ModelType = $ModelType;
+        parent::__construct($data);
     }
-    
-    abstract public function getMeta($key);
     
     abstract public function save();
     
-    abstract public function setMeta($key, $value);
+    abstract public function getQualifierId($model_type_id);
     
-    /**
-     * @param AbstractFactory $Factory
-     * @return \WPObjects\Model\AbstractModel || array
-     */
-    protected function getRelative(\WPObjects\Factory\AbstractFactory $Factory, $filters = array(), $single = true)
+    abstract public function setQualifierId($model_type_id, $model_id);
+    
+    public function getRelative(\WPObjects\Model\AbstractModelType $RelativeModelType, $filters = array(), $single = true)
     {
-        $model_type_id = $Factory->getModelType();
+        $model_type_id = $RelativeModelType->getId();
         if (isset($this->relatives[$model_type_id])) {
             return $this->relatives[$model_type_id];
         }
         
-        $relative_model_id = $this->getRelativeId($Factory);
-        if (!$relative_model_id) {
-            return null;
+        $qualifiers = $this->getModelType()->getQualifiersIds();
+        $agregators = $this->getModelType()->getAgregatorsIds();
+        
+        if (in_array($RelativeModelType->getId(), $qualifiers)) {
+            
+            $relative_ids = $this->getQualifierId($RelativeModelType->getId());
+            $Result = $RelativeModelType->getFactory()->query(array(
+                $RelativeModelType->getFactory()->getIdAttrName() => $relative_ids
+            ), $filters)->getResult();
+            
+        } else if (in_array($RelativeModelType->getId(), $agregators)) {
+            
+            $qualifier_attr_name = $RelativeModelType->getQualifierAttrName($this->getModelType()->getId());
+            $RelativeModelType->getFactory()->query(array(
+                $qualifier_attr_name => $this->getId()
+            ), $filters)->getResult();
+            
+        } else {
+            throw new \Exception('Undefined relative model type');
         }
         
-        $Model = $Factory->get($relative_model_id, $filters, $single);
-        $this->relatives[$model_type_id] = $Model;
-        return $Model;
-    }
-    
-    protected function getRelativeId(\WPObjects\Factory\AbstractFactory $Factory)
-    {
-        $model_type_id = $Factory->getModelType();
-        $attr = AbstractFactory::getSpecializationAttrName($model_type_id);
-        $relative_model_id = $this->getMeta($attr);
-        
-        return $relative_model_id ? $relative_model_id : null;
-    }
-    
-    protected function getInRelative(\WPObjects\Factory\AbstractFactory $Factory, $filters = array())
-    {
-        $model_type_id = $Factory->getModelType();
-        if (isset($this->parent_relatives[$model_type_id])) {
-            return $this->parent_relatives[$model_type_id];
+        if ($single === false) {
+            $this->relatives[$model_type_id] = $Result;
+        } else {
+            $this->relatives[$model_type_id] = current($Result);
         }
         
-        $attr = AbstractFactory::getSpecializationAttrName($this->getModelType());
-        $Factory->query(array_merge(array(
-            $attr => $this->getId()
-        )), $filters);
-        
-        $this->parent_relatives[$model_type_id] = $Factory->getResult();
-        return $this->parent_relatives[$model_type_id];
+        return $this->relatives[$model_type_id];
     }
-    
+        
     /**
      * @return \WPObjects\Model\AbstractModelType
      */
@@ -92,4 +83,5 @@ abstract class AbstractTypicalModel extends AbstractModel implements
         
         return $this->ModelType;
     }
+    
 }

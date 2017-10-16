@@ -10,25 +10,34 @@
 
 namespace WPObjects\Model;
 
-abstract class AbstractDataModel extends AbstractModel
+abstract class AbstractDataModel extends AbstractTypicalModel
 {
     /**
-     * @param array $data
+     * Get associated model identities
+     * @param string $model_type_id
      */
-    public function __construct($data)
+    public function getQualifierId($model_type_id)
     {
-        parent::__construct($data);
-        $this->exchangeArray($data);
+        $attr_name = $this->getModelType()->getQualifierAttrName($model_type_id);
+        if (isset($this->$attr_name)) {
+            return $this->$attr_name;
+        }
+        
+        return null;
     }
     
-    public function getMeta($key)
+    /**
+     * Set association with other typical model instance 
+     * @param string $model_type_id
+     * @param int $model_id
+     * @return $this
+     */
+    public function setQualifierId($model_type_id, $model_id)
     {
-        return $this->$key;
-    }
-    
-    public function setMeta($key, $value)
-    {
-        return $this->$key = $value;
+        $attr_name = $this->getModelType()->getQualifierAttrName($model_type_id);
+        $this->$attr_name = $model_id;
+        
+        return $this;
     }
     
     public function save()

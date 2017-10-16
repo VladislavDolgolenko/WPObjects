@@ -19,18 +19,11 @@ class Manager
         $listeners = isset($this->listeners[$event]) ? $this->listeners[$event] : array();
         
         foreach ($listeners as $listener) {
-            if (is_array($listener) && is_callable($listener[1]) && is_object($listener[0])) {
-                $context = $listener[0];
-                $method = $listener[1];
-            } else if (is_callable($listener)) {
-                $method = $listener;
-                $context = $this;
-            } else {
-                throw new \Exception('Undefined listener type');
+            if (!is_callable($listener)) {
+                throw new \Exception('Listener not callable!');
             }
             
-            $method->bindTo($context);
-            $result = $method($this);
+            $result = call_user_func($listener, $this);
             if ($result === false) {
                 break;
             }
@@ -39,7 +32,35 @@ class Manager
         return $this;
     }
     
-    public function addListener($event, $cellable)
+    public function attachListenersAggregator(\WPObjects\EventManager\ListenerAggregateInterface $Listener)
+    {
+        $Listener->attach($this);
+        
+        return $this;
+    }
+    
+    public function detachListenersAggregator(\WPObjects\EventManager\ListenerAggregateInterface $Listener)
+    {
+        $Listener->detach($this);
+        
+        return $this;
+    }
+    
+    public function detach($event, $cellable)
+    {
+        $listeners = $this->getEventListeners($event);
+        foreach ($listeners as $key =>  $listener) {
+            if ($cellable === $listener) {
+                unset($listeners[$key]);
+            }
+        }
+        
+        $this->setEventListeners($event, $listeners);
+        
+        return $this;
+    }
+    
+    public function attach($event, $cellable)
     {
         if (!is_array($this->listeners)) {
             $this->listeners = array();
@@ -50,6 +71,31 @@ class Manager
         }
         
         $this->listeners[$event][] = $cellable;
+        
+        return $this;
+    }
+    
+    public function cleanListeners($event)
+    {
+        if (isset($this->listeners[$event])) {
+            unset($this->listeners[$event]);
+        }
+        
+        return $this;
+    }
+    
+    /**
+     * @param string $event
+     * @return callable
+     */
+    protected function getEventListeners($event)
+    {
+        return isset($this->listeners[$event]) ? $this->listeners[$event] : array();
+    }
+    
+    protected function setEventListeners($event, $listeners)
+    {
+        $this->listeners[$event] = $listeners;
         
         return $this;
     }

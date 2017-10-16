@@ -15,8 +15,6 @@ use WPObjects\Data\Data;
 abstract class AbstractData extends AbstractModelFactory implements
     \WPObjects\Data\StorageInterface
 {
-    protected $id_key = 'id';
-    
     /**
      * Data access object
      * @var \WPObjects\Data\Data
@@ -92,9 +90,10 @@ abstract class AbstractData extends AbstractModelFactory implements
     
     public function query($filters = array(), $result_as_object = false)
     {
-        $this->filters = array_merge($this->getDefaultFilters(), $filters);
+        $filters = array_merge($this->getDefaultFilters(), $filters);
+        $this->setFilters($filters);
         $this->result_as_object = $result_as_object;
-        $this->result = null;
+        $this->setResult(null);
         $this->result_data = array();
         
         $this->filter()
@@ -214,17 +213,4 @@ abstract class AbstractData extends AbstractModelFactory implements
         return $this->Data;
     }
     
-    /**
-     * Return ids qualifiers types
-     * @return array
-     */
-    protected function getQualifiersIds()
-    {
-        return $this->getModelType()->getQualifiersIds();
-    }
-    
-    protected function getAgregatorsIds()
-    {
-        return $this->getModelType()->getAgregatorsIds();
-    }
 }
