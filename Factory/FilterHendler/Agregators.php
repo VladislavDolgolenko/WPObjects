@@ -8,23 +8,23 @@
  * @support      support@torbara.com
  */
 
-namespace WPObjects\Factory\FilterHandler;
+namespace WPObjects\Factory\FilterHendler;
 
 class Agregators implements
     \WPObjects\EventManager\ListenerAggregateInterface
 {
     
-    protected function attach(\WPObjects\EventManager\Manager $EventManager)
+    public function attach(\WPObjects\EventManager\Manager $EventManager)
     {
         $EventManager->attach('prepare_filters', array($this, 'handler'));
     }
     
-    protected function detach(\WPObjects\EventManager\Manager $EventManager)
+    public function detach(\WPObjects\EventManager\Manager $EventManager)
     {
         $EventManager->detach('prepare_filters', array($this, 'handler'));
     }
     
-    protected function handler(\WPObjects\Factory\AbstractModelFactory $Factory)
+    public function handler(\WPObjects\Factory\AbstractModelFactory $Factory)
     {
         $ModelType = $Factory->getModelType();
         $filters = $Factory->getFilters();

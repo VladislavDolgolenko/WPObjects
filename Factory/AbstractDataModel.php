@@ -38,10 +38,27 @@ class AbstractDataModel extends AbstractData implements
         return $this;
     }
     
+    public function getStorage()
+    {
+        $Storage = parent::getStorage();
+        if ($Storage) {
+            return $Storage;
+        }
+        
+        if (!$this->getModelType() instanceof \WPObjects\Data\DataType) {
+            throw new \Exception('Model type in data model fatory must be instance of \WPObjects\Data\DataType');
+        }
+        
+        return $this->getModelType()->getStorage();
+    }
+    
     protected function initModel($post)
     {
         return $this->getModelType()->initModel($post);
     }
     
-    
+    public function getIdAttrName()
+    {
+        return $this->getModelType()->getIdAttrName();
+    }
 }

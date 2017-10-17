@@ -24,35 +24,88 @@ abstract class AbstractModelFactory extends EventManager implements
     
     /**
      * Query flag. How to create result object. If true, result must be instance of \WP_Query
+     * 
      * @var boolean
      */
     protected $result_as_object = false;
     
     /**
      * Query filters, using for build query 
+     * 
      * @var type 
      */
     protected $filters = array();
     
     /**
      * Last query results as initialized objects 
+     * 
      * @var array
      */
     protected $result = null;
     
     /**
      * Identity attribute name
+     * 
      * @var string
      */
     protected $id_key = 'id';
     
-    abstract public function initModel($post);
+    /**
+     * Cached query results
+     * 
+     * @var array
+     */
+    protected $cache = array();
     
+    /**
+     * Initialize model type
+     * 
+     * @param array|\WP_Post $post once result query data for initialize model
+     * @return \WPObjects\Model\AbstractModel
+     */
+    abstract protected function initModel($post);
+    
+    /**
+     * Query processing
+     */
+    abstract protected function doQuery($filters = array(), $result_as_object = false);
+    
+    /**
+     * Cache query control
+     * 
+     * @param array $filters
+     * @param boolean $result_as_object
+     * @return $this
+     */
+    public function query($filters = array(), $result_as_object = false)
+    {
+        $cache_id = hash('md5', serialize($filters) . serialize($result_as_object)); 
+        if (isset($this->cache[$cache_id])) {
+            $this->setResult($this->cache[$cache_id]);
+            //\WPObjects\Log\Loger::getInstance()->write("Factory " . get_class($this) . " : query restore from cache with id $cache_id");
+        } else {
+            $this->doQuery($filters, $result_as_object);
+            $this->cache[$cache_id] = $this->getResult();
+        }
+        
+        return $this;
+    }
+    
+    /**
+     * Return identities attribute name of current factory model type 
+     * 
+     * @return string
+     */
     public function getIdAttrName()
     {
         return $this->id_key;
     }
     
+    /**
+     * Return identities of objects from last result
+     * 
+     * @return array
+     */
     public function getResultIds()
     {
         $result_ids = array();
@@ -65,6 +118,7 @@ abstract class AbstractModelFactory extends EventManager implements
     
     /**
      * Return last query result
+     * 
      * @return array
      */
     public function getResult()
@@ -74,6 +128,7 @@ abstract class AbstractModelFactory extends EventManager implements
     
     /**
      * Insert last query result
+     * 
      * @param array $result
      * @return $this
      */
@@ -84,11 +139,22 @@ abstract class AbstractModelFactory extends EventManager implements
         return $this;
     }
     
+    /**
+     * Return query filters
+     * 
+     * @return array
+     */
     public function getFilters()
     {
         return $this->filters;
     }
     
+    /**
+     * Merge current with new filters
+     * 
+     * @param array $array new filters
+     * @return $this
+     */
     public function updateFilters($array)
     {
         $this->filters = array_merge($this->filters, $array);
@@ -96,6 +162,13 @@ abstract class AbstractModelFactory extends EventManager implements
         return $this;
     }
     
+    /**
+     * Set current query filters.
+     * 
+     * @param array $array
+     * @param bollean $silent if true initialize event 'set_query_filters'
+     * @return $this
+     */
     protected function setFilters($array, $silent = false)
     {
         $this->filters = $array;
@@ -109,6 +182,7 @@ abstract class AbstractModelFactory extends EventManager implements
     
     /**
      * Create value as array if string delimiter is ','
+     * 
      * @param string $string
      * @return array()
      */

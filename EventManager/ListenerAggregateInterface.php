@@ -10,7 +10,7 @@
 
 namespace WPObjects\EventManager;
 
-interface ListenerAggregateInterface extends ListenerInterface
+interface ListenerAggregateInterface
 {
     public function attach(\WPObjects\EventManager\Manager $EventManager);
     

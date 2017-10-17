@@ -62,9 +62,10 @@ class Manager
         }
         
         if (!isset($this->config[$name])) {
-            throw new \Exception('Service not found');
+            throw new \Exception('Service not found:' . $name );
         }
         
+        $Object = null;
         $service_factory = $this->config[$name];
         if (is_callable($service_factory)) {
             $Object = $service_factory($this);
@@ -81,6 +82,7 @@ class Manager
     public function set($name, $value)
     {
         $this->initialized[$name] = $value;
+        \WPObjects\Log\Loger::getInstance()->write("Service: $name instance of ". get_class($value));
         $this->inject($value);
         
         return $this;
@@ -102,7 +104,7 @@ class Manager
             $Object = $DI->inject($Object);
         }
         
-        return $this;
+        return $Object;
     }
     
     public function addFactory($name, $cellable)

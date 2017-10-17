@@ -14,12 +14,15 @@ abstract class AbstractModelType extends AbstractModel implements
     \WPObjects\Service\ManagerInterface
 {
     /**
+     * Factory of current model type
+     * 
      * @var \WPObjects\Model\ModelTypeFactory
      */
     protected $ModelTypeFactory = null;
     
     /**
      * Factory of current model type
+     * 
      * @var \WPObjects\Factory\AbstractModelFactory
      */
     protected $Factory = null;
@@ -27,7 +30,9 @@ abstract class AbstractModelType extends AbstractModel implements
     /**
      * Qualifiers for object classes, 
      * there as qualifier meta attribute of current class object.
+     * 
      * Qualifiers - is UML2 type of association (current object to other object)
+     * 
      * @var array
      */
     protected $qualifiers = array();
@@ -35,19 +40,60 @@ abstract class AbstractModelType extends AbstractModel implements
     /**
      * Register special methods for reading global WordPress page context 
      * as object of model type. Methods must return ids of current model type.
+     * 
      * @var array of callable functions
      */
     protected $context_methods_reading = array();
+    
+    /**
+     * Cache of initialized models
+     * 
+     * @var \WPObjects\Model\AbstractTypicalModel in array
+     */
+    protected $initialized = array();
+    
+    /**
+     * identification attribute of the current model type
+     * 
+     * @var string
+     */
+    protected $id_attr_name = 'id';
+    
+    /**
+     *
+     * @var boolean
+     */
+    protected $unique = true;
     
     abstract public function getModelClassName();
     
     /**
      * Initialize Model of current model type.
      * Use in factor method initModel
+     * 
      * @param type $data
      * @return type
      */
     public function initModel($data)
+    {
+        $attr_name = $this->getIdAttrName();
+        if (is_object($data) && isset($data->$attr_name)) {
+            $id = $data->$attr_name;
+        } else if (is_array($data) && isset($data[$attr_name])) {
+            $id = $data[$attr_name];
+        } else {
+            throw new \Exception("Model initialization without identifier.");
+        }
+        
+        if (isset($this->initialized[$id]) && $this->unique) {
+            return $this->initialized[$id];
+        }
+        
+        $this->initialized[$id] = $this->createModel($data);
+        return $this->initialized[$id];
+    }
+    
+    public function createModel($data)
     {
         $class = $this->getModelClassName();
         $Model = new $class($data, $this);
@@ -56,6 +102,7 @@ abstract class AbstractModelType extends AbstractModel implements
     
     /**
      * Return special methods for reading global WordPress page context.
+     * 
      * @param string $model_type_id
      * @return callable|null
      */
@@ -70,6 +117,7 @@ abstract class AbstractModelType extends AbstractModel implements
     
     /**
      * Return model type object of context of this context compatible
+     * 
      * @param \WP_Post $post
      * @return \WPObjects\Model\AbstractModelType
      */
@@ -85,6 +133,7 @@ abstract class AbstractModelType extends AbstractModel implements
     
     /**
      * Return all model types identities which can be context for current model type
+     * 
      * @return array of identifiers
      */
     public function getContextModelTypes()
@@ -129,7 +178,7 @@ abstract class AbstractModelType extends AbstractModel implements
      */
     protected function getQualifiers()
     {
-        return $this->getModelTypeFactory()->get($this->getQualifiersIds());
+        return $this->getModelTypeFactory()->get($this->getQualifiersIds(), array(), false);
     }
     
     /**
@@ -192,5 +241,10 @@ abstract class AbstractModelType extends AbstractModel implements
         }
         
         return $this->ServiceManager;
+    }
+    
+    public function getIdAttrName()
+    {
+        return $this->id_attr_name;
     }
 }

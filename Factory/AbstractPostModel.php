@@ -10,7 +10,7 @@
 
 namespace WPObjects\Factory;
 
-abstract class AbstractPostFactory extends AbstractModelFactory implements
+abstract class AbstractPostModel extends AbstractModelFactory implements
     \WPObjects\Factory\TypicalModelFactoryInterface
 {
     /**
@@ -79,7 +79,7 @@ abstract class AbstractPostFactory extends AbstractModelFactory implements
      * If true, result must be instance of \WP_Query
      * @return \MSP\Model\AbstractModel
      */
-    public function query($filters = array(), $result_as_object = false)
+    public function doQuery($filters = array(), $result_as_object = false)
     {
         $this->setFilters($filters);
         $this->result_as_object = $result_as_object;

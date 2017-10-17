@@ -17,30 +17,23 @@ class Data {
     private $active_datas = array();
     private $active_datas_objects = array();
     private $data_disables = array();
-    private $data_types = null;
-    private $querys_count = 0;
-    private static $_instance = null;
+    private static $_instances = array();
     
     protected $wp_option_prefix = null;
     protected $datas_config_file_patch = null;
     protected $datas_path = null;
 
-    public function __construct()
-    {
-        
-    }
-    
     /**
      * @return \MSP\Data\Data
      */
     static public function getInstance()
     {
         $class = get_called_class();
-        if (is_null(self::$_instance)) {
-            self::$_instance = new $class();
+        if (!isset(self::$_instances[$class])) {
+            self::$_instances[$class] = new $class();
         }
         
-        return self::$_instance;
+        return self::$_instances[$class];
     }
     
     public function resetCache()
@@ -91,7 +84,7 @@ class Data {
             $result_datas = array();
             foreach ($datas as $data) {
 
-                if ( $this->isActiveData($Storage->getId(), $data[$key]) === true ) {
+                if ( $this->isActiveData($Storage, $data[$key]) === true ) {
                     $result_datas[] = $data;
                 }
 
@@ -100,16 +93,15 @@ class Data {
             return $result_datas;
         }
         
-    public function isActiveData($datas_type_id, $data_id)
+    public function isActiveData(\WPObjects\Data\Storage $Storage, $data_id)
     {
-        $activity = $this->getDataDisables($datas_type_id);
-        $data_type = $this->getDataTypeById($datas_type_id);
+        $activity = $this->getDataDisables($Storage->getId());
 
-        if (!isset($data_type->activity) && !in_array($data_id, $activity)) {
+        if (!isset($Storage->activity) && !in_array($data_id, $activity)) {
             return true;
 
         // If invert type
-        } elseif (isset($data_type->activity) && in_array($data_id, $activity)) {
+        } elseif (isset($Storage->activity) && in_array($data_id, $activity)) {
             return true;
         }
 
@@ -145,7 +137,14 @@ class Data {
     
         protected function extractDatas(\WPObjects\Data\Storage $Storage)
         {
-            $build_in = (include $Storage->getFilePath());
+            if ($Storage->getFilePath() && file_exists($Storage->getFilePath())) {
+                $build_in = (include $Storage->getFilePath());
+                \WPObjects\Log\Loger::getInstance()->write("Storage: " . $Storage->getFilePath() );
+            } else {
+                \WPObjects\Log\Loger::getInstance()->write("ERROR Storage file not exists: " . $Storage->getFilePath() );
+                $build_in = array();
+            }
+            
             foreach ($build_in as $key => $data) {
                 $build_in[$key]['build_in'] = true;
             }
@@ -175,38 +174,6 @@ class Data {
             }
 
             return $disable_datas_keys;
-        }
-        
-    public function getDataTypeById($id)
-    {
-        foreach ($this->getDataTypes() as $DataType) {
-            if ($DataType->id === $id) {
-                return $DataType;
-            }
-        }
-        
-        return null;
-    }
-        
-    public function getDataTypes()
-    {
-        if (is_null($this->data_types)) {
-            $this->data_types = $this->extractDataTypes();
-        }
-        
-        return $this->data_types;
-    }
-    
-        private function extractDataTypes()
-        {
-            $datas = (include $this->datas_config_file_patch);
-
-            $result = array();
-            foreach ($datas as $data) {
-                $result[] = new \ArrayObject($data, \ArrayObject::ARRAY_AS_PROPS);
-            }
-
-            return $result;
         }
         
     static public function getDataIdentetyKey($data)

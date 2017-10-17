@@ -8,7 +8,7 @@
  * @support      support@torbara.com
  */
 
-namespace WPObjects\Factory\FilterHandler;
+namespace WPObjects\Factory\FilterHendler;
 
 class WordPressContext implements
     \WPObjects\EventManager\ListenerAggregateInterface
@@ -23,12 +23,12 @@ class WordPressContext implements
      */
     protected $filters = null;
     
-    protected function attach(\WPObjects\EventManager\Manager $EventManager)
+    public function attach(\WPObjects\EventManager\Manager $EventManager)
     {
         $EventManager->attach('prepare_filters', array($this, 'handler'));
     }
     
-    protected function detach(\WPObjects\EventManager\Manager $EventManager)
+    public function detach(\WPObjects\EventManager\Manager $EventManager)
     {
         $EventManager->detach('prepare_filters', array($this, 'handler'));
     }

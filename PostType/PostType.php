@@ -24,6 +24,13 @@ class PostType extends AbstractModelType implements
     protected $id = null;
     
     /**
+     * identification attribute of the current model type
+     * 
+     * @var string
+     */
+    protected $id_attr_name = 'ID';
+    
+    /**
      * Configuration for WordPress post-type object
      * @var type 
      */

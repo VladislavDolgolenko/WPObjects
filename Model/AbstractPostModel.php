@@ -24,7 +24,7 @@ abstract class AbstractPostModel extends AbstractTypicalModel
      */
     protected $metas = array();
 
-    protected function exchangeObject(\WP_Post $post)
+    protected function exchangeObject($post)
     {
         $this->post = $post;
         $register_atts = $this->getModelType()->getDefaultAttrs();

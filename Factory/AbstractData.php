@@ -88,7 +88,7 @@ abstract class AbstractData extends AbstractModelFactory implements
         return $result;
     }
     
-    public function query($filters = array(), $result_as_object = false)
+    public function doQuery($filters = array(), $result_as_object = false)
     {
         $filters = array_merge($this->getDefaultFilters(), $filters);
         $this->setFilters($filters);

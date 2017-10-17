@@ -34,11 +34,13 @@ class DI implements ManagerInterface
                 continue;
             }
             
+            
             foreach ($deps as $service_name => $setter_mathod) {
                 $Service = $this->getServiceManager()->get($service_name);
                 if (!$Service) {
                     throw new \Exception("Undefined service $service_name for $class_name.");
                 }
+                \WPObjects\Log\Loger::getInstance()->write("DI: $class inject $service_name in $setter_mathod");
                 $Object->$setter_mathod($Service);
             }
         }

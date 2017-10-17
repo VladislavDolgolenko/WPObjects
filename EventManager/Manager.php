@@ -66,7 +66,7 @@ class Manager
             $this->listeners = array();
         }
         
-        if (!is_array($this->listeners[$event])) {
+        if (!isset($this->listeners[$event]) || !is_array($this->listeners[$event])) {
             $this->listeners[$event] = array();
         }
         
