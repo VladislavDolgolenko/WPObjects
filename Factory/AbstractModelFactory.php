@@ -79,7 +79,9 @@ abstract class AbstractModelFactory extends EventManager implements
      */
     public function query($filters = array(), $result_as_object = false)
     {
-        $cache_id = hash('md5', serialize($filters) . serialize($result_as_object)); 
+        $cache_hash_data = array_merge($filters, array('result_as_object' => $result_as_object));
+        $cache_hash = serialize($cache_hash_data);
+        $cache_id = hash('md5', $cache_hash); 
         if (isset($this->cache[$cache_id])) {
             $this->setResult($this->cache[$cache_id]);
             //\WPObjects\Log\Loger::getInstance()->write("Factory " . get_class($this) . " : query restore from cache with id $cache_id");

@@ -40,7 +40,11 @@ abstract class AbstractPostModel extends AbstractModelFactory implements
     {
         global $post;
         
-        if ($id && $id instanceof \WP_Post) {
+        if ($id instanceof \WPObjects\Model\AbstractTypicalModel) {
+            return $id;
+        }
+        
+        if ($id instanceof \WP_Post) {
             $id = $id->ID;
         }
         
@@ -227,7 +231,7 @@ abstract class AbstractPostModel extends AbstractModelFactory implements
     public function getModelType()
     {
         if (is_null($this->ModelType)) {
-            throw new \Exception('Undefiend model type!');
+            throw new \Exception('Undefiend model type in ' . get_class($this));
         }
         
         return $this->ModelType;

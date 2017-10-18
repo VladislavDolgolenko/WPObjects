@@ -25,7 +25,7 @@ class AbstractDataModel extends AbstractData implements
     public function getModelType()
     {
         if (is_null($this->ModelType)) {
-            throw new \Exception('Undefiend model type!');
+            throw new \Exception('Undefiend model type in' . get_class($this));
         }
         
         return $this->ModelType;

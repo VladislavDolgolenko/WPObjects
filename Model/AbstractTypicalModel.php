@@ -35,8 +35,21 @@ abstract class AbstractTypicalModel extends AbstractModel implements
     
     abstract public function setQualifierId($model_type_id, $model_id);
     
-    public function getRelative(\WPObjects\Model\AbstractModelType $RelativeModelType, $filters = array(), $single = true)
+    /**
+     * Return relative (aggregated or aggregator) model by model type.
+     * 
+     * @param string|\WPObjects\Model\AbstractModelType $RelativeModelType object or identifier of relative model type 
+     * @param array $filters 
+     * @param boolean $single
+     * @return \WPObjects\Model\AbstractTypicalModel 's in array
+     * @throws \Exception
+     */
+    public function getRelative($RelativeModelType, $filters = array(), $single = true)
     {
+        if (!$RelativeModelType instanceof \WPObjects\Model\AbstractModelType) {
+            $RelativeModelType = $this->getModelType()->getModelTypeFactory()->get($RelativeModelType);
+        }
+        
         $model_type_id = $RelativeModelType->getId();
         if (isset($this->relatives[$model_type_id])) {
             return $this->relatives[$model_type_id];
@@ -70,6 +83,21 @@ abstract class AbstractTypicalModel extends AbstractModel implements
         }
         
         return $this->relatives[$model_type_id];
+    }
+    
+    public function getRelativeId($RelativeModelType, $single = true)
+    {
+        $Relatives = $this->getRelative($RelativeModelType, array(), $single);
+        if ($single) {
+            return $Relatives->getId();
+        }
+        
+        $result_ids = array();
+        foreach ($Relatives as $Relative) {
+            $result_ids[] = $Relative->getId();
+        }
+        
+        return $result_ids;
     }
         
     /**

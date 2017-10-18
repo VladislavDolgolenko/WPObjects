@@ -47,7 +47,7 @@ class Loger
         $content = file_get_contents($this->file_path);
         
         $line = $line_message . "\n";
-        echo $line;
+        //echo $line;
         
         $content .= $line;
         

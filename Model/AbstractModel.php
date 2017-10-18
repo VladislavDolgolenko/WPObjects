@@ -10,8 +10,17 @@
 
 namespace WPObjects\Model;
 
-abstract class AbstractModel extends \ArrayObject implements ModelInterface
+abstract class AbstractModel extends \ArrayObject implements 
+    ModelInterface,
+    \WPObjects\Service\ManagerInterface
 {
+    /**
+     * Global service manager
+     * 
+     * @var \WPobjects\Service\Manager
+     */
+    protected $ServiceManager = null;
+    
     public function __construct($data)
     {
         parent::__construct(array(), self::ARRAY_AS_PROPS, "ArrayIterator");
@@ -56,6 +65,22 @@ abstract class AbstractModel extends \ArrayObject implements ModelInterface
         }
         
         return '_' . $object_type . '_id';
+    }
+    
+    public function setServiceManager(\WPObjects\Service\Manager $ServiceManager)
+    {
+        $this->ServiceManager = $ServiceManager;
+        
+        return $this;
+    }
+    
+    public function getServiceManager()
+    {
+        if (is_null($this->ServiceManager)) {
+            throw new \Exception('Undefined service manager');
+        }
+        
+        return $this->ServiceManager;
     }
 }
 

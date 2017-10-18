@@ -10,8 +10,7 @@
 
 namespace WPObjects\Model;
 
-abstract class AbstractModelType extends AbstractModel implements
-    \WPObjects\Service\ManagerInterface
+abstract class AbstractModelType extends AbstractModel
 {
     /**
      * Factory of current model type
@@ -58,6 +57,13 @@ abstract class AbstractModelType extends AbstractModel implements
      * @var string
      */
     protected $id_attr_name = 'id';
+    
+    /**
+     * Rewrite default qualifiers attributes names
+     * 
+     * @var array
+     */
+    protected $qualifiers_attr_names = array();
     
     /**
      *
@@ -165,11 +171,17 @@ abstract class AbstractModelType extends AbstractModel implements
      */
     public function getQualifierAttrName($object_type_id)
     {
-        if (in_array($object_type_id, $this->getQualifiersIds())) {
-            return parent::getQualifierAttrName($object_type_id);
+        if (!in_array($object_type_id, $this->getQualifiersIds())) {
+            return $object_type_id;
         }
         
-        return $object_type_id;
+        foreach ($this->qualifiers_attr_names as $model_type_id => $attr_name) {
+            if ($model_type_id === $object_type_id) {
+                return $attr_name;
+            }
+        }
+        
+        return parent::getQualifierAttrName($object_type_id);
     }
     
     /**
@@ -203,7 +215,15 @@ abstract class AbstractModelType extends AbstractModel implements
     
     public function getFactory()
     {
-        return $this->Factory;
+        if (!is_null($this->Factory)) {
+            return $this->Factory;
+        }
+        
+        if (isset($this->factory_service_name)) {
+            return $this->getServiceManager()->get($this->factory_service_name);
+        }
+        
+        throw new \Exception('Undefined model type factory in ' . $this->getId());
     }
     
     public function setFactory(\WPObjects\Factory\AbstractModelFactory $Factory)
@@ -225,22 +245,6 @@ abstract class AbstractModelType extends AbstractModel implements
     public function setModelTypeFactory(\WPObjects\Model\ModelTypeFactory $Factory)
     {
         $this->ModelTypeFactory = $Factory;
-    }
-    
-    public function setServiceManager(\WPObjects\Service\Manager $ServiceManager)
-    {
-        $this->ServiceManager = $ServiceManager;
-        
-        return $this;
-    }
-    
-    public function getServiceManager()
-    {
-        if (is_null($this->ServiceManager)) {
-            throw new \Exception('Undefined service manager');
-        }
-        
-        return $this->ServiceManager;
     }
     
     public function getIdAttrName()
