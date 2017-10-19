@@ -145,13 +145,20 @@ class Data {
                 $build_in = array();
             }
             
-            foreach ($build_in as $key => $data) {
-                $build_in[$key]['build_in'] = true;
-            }
+            $build_in = $this->filterBuildInData($build_in, $Storage);
 
             $custom = get_option($this->wp_option_prefix . '_data_' . $Storage->getId(), array());
 
             return array_merge($custom, $build_in);
+        }
+        
+        protected function filterBuildInData($datas, $Storage)
+        {
+            foreach ($datas as $key => $data) {
+                $datas[$key]['build_in'] = true;
+            }
+            
+            return $datas;
         }
     
     public function getDataDisables($datas_type)
@@ -180,6 +187,8 @@ class Data {
     {
         if (isset($data['id'])) {
             return 'id';
+        } else if (isset($data['ID'])) {
+            return 'ID';
         } else if (isset($data['slug'])) {
             return 'slug';
         } else if ($data['key']) {

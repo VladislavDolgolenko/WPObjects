@@ -132,6 +132,10 @@ abstract class AbstractPostModel extends AbstractTypicalModel
     
     public function setMeta($key, $value)
     {
+        if (is_array($value) && count($value) === 1) {
+            $value = current($value);
+        }
+        
         if (!in_array($key, $this->getModelType()->getRegisterMetas())) {
             return $this;
         }

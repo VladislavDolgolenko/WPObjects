@@ -156,7 +156,7 @@ abstract class AbstractModelType extends AbstractModel
     {
         $result = array();
         foreach ($this->getQualifiers() as $QualifierModelType) {
-            $result[] = parent::getQualifierAttrName($QualifierModelType->getId());
+            $result[] = $this->getQualifierAttrName($QualifierModelType->getId());
         }
         
         return $result;

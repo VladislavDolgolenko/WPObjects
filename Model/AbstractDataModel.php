@@ -12,6 +12,16 @@ namespace WPObjects\Model;
 
 abstract class AbstractDataModel extends AbstractTypicalModel
 {
+    public function getId()
+    {
+        $attr = $this->getModelType()->getIdAttrName();
+        if (isset($this->$attr)) {
+            return $this->$attr;
+        }
+        
+        return null;
+    }
+    
     /**
      * Get associated model identities
      * @param string $model_type_id
