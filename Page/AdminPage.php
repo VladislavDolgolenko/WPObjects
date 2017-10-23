@@ -8,9 +8,18 @@
 
 namespace WPObjects\Page;
 
-abstract class AdminPage implements \WPObjects\EventManager\ListenerInterface
+abstract class AdminPage implements 
+    \WPObjects\EventManager\ListenerInterface,
+    \WPObjects\Service\ManagerInterface
 {
     private static $_instances = array();
+    
+    /**
+     * Global service manager
+     * 
+     * @var \WPobjects\Service\Manager
+     */
+    protected $ServiceManager = null;
     
     protected $perent_menu_id = null;
     protected $menu_name = null;
@@ -110,4 +119,20 @@ abstract class AdminPage implements \WPObjects\EventManager\ListenerInterface
     abstract protected function enqueues();
     
     abstract protected function getTemplatePath();
+    
+    public function setServiceManager(\WPObjects\Service\Manager $ServiceManager)
+    {
+        $this->ServiceManager = $ServiceManager;
+        
+        return $this;
+    }
+    
+    public function getServiceManager()
+    {
+        if (is_null($this->ServiceManager)) {
+            throw new \Exception('Undefined service manager');
+        }
+        
+        return $this->ServiceManager;
+    }
 }

@@ -43,6 +43,21 @@ class PostType extends AbstractModelType implements
     protected $register_metas = array();
     
     /**
+     * WoprdPress options prefix for post-type settings 
+     * @var type 
+     */
+    protected $settings_prefix = 'wpobjects_';
+    
+    /**
+     * List of customazible attributes
+     * 
+     * @var array
+     */
+    protected $settings_attributes = array(
+        'rewrite'
+    );
+    
+    /**
      * Default object attributes
      * @var array
      */
@@ -94,8 +109,15 @@ class PostType extends AbstractModelType implements
         }
         
         parent::__construct($data);
+        $this->initSettings();
     }
     
+    /**
+     * Return php class name of current post-type typical model
+     * 
+     * @return string
+     * @throws \Exception
+     */
     public function getModelClassName()
     {
         if (!isset($this->model_class_name)) {
@@ -117,11 +139,28 @@ class PostType extends AbstractModelType implements
         \remove_action('save_post', array($this, 'savePost'));
     }
     
+    /**
+     * Handler for registration current post-type
+     * 
+     * @return $this
+     */
     public function register()
     {
         \register_post_type($this->getId(), $this->getConfig());
+        
+        return $this;
     }
     
+    /**
+     * Handler for saving posts of current post-type
+     * 
+     * @global \WP_Post $_POST
+     * @param int $post_id
+     * @param \WP_Post $post
+     * @param boolean $update creation or update action
+     * 
+     * @return $this
+     */
     public function savePost($post_id, $post, $update)
     {
         global $_POST;
@@ -144,6 +183,159 @@ class PostType extends AbstractModelType implements
         return $this;
     }
     
+    /**
+     * Update post-type settings in database
+     * 
+     * @return $this
+     */
+    public function updateSettings()
+    {
+        $settings = $this->getSettings();
+        if (count($settings)) {
+            update_option($this->getSettingsKey(), $this->getSettings());
+        } else {
+            delete_option($this->getSettingsKey());
+        }
+        
+        return $this;
+    }
+    
+    /**
+     * Apply current post-type settings from database
+     * 
+     * @return $this
+     */
+    public function initSettings()
+    {
+        $setting = get_option($this->getSettingsKey(), array());
+        $config = $this->getConfig();
+        $this->setConfig(array_merge($config, $setting));
+        
+        return $this;
+    }
+    
+    /**
+     * Return current post-type settings
+     * 
+     * @return array
+     */
+    public function getSettings()
+    {
+        $config = $this->getConfig();
+        
+        $settings = array();
+        foreach ($config as $key => $value) {
+            if (in_array($key, $this->settings_attributes)) {
+                $settings[$key] = $value;
+            }
+        }
+        
+        return $settings;
+    }
+    
+    /**
+     * Return target current post-type settings
+     * 
+     * @param string $key
+     * @return mixed 
+     */
+    public function getSetting($key)
+    {
+        $settings = $this->getSettings();
+        
+        if (isset($settings[$key])) {
+            return $settings[$key];
+        }
+        
+        return null;
+    }
+    
+    /**
+     * Set value in to current post-type settings
+     * 
+     * @param string $key
+     * @param string|int|array|boolean $value
+     * 
+     * @return $this
+     */
+    public function setSetting($key, $value)
+    {
+        if (!in_array($key, $this->settings_attributes)) {
+            throw new \Exception('Undefined post-type setting attribute');
+        }
+        
+        $config = $this->getConfig();
+        if ($value) {
+            $config[$key] = $this->sanitizeValue($value);
+        } else {
+            unset($config[$key]);
+        }
+        
+        $this->setConfig($config);
+        
+        return $this;
+    }
+    
+    /**
+     * Set rewrite slug in url's for posts pages of current post-type
+     * 
+     * @param string $string
+     * @return $this
+     * @throws \Exception
+     */
+    public function setRewriteSlug($string)
+    {
+        if (!is_string($string)) {
+            throw new \Exception('Incorrect slug type, must be string.');
+        }
+        
+        $config = $this->getConfig();
+        if (!isset($config['rewrite'])) {
+            $config['rewrite'] = array();
+        }
+        
+        if ($string) {
+            $config['rewrite']['slug'] = $this->sanitizeValue($string);
+        } else {
+            unset($config['rewrite']);
+        }
+        
+        $this->setConfig($config);
+        
+        return $this;
+    }
+    
+    /**
+     * Return current rewrite slug in url's for posts pages of current post-type
+     * 
+     * @return string
+     */
+    public function getRewriteSlug()
+    {
+        $config = $this->getConfig();
+        if (isset($config['rewrite']) && isset($config['rewrite']['slug'])) {
+            return $config['rewrite']['slug'];
+        }
+        
+        return $this->getId();
+    }
+    
+    /**
+     * Generate and return WordPress options key for settings of current post-type.
+     * 
+     * @return string
+     */
+    public function getSettingsKey()
+    {
+        return $this->settings_prefix . $this->getId() .'_settings';
+    }
+    
+    /**
+     * Sanitize value or array of values, and return them.
+     * 
+     * @param string|int|array $values
+     * @return string|int|array
+     */
     static public function sanitizeValue($values)
     {
         if (is_array($values)) {
@@ -159,6 +351,12 @@ class PostType extends AbstractModelType implements
         }
     }
     
+    /**
+     * Set identity for WordPress post-type and type of model.
+     * 
+     * @param type $int
+     * @return $this
+     */
     public function setId($int)
     {
         $this->id = $int;
@@ -166,11 +364,21 @@ class PostType extends AbstractModelType implements
         return $this;
     }
     
+    /**
+     * Return identity for WordPress post-type and type of model.
+     * 
+     * @return type
+     */
     public function getId()
     {
         return $this->id;
     }
     
+    /**
+     * Return name of current post-type
+     * 
+     * @return string
+     */
     public function getName()
     {
         $config = $this->getConfig();
@@ -179,16 +387,40 @@ class PostType extends AbstractModelType implements
         return $name;
     }
     
+    public function getMenuIcon()
+    {
+        $config = $this->getConfig();
+        if (isset($config['menu_icon'])) {
+            return $config['menu_icon'];
+        }
+        
+        return null;
+    }
+    
+    /**
+     * Return default attributes of current post-type typical models
+     * @return type
+     */
     public function getDefaultAttrs()
     {
         return $this->defaults_attrs;
     }
     
+    /**
+     * Return post meta attributes for current post-type posts
+     * 
+     * @return array
+     */
     public function getRegisterMetas()
     {
         return array_merge($this->register_metas, $this->getQualifiersAttrsNames());
     }
     
+    /**
+     * Set WordPress post-type config
+     * @param type $config
+     * @return $this
+     */
     public function setConfig($config)
     {
         $this->config = $config;
@@ -196,6 +428,10 @@ class PostType extends AbstractModelType implements
         return $this;
     }
     
+    /**
+     * Return WordPress post-type config
+     * @return array
+     */
     public function getConfig()
     {
         return $this->config;
