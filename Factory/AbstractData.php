@@ -106,7 +106,7 @@ abstract class AbstractData extends AbstractModelFactory implements
     protected function getDefaultFilters()
     {
         return array(
-            
+            'active' => true
         );
     }
     
@@ -199,7 +199,7 @@ abstract class AbstractData extends AbstractModelFactory implements
     protected function pull()
     {
         if (is_null($this->pull)) {
-            $this->pull = $this->getData()->getActiveDatas($this->getStorage());
+            $this->pull = $this->getData()->getDatas($this->getStorage());
         }
         
         return $this->pull;

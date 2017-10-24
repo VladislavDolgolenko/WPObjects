@@ -12,18 +12,58 @@ namespace WPObjects\Data;
 
 class Data {
 
-    private $datas = array();
-    private $datas_objects = array();
-    private $active_datas = array();
-    private $active_datas_objects = array();
-    private $data_disables = array();
+    /**
+     * Singleton instance  
+     * 
+     * @var \WPObjects\Data\Data
+     */
     private static $_instances = array();
     
+    /**
+     * Source data by types
+     * 
+     * @var array 
+     */
+    private $datas = array();
+    
+    /**
+     * Source data by types as \ArrayObject
+     * 
+     * @var \ArrayObject
+     */
+    private $datas_objects = array();
+    
+    /**
+     * Active data by types
+     * 
+     * @var array
+     */
+    private $active_datas = array();
+    
+    /**
+     * Active data by types as \ArrayObject
+     * 
+     * @var \ArrayObject
+     */
+    private $active_datas_objects = array();
+    
+    /**
+     * Informations of disables data intities 
+     * 
+     * @var type 
+     */
+    private $data_disables = array();
+    
+    /**
+     * Prefix for db where data stored as WordPress options
+     * 
+     * @var type 
+     */
     protected $wp_option_prefix = null;
-    protected $datas_config_file_patch = null;
-    protected $datas_path = null;
 
     /**
+     * Return singleton instance  
+     * 
      * @return \MSP\Data\Data
      */
     static public function getInstance()
@@ -36,14 +76,25 @@ class Data {
         return self::$_instances[$class];
     }
     
-    public function resetCache()
+    /**
+     * Reset cache
+     * 
+     * @return $this
+     */
+    public function resetCache($storage_id)
     {
-        $this->datas = null;
-        $this->datas_objects = null;
-        $this->active_datas = null;
-        $this->active_datas_objects = null;
-        $this->data_disables = null;
+        unset($this->datas[$storage_id]);
+        unset($this->datas_objects[$storage_id]);
+        unset($this->active_datas[$storage_id]);
+        unset($this->active_datas_objects[$storage_id]);
+        unset($this->data_disables[$storage_id]);
+        
+        return $this;
     }
+    
+/*
+ * Data getting with active status
+ */
     
     public function getActiveDatasObjects(\WPObjects\Data\Storage $Storage)
     {
@@ -79,35 +130,20 @@ class Data {
                 return array();
             }
 
-            $key = $this->getDataIdentetyKey($datas[0]);
-
             $result_datas = array();
             foreach ($datas as $data) {
-
-                if ( $this->isActiveData($Storage, $data[$key]) === true ) {
+                if ($data['active'] === true) {
                     $result_datas[] = $data;
                 }
-
             }
 
             return $result_datas;
         }
+
+/*
+ * Data getting 
+ */
         
-    public function isActiveData(\WPObjects\Data\Storage $Storage, $data_id)
-    {
-        $activity = $this->getDataDisables($Storage->getId());
-
-        if (!isset($Storage->activity) && !in_array($data_id, $activity)) {
-            return true;
-
-        // If invert type
-        } elseif (isset($Storage->activity) && in_array($data_id, $activity)) {
-            return true;
-        }
-
-        return false;
-    }
-
     public function getDatasObjects(\WPObjects\Data\Storage $Storage)
     {
         if (isset($this->datas_objects[$Storage->getId()])) {
@@ -146,13 +182,15 @@ class Data {
             }
             
             $build_in = $this->filterBuildInData($build_in, $Storage);
-
-            $custom = get_option($this->wp_option_prefix . '_data_' . $Storage->getId(), array());
-
-            return array_merge($custom, $build_in);
+            $custom = $this->readStorageData($Storage);
+            
+            $result = array_merge($custom, $build_in);
+            $filtered_result = $this->filterResultData($result, $Storage);
+            
+            return $filtered_result;
         }
         
-        protected function filterBuildInData($datas, $Storage)
+        protected function filterBuildInData($datas, \WPObjects\Data\Storage $Storage)
         {
             foreach ($datas as $key => $data) {
                 $datas[$key]['build_in'] = true;
@@ -160,6 +198,39 @@ class Data {
             
             return $datas;
         }
+        
+        protected function filterResultData($datas, \WPObjects\Data\Storage $Storage)
+        {
+            $key = $this->getDataIdentetyKey(current($datas));
+            foreach ($datas as $index => $data) {
+                if ($this->isActiveData($Storage, $data[$key]) === true) {
+                    $datas[$index]['active'] = true;
+                } else {
+                    $datas[$index]['active'] = false;
+                }
+            }
+            
+            return $datas;
+        }
+        
+/*
+ * Data active status 
+ */
+        
+    public function isActiveData(\WPObjects\Data\Storage $Storage, $data_id)
+    {
+        $activity = $this->getDataDisables($Storage->getId());
+
+        if (!isset($Storage->activity) && !in_array($data_id, $activity)) {
+            return true;
+
+        // If invert type
+        } elseif (isset($Storage->activity) && in_array($data_id, $activity)) {
+            return true;
+        }
+
+        return false;
+    }
     
     public function getDataDisables($datas_type)
     {
@@ -183,6 +254,96 @@ class Data {
             return $disable_datas_keys;
         }
         
+    protected function updateModelStatus(\WPObjects\Model\AbstractDataModel $Model)
+    {
+        $Storage = $Model->getModelType()->getStorage();
+        $disables = $this->getDataDisables($Storage->getId());
+        $index = array_search($Model->getId(), $disables);
+        $is_status = isset($Storage->activity) ? !$Model->isActive() : $Model->isActive();
+        
+        if ($is_status && $index) {
+            unset($disables[$index]);
+        } else if (!$is_status && !$index) {
+            $disables[] = $Model->getId();
+        }
+        
+        $disablement_key = $this->getDataTypeWpOptionKeyDisables($Storage->getId());
+        update_option($disablement_key, $disables);
+    }
+
+    
+/*
+ * Saving
+ */
+
+    /**
+     * Saving model instance in to database through WordPress options
+     * 
+     * Model mast have identity!
+     * 
+     * @param \WPObjects\Model\AbstractDataModel $Model
+     * @return boolean
+     * @throws \Exception
+     */
+    public function saveModel(\WPObjects\Model\AbstractDataModel $Model)
+    {
+        if (!$Model->getId()) {
+            throw new \Exception('Undefined model id. Model Can\'t to save.');
+        }
+        
+        if ($Model->isBuildIn()) {
+            throw new \Exception('You can not change the built-in model "' . $Model->getId() . '"');
+        }
+        
+        $Storage = $Model->getModelType()->getStorage();
+        $all_datas = $this->readStorageData($Storage);
+        $index = $this->getIndexById($Model->getId(), $Model->getModelType());
+        
+        if ($index) {
+            $all_datas[$index] = array_merge($all_datas[$index], $Model->toArray());
+        } else {
+            $all_datas[] = $Model->toArray();
+        }
+        
+        $this->writeStorageData($Storage, $all_datas);
+        $this->updateModelStatus($Model);
+        
+        $this->resetCache($Storage->getId());
+        
+        return $this;
+    }
+    
+    public function getIndexById($id, \WPObjects\Model\AbstractModelType $ModelType)
+    {
+        $Storage = $ModelType->getStorage();
+        $id_attr = $ModelType->getIdAttrName();
+        
+        $all_datas = $this->readStorageData($Storage);
+        foreach ($all_datas as $index => $model_data) {
+            if ($model_data[$id_attr] == $id) {
+                return $index;
+            }
+        }
+        
+        return false;
+    }
+    
+    protected function writeStorageData(\WPObjects\Data\Storage $Storage, $data)
+    {
+        $option_key = $this->getDataTypeWpOptionKey($Storage->getId());
+        update_option($option_key, $data);
+    }
+    
+    protected function readStorageData(\WPObjects\Data\Storage $Storage)
+    {
+        $option_key = $this->getDataTypeWpOptionKey($Storage->getId());
+        return get_option($option_key, array());
+    }
+    
+/*
+ * Configurations
+ */    
+    
     static public function getDataIdentetyKey($data)
     {
         if (isset($data['id'])) {
@@ -203,16 +364,14 @@ class Data {
         return $this->wp_option_prefix . '_data_' . $datas_type_id;
     }
     
-    public function getDataTypeWpOptionKeyDelete($datas_type_id)
-    {
-        return $this->wp_option_prefix . '_data_' . $datas_type_id . '_delete';
-    }
-    
     public function getDataTypeWpOptionKeyDisables($datas_type_id)
     {
         return $this->wp_option_prefix . '_data_' . $datas_type_id . '_disables';
     }
     
+/*
+ * Export & Import
+ */
     
     // export 
     public function export()
@@ -252,5 +411,7 @@ class Data {
         
         return true;
     }
+    
+    
 
 }

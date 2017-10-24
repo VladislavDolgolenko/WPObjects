@@ -50,8 +50,40 @@ abstract class AbstractDataModel extends AbstractTypicalModel
         return $this;
     }
     
+    public function isBuildIn()
+    {
+        if (isset($this->build_in) && $this->build_in === true) {
+            return true;
+        }
+        
+        return false;
+    }
+    
+    public function isActive()
+    {
+        if (isset($this->active) && $this->active === true) {
+            return true;
+        }
+        
+        return false;
+    }
+    
+    /**
+     * Save or update model in database as WordPress options.
+     * If current model is build in, saving do nothing.
+     * 
+     * @return $this
+     */
     public function save()
     {
-        return;
+        $DataAccess = $this->getDataAccess();
+        $DataAccess->saveModel($this);
+        
+        return $this;
     }
+    
+    /**
+     * @return \WPObjects\Data\Data
+     */
+    abstract public function getDataAccess();
 }
