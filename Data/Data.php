@@ -364,6 +364,11 @@ class Data {
         return $this->wp_option_prefix . '_data_' . $datas_type_id;
     }
     
+    public function getDataTypeWpOptionKeyDelete($datas_type_id)
+    {
+        return $this->wp_option_prefix . '_data_' . $datas_type_id . '_delete';
+    }
+    
     public function getDataTypeWpOptionKeyDisables($datas_type_id)
     {
         return $this->wp_option_prefix . '_data_' . $datas_type_id . '_disables';
