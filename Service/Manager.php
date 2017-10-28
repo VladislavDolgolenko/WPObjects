@@ -16,6 +16,8 @@ class Manager
     
     protected $config = array();
     
+    protected $not_stored_services = array();
+    
     /**
      * @var \WPObjects\Service\DI
      */
@@ -57,7 +59,7 @@ class Manager
     
     public function get($name)
     {
-        if (isset($this->initialized[$name])) {
+        if (isset($this->initialized[$name]) && $this->isStoredService($name)) {
             return $this->initialized[$name];
         }
         
@@ -127,6 +129,22 @@ class Manager
     public function addConfig($config)
     {
         $this->config = array_merge($this->config, $config);
+        
+        return $this;
+    }
+    
+    public function isStoredService($name)
+    {
+        if (in_array($name, $this->not_stored_services)) {
+            return false;
+        }
+        
+        return true;
+    }
+    
+    public function addNotStoredServicesConfig($config)
+    {
+        $this->not_stored_services = array_merge($this->not_stored_services, $config);
         
         return $this;
     }

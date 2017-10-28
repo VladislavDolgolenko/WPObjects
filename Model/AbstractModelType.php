@@ -10,7 +10,8 @@
 
 namespace WPObjects\Model;
 
-abstract class AbstractModelType extends AbstractModel
+abstract class AbstractModelType extends AbstractModel implements
+    \WPObjects\EventManager\ListenerInterface
 {
     /**
      * Factory of current model type
@@ -66,12 +67,37 @@ abstract class AbstractModelType extends AbstractModel
     protected $qualifiers_attr_names = array();
     
     /**
+     * @var \WPObjects\AjaxController\TypicalModelController
+     */
+    protected $RESTController = null;
+    
+    /**
      *
      * @var boolean
      */
     protected $unique = true;
     
     abstract public function getModelClassName();
+    
+    public function attach()
+    {
+        $Controller = $this->getController();
+        if ($Controller) {
+            $this->getController()->attach();
+        }
+        
+        return $this;
+    }
+    
+    public function detach()
+    {
+        $Controller = $this->getController();
+        if ($Controller) {
+            $this->getController()->detach();
+        }
+        
+        return $this;
+    }
     
     /**
      * Initialize Model of current model type.
@@ -245,6 +271,23 @@ abstract class AbstractModelType extends AbstractModel
     public function setModelTypeFactory(\WPObjects\Model\ModelTypeFactory $Factory)
     {
         $this->ModelTypeFactory = $Factory;
+    }
+    
+    public function setController(\WPObjects\AjaxController\TypicalModelController $Controller)
+    {
+        $this->RESTController = $Controller;
+        $Controller->setFactory($this->getFactory());
+        $Controller->setObjectTypeName($this->getId());
+        
+        return $this;
+    }
+    
+    /**
+     * @return \WPObjects\AjaxController\TypicalModelController
+     */
+    public function getController()
+    {
+        return $this->RESTController;
     }
     
     public function getIdAttrName()

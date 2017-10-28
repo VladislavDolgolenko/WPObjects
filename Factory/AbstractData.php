@@ -59,7 +59,7 @@ abstract class AbstractData extends AbstractModelFactory implements
     
     public function get($id = null, $filters = array(), $single = true)
     {
-        $this->query(array_merge(array($this->id_key => $id), $filters));
+        $this->query(array_merge(array($this->getIdAttrName() => $id), $filters));
         if ($single) {
             return current($this->getResult());
         } else {
@@ -76,11 +76,12 @@ abstract class AbstractData extends AbstractModelFactory implements
         /* @var $Object WPObjects\Model\AbstractModel */
         
         $result = array();
+        $id_attr = $this->getIdAttrName();
         foreach ($this->getResult() as $Object) {
 
             $result[] = array(
                 'label' => $Object->getName(),
-                'value' => $Object->$this->id_key,
+                'value' => $Object->$id_attr,
             );
             
         }
@@ -91,7 +92,7 @@ abstract class AbstractData extends AbstractModelFactory implements
     public function doQuery($filters = array(), $result_as_object = false)
     {
         $filters = array_merge($this->getDefaultFilters(), $filters);
-        $this->setFilters($filters);
+        $this->setFilters(array_filter($filters));
         $this->result_as_object = $result_as_object;
         $this->setResult(null);
         $this->result_data = array();
@@ -164,14 +165,15 @@ abstract class AbstractData extends AbstractModelFactory implements
     
     protected function sorting()
     {
-        if (!isset($this->filters[$this->id_key]) || !is_array($this->filters[$this->id_key])) {
+        $id_attr = $this->getIdAttrName();
+        if (!isset($this->filters[$id_attr]) || !is_array($this->filters[$id_attr])) {
             return $this;
         }
         
         $result = array();
-        foreach ($this->filters[$this->id_key] as $id) {
+        foreach ($this->filters[$id_attr] as $id) {
             foreach ($this->result_data as $data) {
-                if ($data[$this->id_key] == $id) {
+                if ($data[$id_attr] == $id) {
                     $result[] = $data;
                 }
             }
@@ -196,7 +198,7 @@ abstract class AbstractData extends AbstractModelFactory implements
     /**
      * @return array
      */
-    protected function pull()
+    public function pull()
     {
         if (is_null($this->pull)) {
             $this->pull = $this->getData()->getDatas($this->getStorage());

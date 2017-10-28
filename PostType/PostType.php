@@ -129,12 +129,14 @@ class PostType extends AbstractModelType implements
     
     public function attach()
     {
+        parent::attach();
         \add_action('save_post', array($this, 'savePost'), 10, 3);
         \add_action('init', array($this, 'register'));
     }
     
     public function detach()
     {
+        parent::detach();
         \remove_action('init', array($this, 'register'));
         \remove_action('save_post', array($this, 'savePost'));
     }
