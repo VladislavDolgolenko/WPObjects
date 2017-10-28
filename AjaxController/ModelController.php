@@ -13,7 +13,7 @@ namespace WPObjects\AjaxController;
 /**
  * Нужны права доступа
  */
-class TypicalModelController extends AbstractRESTController
+class ModelController extends AbstractRESTController
 {
     protected $ModelType = null;
     
@@ -25,7 +25,7 @@ class TypicalModelController extends AbstractRESTController
         $Model = $Factory->get($id);
         
         if ($Model) {
-            return $Model->getArrayCopy();
+            return $Model->toJSON();
         }
         
         return new \WP_Error( 'not_found', 'not_found', array( 'status' => 404 ) );
@@ -39,7 +39,7 @@ class TypicalModelController extends AbstractRESTController
         
         $result = array();
         foreach ($ResultModels as $Model) {
-            $result[] = $Model->getArrayCopy();
+            $result[] = $Model->toJSON();
         }
         
         return $result;
@@ -60,7 +60,7 @@ class TypicalModelController extends AbstractRESTController
         $Model->exchange($data);
         $Model->save();
         
-        return $Model->getArrayCopy();
+        return $Model->toJSON();
     }
     
     public function delete($id)
@@ -72,7 +72,7 @@ class TypicalModelController extends AbstractRESTController
         return true;
     }
     
-    public function setFactory(\WPObjects\Factory\AbstractModelFactory $Factory)
+    public function setFactory(\WPObjects\Factory\FactoryInterface $Factory)
     {
         $this->Factory = $Factory;
         

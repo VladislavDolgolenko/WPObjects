@@ -12,7 +12,8 @@ namespace WPObjects\Model;
 
 abstract class AbstractModel extends \ArrayObject implements 
     ModelInterface,
-    \WPObjects\Service\ManagerInterface
+    \WPObjects\Service\ManagerInterface,
+    JsonInterface
 {
     /**
      * Global service manager
@@ -25,6 +26,11 @@ abstract class AbstractModel extends \ArrayObject implements
     {
         parent::__construct(array(), self::ARRAY_AS_PROPS, "ArrayIterator");
         $this->exchange($data);
+    }
+    
+    public function toJSON()
+    {
+        return $this->getArrayCopy();
     }
     
     public function exchange($data)

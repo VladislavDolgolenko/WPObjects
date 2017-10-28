@@ -67,7 +67,7 @@ abstract class AbstractModelType extends AbstractModel implements
     protected $qualifiers_attr_names = array();
     
     /**
-     * @var \WPObjects\AjaxController\TypicalModelController
+     * @var \WPObjects\AjaxController\ModelController
      */
     protected $RESTController = null;
     
@@ -273,7 +273,7 @@ abstract class AbstractModelType extends AbstractModel implements
         $this->ModelTypeFactory = $Factory;
     }
     
-    public function setController(\WPObjects\AjaxController\TypicalModelController $Controller)
+    public function setController(\WPObjects\AjaxController\ModelController $Controller)
     {
         $this->RESTController = $Controller;
         $Controller->setFactory($this->getFactory());
@@ -283,7 +283,7 @@ abstract class AbstractModelType extends AbstractModel implements
     }
     
     /**
-     * @return \WPObjects\AjaxController\TypicalModelController
+     * @return \WPObjects\AjaxController\ModelController
      */
     public function getController()
     {
