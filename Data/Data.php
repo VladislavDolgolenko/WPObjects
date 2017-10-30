@@ -291,21 +291,20 @@ class Data {
             throw new \Exception('Undefined model id. Model Can\'t to save.');
         }
         
-        if ($Model->isBuildIn()) {
-            throw new \Exception('You can not change the built-in model "' . $Model->getId() . '"');
-        }
-        
         $Storage = $Model->getModelType()->getStorage();
         $all_datas = $this->readStorageData($Storage);
         $index = $this->getIndexById($Model->getId(), $Model->getModelType());
         
         if ($index) {
-            $all_datas[$index] = array_merge($all_datas[$index], $Model->toArray());
+            $all_datas[$index] = array_merge($all_datas[$index], $Model->toJSON());
         } else {
-            $all_datas[] = $Model->toArray();
+            $all_datas[] = $Model->toJSON();
         }
         
-        $this->writeStorageData($Storage, $all_datas);
+        if (!$Model->isBuildIn()) {
+            $this->writeStorageData($Storage, $all_datas);
+        }
+        
         $this->updateModelStatus($Model);
         
         $this->resetCache($Storage->getId());

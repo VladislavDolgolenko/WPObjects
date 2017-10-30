@@ -29,6 +29,14 @@ abstract class AbstractTypicalModel extends AbstractModel implements
         parent::__construct($data);
     }
     
+    public function toJSON()
+    {
+        $data = parent::toJSON();
+        $data['id'] = $this->getId();
+        
+        return $data;
+    }
+    
     abstract public function save();
     
     abstract public function getQualifierId($model_type_id);

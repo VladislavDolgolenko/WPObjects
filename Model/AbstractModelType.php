@@ -79,6 +79,16 @@ abstract class AbstractModelType extends AbstractModel implements
     
     abstract public function getModelClassName();
     
+    public function toJSON()
+    {
+        $data = parent::toJSON();
+        $data['qualifiers'] = isset($this->qualifiers) ? $this->qualifiers : array();
+        $data['qualifiers_attr_names'] = isset($this->qualifiers_attr_names) ? $this->qualifiers_attr_names : array();
+        $data['id_attr_name'] = isset($this->id_attr_name) ? $this->id_attr_name : array();
+        
+        return $data;
+    }
+    
     public function attach()
     {
         $Controller = $this->getController();

@@ -67,16 +67,18 @@ abstract Class AbstractRESTController implements
         $method = $request->get_method(); 
         $id = $request->get_param('id'); 
         
+        $body_data = json_decode($request->get_body());
+        
         if (!$id && $method === "GET") {
             return $this->getList($request->get_query_params());
         } else if ($id && $method === "GET") {
             return $this->get($id);
-        } else if ($id && $method === "DELETE" && current_user_can( 'manage_options' )) {
+        } else if ($id && $method === "DELETE") {
             return $this->delete($id);
-        } else if ($method === "CREATE" && current_user_can( 'manage_options' )) {
-            return $this->create($request->get_body_params());
-        } else if ($id && $method === "UPDATE" && current_user_can( 'manage_options' )) {
-            return $this->update($id, $request->get_body_params());
+        } else if ($method === "POST" ) {
+            return $this->create($body_data);
+        } else if ($id && $method === "PUT") {
+            return $this->update($id, $body_data);
         }
         
         return new \WP_Error( 'mewthod_not_allowed', 'Method not allowed', array( 'status' => 404 ) );
@@ -89,7 +91,7 @@ abstract Class AbstractRESTController implements
         }
         
         if ($uniq) {
-            return '/' . $this->object_type_name . '/(?P<id>[a-zA-Z0-9-]+)';
+            return '/' . $this->object_type_name . '/(?P<id>[a-zA-Z0-9-_]+)';
         } else {
             return '/' . $this->object_type_name . '';
         }
