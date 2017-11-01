@@ -39,6 +39,8 @@ abstract class AbstractTypicalModel extends AbstractModel implements
     
     abstract public function save();
     
+    abstract public function delete();
+    
     abstract public function getQualifierId($model_type_id);
     
     abstract public function setQualifierId($model_type_id, $model_id);

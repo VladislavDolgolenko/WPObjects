@@ -69,6 +69,9 @@ abstract Class AbstractRESTController implements
         
         $body_data = json_decode($request->get_body());
         
+        var_dump(wp_get_current_user());
+        var_dump(current_user_can('manage_options'));
+        
         if (!$id && $method === "GET") {
             return $this->getList($request->get_query_params());
         } else if ($id && $method === "GET") {

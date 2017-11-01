@@ -220,7 +220,7 @@ abstract class AbstractPostModel extends AbstractModelFactory implements
         return $this;
     }
     
-    protected function initModel($post)
+    public function initModel($post)
     {
         return $this->getModelType()->initModel($post);
     }

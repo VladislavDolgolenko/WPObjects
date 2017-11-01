@@ -52,7 +52,7 @@ class AbstractDataModel extends AbstractData implements
         return $this->getModelType()->getStorage();
     }
     
-    protected function initModel($post)
+    public function initModel($post)
     {
         return $this->getModelType()->initModel($post);
     }

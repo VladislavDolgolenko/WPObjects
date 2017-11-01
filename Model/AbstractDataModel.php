@@ -82,6 +82,14 @@ abstract class AbstractDataModel extends AbstractTypicalModel
         return $this;
     }
     
+    public function delete()
+    {
+        $DataAccess = $this->getDataAccess();
+        $DataAccess->deleteModel($this);
+        
+        return $this;
+    }
+    
     /**
      * @return \WPObjects\Data\Data
      */

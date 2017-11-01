@@ -58,6 +58,13 @@ abstract class AbstractPostModel extends AbstractTypicalModel
         return $this;
     }
     
+    public function delete()
+    {
+        \wp_delete_post( $this->getId(), true);
+        
+        return $this;
+    }
+    
     public function saveMetas()
     {
         foreach ($this->getRegisterMetas() as $meta_name) {

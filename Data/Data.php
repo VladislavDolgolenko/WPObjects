@@ -201,8 +201,12 @@ class Data {
         
         protected function filterResultData($datas, \WPObjects\Data\Storage $Storage)
         {
-            $key = $this->getDataIdentetyKey(current($datas));
+            if (!count($datas)) {
+                return $datas;
+            }
+            
             foreach ($datas as $index => $data) {
+                $key = $this->getDataIdentetyKey($data);
                 if ($this->isActiveData($Storage, $data[$key]) === true) {
                     $datas[$index]['active'] = true;
                 } else {
@@ -269,8 +273,24 @@ class Data {
         
         $disablement_key = $this->getDataTypeWpOptionKeyDisables($Storage->getId());
         update_option($disablement_key, $disables);
+        
+        return $this;
     }
 
+    protected function deleteModelStatus(\WPObjects\Model\AbstractDataModel $Model)
+    {
+        $Storage = $Model->getModelType()->getStorage();
+        $disables = $this->getDataDisables($Storage->getId());
+        if (in_array($Model->getId(), $disables)) {
+            $index = array_search($Model->getId(), $disables);
+            unset($disables[$index]);
+        }
+        
+        $disablement_key = $this->getDataTypeWpOptionKeyDisables($Storage->getId());
+        update_option($disablement_key, $disables);
+        
+        return $this;
+    }
     
 /*
  * Saving
@@ -295,7 +315,7 @@ class Data {
         $all_datas = $this->readStorageData($Storage);
         $index = $this->getIndexById($Model->getId(), $Model->getModelType());
         
-        if ($index) {
+        if ($index !== false) {
             $all_datas[$index] = array_merge($all_datas[$index], $Model->toJSON());
         } else {
             $all_datas[] = $Model->toJSON();
@@ -338,6 +358,25 @@ class Data {
         $option_key = $this->getDataTypeWpOptionKey($Storage->getId());
         return get_option($option_key, array());
     }
+  
+    public function deleteModel(\WPObjects\Model\AbstractDataModel $Model)
+    {
+        $Storage = $Model->getModelType()->getStorage();
+        $all_datas = $this->readStorageData($Storage);
+        
+        $index = $this->getIndexById($Model->getId(), $Model->getModelType());
+        if ($index === false) {
+            return $this;
+        }
+        
+        unset($all_datas[$index]);
+        $this->writeStorageData($Storage, $all_datas);
+        $this->resetCache($Storage->getId());
+        
+        $this->deleteModelStatus($Model);
+        
+        return $this;
+    }
     
 /*
  * Configurations
@@ -351,7 +390,7 @@ class Data {
             return 'ID';
         } else if (isset($data['slug'])) {
             return 'slug';
-        } else if ($data['key']) {
+        } else if (isset($data['key'])) {
             return 'key';
         }
 

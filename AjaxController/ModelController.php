@@ -31,7 +31,7 @@ class ModelController extends AbstractRESTController
         return new \WP_Error( 'not_found', 'not_found', array( 'status' => 404 ) );
     }
     
-    public function getList($params = null)
+    public function getList($params = array())
     {
         $Factory = $this->getFactory();
         $Factory->query($params);
@@ -47,16 +47,19 @@ class ModelController extends AbstractRESTController
     
     public function create($data)
     {
-        $Model = $this->getModelType()->initModel($data);
+        $Model = $this->getFactory()->initModel($data);
         $Model->save();
         
-        return $Model->getArrayCopy();
+        return $Model->toJSON();
     }
     
     public function update($id, $data)
     {
         $Factory = $this->getFactory();
         $Model = $Factory->get($id);
+        if (!$Model) {
+            return $this->create($data);
+        }
         $Model->exchange($data);
         $Model->save();
         
@@ -67,7 +70,10 @@ class ModelController extends AbstractRESTController
     {
         $Factory = $this->getFactory();
         $Model = $Factory->get($id);
-        $Model->delete();
+        
+        if ($Model) {
+            $Model->delete();
+        }
         
         return true;
     }

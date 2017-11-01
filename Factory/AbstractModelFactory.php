@@ -63,7 +63,7 @@ abstract class AbstractModelFactory extends EventManager implements
      * @param array|\WP_Post $post once result query data for initialize model
      * @return \WPObjects\Model\AbstractModel
      */
-    abstract protected function initModel($post);
+    abstract public function initModel($post);
     
     /**
      * Query processing
