@@ -28,6 +28,15 @@ abstract class AbstractModel extends \ArrayObject implements
         $this->exchange($data);
     }
     
+    public function get($attr_name)
+    {
+        if (isset($this->$attr_name)) {
+            return $this->$attr_name;
+        }
+        
+        return null;
+    }
+    
     public function toJSON()
     {
         return $this->getArrayCopy();

@@ -32,7 +32,7 @@ abstract class AbstractTypicalModel extends AbstractModel implements
     public function toJSON()
     {
         $data = parent::toJSON();
-        $data['id'] = $this->getId();
+        $data['name'] = $this->getName();
         
         return $data;
     }

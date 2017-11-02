@@ -265,9 +265,9 @@ class Data {
         $index = array_search($Model->getId(), $disables);
         $is_status = isset($Storage->activity) ? !$Model->isActive() : $Model->isActive();
         
-        if ($is_status && $index) {
+        if ($is_status && $index !== false) {
             unset($disables[$index]);
-        } else if (!$is_status && !$index) {
+        } else if (!$is_status && $index === false) {
             $disables[] = $Model->getId();
         }
         

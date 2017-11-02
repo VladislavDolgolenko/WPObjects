@@ -45,8 +45,30 @@ class ModelController extends AbstractRESTController
         return $result;
     }
     
+    /**
+     * _creation_id - is new object identity if objects based on custom identities 
+     * 
+     * @param array $data
+     * @return type
+     */
     public function create($data)
     {
+        $id_attr = $this->getFactory()->getIdAttrName();
+        
+        if (isset($data['_creation_id'])) {
+            $id = $data['_creation_id'];
+            $data[$id_attr] = $id;
+            unset($data['_creation_id']);
+        }
+        
+        if (isset($data[$id_attr])) {
+            $id = $data[$id_attr];
+            $Model = $this->getFactory()->get($id);
+            if ($Model) {
+                return new \WP_Error( 'not_found', 'not_found', array( 'status' => 406 ) );
+            }
+        }
+        
         $Model = $this->getFactory()->initModel($data);
         $Model->save();
         
@@ -58,7 +80,7 @@ class ModelController extends AbstractRESTController
         $Factory = $this->getFactory();
         $Model = $Factory->get($id);
         if (!$Model) {
-            return $this->create($data);
+            return new \WP_Error( 'not_found', 'not_found', array( 'status' => 404 ) );
         }
         $Model->exchange($data);
         $Model->save();

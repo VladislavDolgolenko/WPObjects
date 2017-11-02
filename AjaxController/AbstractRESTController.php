@@ -39,6 +39,7 @@ abstract Class AbstractRESTController implements
         \register_rest_route($namespace, $this->getRoute(), array(
             'methods' => 'GET',
             'callback' => array($this, 'prepareAction'),
+            
         ));
         
         \register_rest_route($namespace, $this->getRoute(false), array(
@@ -49,16 +50,25 @@ abstract Class AbstractRESTController implements
         \register_rest_route($namespace, $this->getRoute(), array(
             'methods' => 'PUT',
             'callback' => array($this, 'prepareAction'),
+            'permission_callback' => function () {
+                return current_user_can( 'manage_options' );
+            }
         ));
         
         \register_rest_route($namespace, $this->getRoute(false), array(
             'methods' => 'POST',
             'callback' => array($this, 'prepareAction'),
+            'permission_callback' => function () {
+                return current_user_can( 'manage_options' );
+            }
         ));
         
         \register_rest_route($namespace, $this->getRoute(), array(
             'methods' => 'DELETE',
             'callback' => array($this, 'prepareAction'),
+            'permission_callback' => function () {
+                return current_user_can( 'manage_options' );
+            }
         ));
     }
     
@@ -67,10 +77,7 @@ abstract Class AbstractRESTController implements
         $method = $request->get_method(); 
         $id = $request->get_param('id'); 
         
-        $body_data = json_decode($request->get_body());
-        
-        var_dump(wp_get_current_user());
-        var_dump(current_user_can('manage_options'));
+        $body_data = json_decode($request->get_body(), true);
         
         if (!$id && $method === "GET") {
             return $this->getList($request->get_query_params());

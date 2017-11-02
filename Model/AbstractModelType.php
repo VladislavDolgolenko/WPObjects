@@ -84,7 +84,7 @@ abstract class AbstractModelType extends AbstractModel implements
         $data = parent::toJSON();
         $data['qualifiers'] = isset($this->qualifiers) ? $this->qualifiers : array();
         $data['qualifiers_attr_names'] = isset($this->qualifiers_attr_names) ? $this->qualifiers_attr_names : array();
-        $data['id_attr_name'] = $this->id_attr_name;
+        $data['id_attr_name'] = $this->getIdAttrName();
         
         return $data;
     }
