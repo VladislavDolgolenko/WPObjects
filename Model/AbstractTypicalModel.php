@@ -61,7 +61,7 @@ abstract class AbstractTypicalModel extends AbstractModel implements
         }
         
         $model_type_id = $RelativeModelType->getId();
-        if (isset($this->relatives[$model_type_id])) {
+        if (isset($this->relatives[$model_type_id]) && !$filters) {
             return $this->relatives[$model_type_id];
         }
         
@@ -71,28 +71,36 @@ abstract class AbstractTypicalModel extends AbstractModel implements
         if (in_array($RelativeModelType->getId(), $qualifiers)) {
             
             $relative_ids = $this->getQualifierId($RelativeModelType->getId());
-            $Result = $RelativeModelType->getFactory()->query(array(
+            $params = array_merge(array(
                 $RelativeModelType->getFactory()->getIdAttrName() => $relative_ids
-            ), $filters)->getResult();
+            ), $filters);
+            
+            $Result = $RelativeModelType->getFactory()->query($params)->getResult();
             
         } else if (in_array($RelativeModelType->getId(), $agregators)) {
             
             $qualifier_attr_name = $RelativeModelType->getQualifierAttrName($this->getModelType()->getId());
-            $RelativeModelType->getFactory()->query(array(
+            $params = array_merge(array(
                 $qualifier_attr_name => $this->getId()
-            ), $filters)->getResult();
+            ), $filters);
+            $Result = $RelativeModelType->getFactory()->query($params)->getResult();
             
         } else {
             throw new \Exception('Undefined relative model type');
         }
         
+        $result = null;
         if ($single === false) {
-            $this->relatives[$model_type_id] = $Result;
+            $result = $Result;
         } else {
-            $this->relatives[$model_type_id] = current($Result);
+            $result = current($Result);
         }
         
-        return $this->relatives[$model_type_id];
+        if (!$filters) {
+            $this->relatives[$model_type_id] = $result;
+        }
+        
+        return $result;
     }
     
     public function getRelativeId($RelativeModelType, $single = true)

@@ -27,27 +27,6 @@ class Data {
     private $datas = array();
     
     /**
-     * Source data by types as \ArrayObject
-     * 
-     * @var \ArrayObject
-     */
-    private $datas_objects = array();
-    
-    /**
-     * Active data by types
-     * 
-     * @var array
-     */
-    private $active_datas = array();
-    
-    /**
-     * Active data by types as \ArrayObject
-     * 
-     * @var \ArrayObject
-     */
-    private $active_datas_objects = array();
-    
-    /**
      * Informations of disables data intities 
      * 
      * @var type 
@@ -84,82 +63,15 @@ class Data {
     public function resetCache($storage_id)
     {
         unset($this->datas[$storage_id]);
-        unset($this->datas_objects[$storage_id]);
-        unset($this->active_datas[$storage_id]);
-        unset($this->active_datas_objects[$storage_id]);
         unset($this->data_disables[$storage_id]);
         
         return $this;
     }
-    
-/*
- * Data getting with active status
- */
-    
-    public function getActiveDatasObjects(\WPObjects\Data\Storage $Storage)
-    {
-        if (isset($this->active_datas_objects[$Storage->getId()])) {
-            return $this->active_datas_objects[$Storage->getId()];
-        }
-        
-        $datas = $this->getActiveDatas($Storage);
-        $result = array();
-        foreach ($datas as $data) {
-            $result[] = new \ArrayObject($data, \ArrayObject::ARRAY_AS_PROPS);
-        }
-
-        $this->active_datas_objects[$Storage->getId()] = $result;
-        return $result;
-    }
-    
-    public function getActiveDatas(\WPObjects\Data\Storage $Storage)
-    {
-        if (isset($this->active_datas[$Storage->getId()])) {
-            return $this->active_datas[$Storage->getId()];
-        }
-        
-        $datas = $this->extractActiveDatas($Storage);
-        $this->active_datas[$Storage->getId()] = $datas;
-        return $datas;
-    }
-    
-        private function extractActiveDatas(\WPObjects\Data\Storage $Storage)
-        {
-            $datas = $this->getDatas($Storage);
-            if (count($datas) === 0) {
-                return array();
-            }
-
-            $result_datas = array();
-            foreach ($datas as $data) {
-                if ($data['active'] === true) {
-                    $result_datas[] = $data;
-                }
-            }
-
-            return $result_datas;
-        }
 
 /*
  * Data getting 
  */
         
-    public function getDatasObjects(\WPObjects\Data\Storage $Storage)
-    {
-        if (isset($this->datas_objects[$Storage->getId()])) {
-            return $this->datas_objects[$Storage->getId()];
-        }
-        
-        $datas = $this->getDatas($Storage);
-        $result = array();
-        foreach ($datas as $data) {
-            $result[] = new \ArrayObject($data, \ArrayObject::ARRAY_AS_PROPS);
-        }
-
-        $this->datas_objects[$Storage->getId()] = $result;
-        return $result;
-    }
-    
     public function getDatas(\WPObjects\Data\Storage $Storage)
     {
         if (isset($this->datas[$Storage->getId()])) {
@@ -182,7 +94,7 @@ class Data {
             }
             
             $build_in = $this->filterBuildInData($build_in, $Storage);
-            $custom = $this->readStorageData($Storage);
+            $custom = array_reverse($this->readStorageData($Storage));
             
             $result = array_merge($custom, $build_in);
             $filtered_result = $this->filterResultData($result, $Storage);

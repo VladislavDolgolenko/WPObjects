@@ -78,6 +78,22 @@ abstract class AbstractPostModel extends AbstractModelFactory implements
     }
     
     /**
+     * Return array with values for form select element
+     * 
+     * @return array
+     */
+    function getForSelect()
+    {
+        $result = array();
+        
+        foreach ($this->getResult() as $Object) {
+            $result[$Object->getName()] = $Object->getId();
+        }
+        
+        return $result;
+    }
+    
+    /**
      * Build, send query and set results.
      * @param boolean $result_as_object Query flag. How to create result object. 
      * If true, result must be instance of \WP_Query

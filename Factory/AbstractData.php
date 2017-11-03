@@ -89,6 +89,22 @@ abstract class AbstractData extends AbstractModelFactory implements
         return $result;
     }
     
+    /**
+     * Return array with values for form select element
+     * 
+     * @return array
+     */
+    function getForSelect()
+    {
+        $result = array();
+        
+        foreach ($this->getResult() as $Object) {
+            $result[$Object->getName()] = $Object->getId();
+        }
+        
+        return $result;
+    }
+    
     public function doQuery($filters = array(), $result_as_object = false)
     {
         $filters = array_merge($this->getDefaultFilters(), $filters);

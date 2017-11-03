@@ -127,6 +127,11 @@ abstract class AbstractPostModel extends AbstractTypicalModel
         return \get_the_title($this->ID);
     }
     
+    public function getPermalink()
+    {
+        return \get_the_permalink($this->getId());
+    }
+    
     public function getMeta($key)
     {
         if (!isset($this->metas[$key])) {
@@ -141,6 +146,10 @@ abstract class AbstractPostModel extends AbstractTypicalModel
     {
         if (is_array($value) && count($value) === 1) {
             $value = current($value);
+        }
+        
+        if (\is_serialized($value)) {
+            $value = unserialize($value);
         }
         
         if (!in_array($key, $this->getModelType()->getRegisterMetas())) {
