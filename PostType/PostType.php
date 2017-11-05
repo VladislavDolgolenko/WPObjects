@@ -58,6 +58,11 @@ class PostType extends AbstractModelType implements
     );
     
     /**
+     * @var \WPObjects\PostType\MetaBox in array
+     */
+    protected $MetaBoxes = array();
+    
+    /**
      * Default object attributes
      * @var array
      */
@@ -132,6 +137,7 @@ class PostType extends AbstractModelType implements
         parent::attach();
         \add_action('save_post', array($this, 'savePost'), 10, 3);
         \add_action('init', array($this, 'register'));
+        \add_action('add_meta_boxes', array($this, 'registerMetaBoxes'));
     }
     
     public function detach()
@@ -139,6 +145,7 @@ class PostType extends AbstractModelType implements
         parent::detach();
         \remove_action('init', array($this, 'register'));
         \remove_action('save_post', array($this, 'savePost'));
+        \remove_action('add_meta_boxes', array($this, 'registerMetaBoxes'));
     }
     
     /**
@@ -148,13 +155,51 @@ class PostType extends AbstractModelType implements
      */
     public function register()
     {
-        \register_post_type($this->getId(), $this->getConfig());
+        if (!post_type_exists($this->getId())) {
+            \register_post_type($this->getId(), $this->getConfig());
+        }
+        
+        if (function_exists('add_meta_box')) {
+            $this->registerMetaBoxes();
+        }
+        
+        return $this;
+    }
+
+    public function registerMetaBoxes()
+    {
+        foreach ($this->getMetaBoxes() as $MetaBox) {
+            $this->registerMetaBox($MetaBox);
+        }
+    }
+    
+    public function registerMetaBox($MetaBox)
+    {
+        \add_meta_box(
+            $MetaBox->getId(), 
+            $MetaBox->getTitle(), 
+            array($MetaBox, 'render'), 
+            $this->getId(), 
+            $MetaBox->getPosition(), 
+            $MetaBox->getPriority()
+        );
+    }
+    
+    public function getMetaBoxes()
+    {
+        return $this->MetaBoxes;
+    }
+    
+    public function addMetaBox(\WPObjects\PostType\MetaBox $MetaBox)
+    {
+        $this->MetaBoxes[] = $MetaBox;
         
         return $this;
     }
     
     /**
      * Handler for saving posts of current post-type
+     * Processing meta attributes saving
      * 
      * @global \WP_Post $_POST
      * @param int $post_id
@@ -175,9 +220,14 @@ class PostType extends AbstractModelType implements
             return;
         }
         
-        $model_class = $this->getModelClass();
-        $Post = new $model_class($post);
-        foreach ($_POST as $attr => $value) {
+        $Post = $this->createModel($post);
+        
+        $metas = array();
+        foreach ($this->getMetaBoxes() as $MetaBox) {
+            $metas = array_merge($metas, $MetaBox->processing($Post, $_POST));
+        }
+        
+        foreach ($metas as $attr => $value) {
             $Post->setMeta($attr, self::sanitizeValue($value));
         }
         
@@ -348,6 +398,8 @@ class PostType extends AbstractModelType implements
                     $values[$key] = self::sanitizeValue($value);
                 }
             }
+            
+            return $values;
         } else {
             return \sanitize_text_field($values);
         }
@@ -399,6 +451,18 @@ class PostType extends AbstractModelType implements
         return null;
     }
     
+    public function getLabels($name = null)
+    {
+        $config = $this->getConfig();
+        
+        $labels = isset($config['labels']) ? $config['labels'] : array();
+        if (is_null($name)) {
+            return $labels;
+        }
+        
+        return isset($labels[$name]) ? $labels[$name] : '';
+    }
+    
     /**
      * Return default attributes of current post-type typical models
      * @return type
@@ -437,6 +501,11 @@ class PostType extends AbstractModelType implements
     public function getConfig()
     {
         return $this->config;
+    }
+    
+    public function getAddNewLink()
+    {
+        return admin_url('post-new.php?post_type=' . $this->getId());
     }
 }
 

@@ -10,65 +10,33 @@
 
 namespace WPObjects\PostType;
 
-abstract class MetaBox implements \WPObjects\EventManager\ListenerInterface
+use WPObjects\Model\AbstractModel;
+
+abstract class MetaBox extends AbstractModel
 {
     protected $id = null;
     protected $title = null;
     protected $position = null;
     protected $priotity = null;
-    protected $PostType = null;
     
-    public function __construct(PostType $PostType, $title = null)
-    {
-        $this->PostType = $PostType;
-        $this->title = $title;
-    }
+    /**
+     * @var \WP_Post
+     */
+    protected $Post = null;
     
-    public function attach()
-    {
-        \add_action('admin_init', array($this, 'register'));
-    }
+    /**
+     * @return array
+     */
+    abstract public function processing(\WPObjects\Model\AbstractPostModel $Post, $data);
     
-    public function detach()
+    /**
+     * @param \WP_Post $post
+     * @return $this
+     */
+    public function render(\WP_Post $post)
     {
-        \remove_action('admin_init', array($this, 'register'));
-    }
-    
-    public function register()
-    {
-        \add_meta_box( 
-            $this->getId(), 
-            $this->title, 
-            array($this, 'render'), 
-            $this->PostType->getId(), 
-            $this->position, 
-            $this->priotity
-        );
+        $this->Post = $post;
         
-        \add_action('save_post', array($this, 'preProcessing'), 10, 1);
-    }
-    
-    abstract protected function getTemplatePath();
-    
-    public function preProcessing($post_id)
-    {
-        global $_POST;
-        if (!isset($_POST['post_type'])) {
-            return;
-        }
-
-        if (defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE || 
-            $_POST['post_type'] !== $this->PostType->getId()) {
-            return;
-        }
-        
-        $this->processing($post_id, $_POST);
-    }
-    
-    abstract protected function processing($post_id, $data);
-    
-    public function render($post)
-    {
         $template_path = $this->getTemplatePath();
         if (!\file_exists($template_path)) {
             return;
@@ -76,16 +44,24 @@ abstract class MetaBox implements \WPObjects\EventManager\ListenerInterface
         
         $this->enqueues();
         include($template_path);
-    }
-    
-    protected function enqueues()
-    {
         
+        return $this;
+    }
+
+    abstract protected function enqueues();
+    
+    abstract protected function getTemplatePath();
+    
+    public function getPost()
+    {
+        return $this->Post;
     }
     
     public function setId($int)
     {
         $this->id = $int;
+        
+        return $this;
     }
     
     public function getId()
@@ -93,14 +69,45 @@ abstract class MetaBox implements \WPObjects\EventManager\ListenerInterface
         return $this->id;
     }
     
+    public function getName()
+    {
+        return $this->getTitle();
+    }
+    
     public function setTitle($string)
     {
         $this->title = $string;
+        
+        return $this;
     }
     
     public function getTitle()
     {
         return $this->title;
+    }
+    
+    public function setPosition($string)
+    {
+        $this->position = $string;
+        
+        return $this;
+    }
+    
+    public function getPosition()
+    {
+        return $this->position;
+    }
+    
+    public function setPriority($string)
+    {
+        $this->priotity = $string;
+        
+        return $this;
+    }
+    
+    public function getPriority()
+    {
+        return $this->priotity;
     }
     
 }

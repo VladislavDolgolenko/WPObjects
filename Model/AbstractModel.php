@@ -37,6 +37,13 @@ abstract class AbstractModel extends \ArrayObject implements
         return null;
     }
     
+    public function set($attr_name, $value)
+    {
+        $this->$attr_name = $value;
+        
+        return $this;
+    }
+    
     public function toJSON()
     {
         return $this->getArrayCopy();

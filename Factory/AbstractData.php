@@ -136,6 +136,9 @@ abstract class AbstractData extends AbstractModelFactory implements
             foreach ($this->filters as $name => $value) {
                 if (!isset($model[$name])) {
                     $confirm = false;
+                }
+                
+                if ($confirm === false) {
                     break;
                 }
                 
