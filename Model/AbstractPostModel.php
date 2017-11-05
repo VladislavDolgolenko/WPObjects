@@ -132,6 +132,11 @@ abstract class AbstractPostModel extends AbstractTypicalModel
         return \get_the_permalink($this->getId());
     }
     
+    public function getThumbnailUrl($size = 'medium')
+    {
+        return \get_the_post_thumbnail_url($this->getId(), $size);
+    }
+    
     public function getMetas()
     {
         return $this->metas;

@@ -33,7 +33,7 @@ abstract class MetaBox extends AbstractModel
      * @param \WP_Post $post
      * @return $this
      */
-    public function render(\WP_Post $post)
+    public function render(\WP_Post $post, $box)
     {
         $this->Post = $post;
         
