@@ -108,7 +108,7 @@ abstract class AbstractData extends AbstractModelFactory implements
     public function doQuery($filters = array(), $result_as_object = false)
     {
         $filters = array_merge($this->getDefaultFilters(), $filters);
-        $this->setFilters(array_filter($filters));
+        $this->setFilters(array_filter($filters, array($this, 'orepareFilterValue')));
         $this->result_as_object = $result_as_object;
         $this->setResult(null);
         $this->result_data = array();
@@ -118,6 +118,15 @@ abstract class AbstractData extends AbstractModelFactory implements
              ->initResults();
         
         return $this;
+    }
+    
+    public function orepareFilterValue($var)
+    {
+        if ($var !== false && !(bool)$var) {
+            return false;
+        }
+        
+        return true;
     }
     
     protected function getDefaultFilters()

@@ -67,8 +67,7 @@ abstract class AbstractPostModel extends AbstractTypicalModel
     
     public function saveMetas()
     {
-        foreach ($this->getModelType()->getRegisterMetas() as $meta_name) {
-            $value = $this->getMeta($meta_name);
+        foreach ($this->getMetas() as $meta_name => $value) {
             $this->saveMeta($meta_name, $value);
         }
         
@@ -78,12 +77,14 @@ abstract class AbstractPostModel extends AbstractTypicalModel
     protected function saveMeta($key, $value)
     {
         if (is_array($value) && !is_array(current($value)) && is_int(key($value))) {
-            \delete_post_meta($key);
+            \delete_post_meta($this->getId(), $key);
             foreach ($value as $value) {
                 \add_post_meta($this->getId(), $key, $value);
             }
-        } else {
+        } else if (!is_null($value)) {
             \update_post_meta($this->getId(), $key, $value);
+        } else {
+            \delete_post_meta($this->getId(), $key);
         }
         
         return $this;
@@ -130,6 +131,11 @@ abstract class AbstractPostModel extends AbstractTypicalModel
     public function getPermalink()
     {
         return \get_the_permalink($this->getId());
+    }
+    
+    public function getEditeLink()
+    {
+        return \get_edit_post_link($this->getId());
     }
     
     public function getThumbnailUrl($size = 'medium')

@@ -232,6 +232,7 @@ class PostType extends AbstractModelType implements
         }
         
         $Post->saveMetas();
+        //exit();
         return $this;
     }
     
