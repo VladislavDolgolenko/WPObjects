@@ -22,13 +22,13 @@ class ModelController extends AbstractRESTController
     public function get($id)
     {
         $Factory = $this->getFactory();
-        $Model = $Factory->get($id);
-        
+        $Model = $Factory->get($id, array('active' => null));
+
         if ($Model) {
             return $Model->toJSON();
         }
         
-        return new \WP_Error( 'not_found', 'not_found', array( 'status' => 404 ) );
+        return new \WP_Error( 'not_found', 'not found', array( 'status' => 404 ) );
     }
     
     public function getList($params = array())
@@ -63,7 +63,7 @@ class ModelController extends AbstractRESTController
         
         if (isset($data[$id_attr])) {
             $id = $data[$id_attr];
-            $Model = $this->getFactory()->get($id);
+            $Model = $this->getFactory()->get($id, array('active' => null));
             if ($Model) {
                 return new \WP_Error( 'not_found', 'not_found', array( 'status' => 406 ) );
             }
@@ -78,7 +78,7 @@ class ModelController extends AbstractRESTController
     public function update($id, $data)
     {
         $Factory = $this->getFactory();
-        $Model = $Factory->get($id);
+        $Model = $Factory->get($id, array('active' => null));
         if (!$Model) {
             return new \WP_Error( 'not_found', 'not_found', array( 'status' => 404 ) );
         }
@@ -91,7 +91,7 @@ class ModelController extends AbstractRESTController
     public function delete($id)
     {
         $Factory = $this->getFactory();
-        $Model = $Factory->get($id);
+        $Model = $Factory->get($id, array('active' => null));
         
         if ($Model) {
             $Model->delete();

@@ -82,7 +82,7 @@ abstract Class AbstractRESTController implements
         if (!$id && $method === "GET") {
             return $this->getList($request->get_query_params());
         } else if ($id && $method === "GET") {
-            return $this->get($id);
+            return $this->get($id, $request->get_query_params());
         } else if ($id && $method === "DELETE") {
             return $this->delete($id);
         } else if ($method === "POST" ) {
