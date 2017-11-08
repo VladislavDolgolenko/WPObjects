@@ -33,6 +33,7 @@ class Loger
     
     public function __construct()
     {
+        return;
         $this->file_path = ABSPATH . '/wp-content/log.txt';
         $this->active = true;
         $this->clean();
@@ -40,6 +41,7 @@ class Loger
     
     public function write($line_message)
     {
+        return;
         if (!$this->active) {
             return;
         }
