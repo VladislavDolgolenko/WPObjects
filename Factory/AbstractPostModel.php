@@ -128,6 +128,10 @@ abstract class AbstractPostModel extends AbstractModelFactory implements
             $this->query['numberposts'] = (int)$this->filters['numberposts'];
         }
         
+        if (isset($this->filters['max_count'])) {
+            $this->query['numberposts'] = (int)$this->filters['max_count'];
+        }
+        
         if (isset($this->filters['id']) && $this->filters['id']) {
             $this->query['post__in'] = $this->prepareStringToArray($this->filters['id']);
             $this->query['orderby'] = 'post__in';

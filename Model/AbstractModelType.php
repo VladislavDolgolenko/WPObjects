@@ -180,7 +180,7 @@ abstract class AbstractModelType extends AbstractModel implements
      */
     public function getContextModelTypes()
     {
-        return array_merge($this->getQualifiersIds(), $this->getAgregatorsIds());
+        return array_merge($this->getQualifiersIds(), $this->getAgregatorsIds(), array($this->getId()));
     }
     
     /**
@@ -236,6 +236,15 @@ abstract class AbstractModelType extends AbstractModel implements
     public function getQualifiersIds()
     {
         return $this->qualifiers;
+    }
+    
+    public function hasQualifier($model_type_id)
+    {
+        if (in_array($model_type_id, $this->qualifiers)) {
+            return true;
+        }
+        
+        return false;
     }
     
     public function getAgregatorsIds()

@@ -16,12 +16,12 @@ class Agregators implements
     
     public function attach(\WPObjects\EventManager\Manager $EventManager)
     {
-        $EventManager->attach('prepare_filters', array($this, 'handler'));
+        $EventManager->attach('set_query_filters', array($this, 'handler'));
     }
     
     public function detach(\WPObjects\EventManager\Manager $EventManager)
     {
-        $EventManager->detach('prepare_filters', array($this, 'handler'));
+        $EventManager->detach('set_query_filters', array($this, 'handler'));
     }
     
     public function handler(\WPObjects\Factory\AbstractModelFactory $Factory)
@@ -42,7 +42,7 @@ class Agregators implements
             }
             
             $filter_ids = array();
-            $AgregatorsObjects = $Factory->get($value);
+            $AgregatorsObjects = $Factory->get($value, array(), false);
             foreach ($AgregatorsObjects as $AgregatorObject) {
                 $ids = $AgregatorObject->getQualifierId($ModelType->getId());
                 if (!is_array($ids)) {

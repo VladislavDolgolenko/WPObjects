@@ -25,12 +25,12 @@ class WordPressContext implements
     
     public function attach(\WPObjects\EventManager\Manager $EventManager)
     {
-        $EventManager->attach('prepare_filters', array($this, 'handler'));
+        $EventManager->attach('set_query_filters', array($this, 'handler'));
     }
     
     public function detach(\WPObjects\EventManager\Manager $EventManager)
     {
-        $EventManager->detach('prepare_filters', array($this, 'handler'));
+        $EventManager->detach('set_query_filters', array($this, 'handler'));
     }
     
     public function handler(\WPObjects\Factory\AbstractModelFactory $Factory)
@@ -42,9 +42,14 @@ class WordPressContext implements
             return;
         }
         
-        $ContextModel = $this->getContextTypicalModel();
+        global $post;
+        $ModelType = $this->getModelType()->getContextModelType($post);
+        if (is_null($ModelType)) {
+            return;
+        }
         
-        // If own context
+        
+        $ContextModel = $ModelType->initModel($post);
         if ($ContextModel->getModelType()->getId() === $this->getFactory()->getModelType()->getId()) {
             $this->filters[$this->getFactory()->getIdAttrName()] = $ContextModel->getId();
         } else {

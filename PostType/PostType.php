@@ -159,7 +159,7 @@ class PostType extends AbstractModelType implements
             \register_post_type($this->getId(), $this->getConfig());
         }
         
-        if (function_exists('add_meta_box')) {
+        if (function_exists('add_meta_box') && \did_action('add_meta_boxes')) {
             $this->registerMetaBoxes();
         }
         

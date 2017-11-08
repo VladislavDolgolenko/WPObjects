@@ -314,11 +314,6 @@ class Data {
         return $this->wp_option_prefix . '_data_' . $datas_type_id;
     }
     
-    public function getDataTypeWpOptionKeyDelete($datas_type_id)
-    {
-        return $this->wp_option_prefix . '_data_' . $datas_type_id . '_delete';
-    }
-    
     public function getDataTypeWpOptionKeyDisables($datas_type_id)
     {
         return $this->wp_option_prefix . '_data_' . $datas_type_id . '_disables';
@@ -328,21 +323,33 @@ class Data {
  * Export & Import
  */
     
-    // export 
-    public function export()
+    public function export($Storages)
     {
-        $DataTypes = $this->getDataTypes();
-        
         $result = array();
-        foreach ($DataTypes as $DataType) {
-            $key_options = $this->getDataTypeWpOptionKey((string)$DataType->id);
-            $key_disables = $this->getDataTypeWpOptionKeyDisables((string)$DataType->id);
+        foreach ($Storages as $Storage) {
+            $key_options = $this->getDataTypeWpOptionKey((string)$Storage->getId());
+            $key_disables = $this->getDataTypeWpOptionKeyDisables((string)$Storage->getId());
             
-            $result[$key_options] = get_option($key_options, array() ); 
-            $result[$key_disables] = get_option($key_disables, array() ); 
+            $result[$key_disables] = $this->extractDataDisables($Storage->getId());
+            $result[$key_options] = $this->readStorageData($Storage); 
         }
         
         return $result;
+    }
+    
+    public function cleanStorages($Storages)
+    {
+        if (!is_array($Storages)) {
+            $Storages = array($Storages);
+        }
+        
+        foreach ($Storages as $Storage) {
+            $key_options = $this->getDataTypeWpOptionKey((string)$Storage->getId());
+            $key_disables = $this->getDataTypeWpOptionKeyDisables((string)$Storage->getId());
+            
+            delete_option($key_options);
+            delete_option($key_disables);
+        }
     }
     
     public function translateExportToJSON($datas)
@@ -359,7 +366,6 @@ class Data {
     public function importJSON($json)
     {
         $wp_data_options = json_decode($json, true);
-        
         foreach ($wp_data_options as $key => $options) {
             update_option($key, $options);
         }

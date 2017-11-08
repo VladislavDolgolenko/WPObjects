@@ -160,7 +160,7 @@ abstract class AbstractPostModel extends AbstractTypicalModel
     
     public function setMeta($key, $value)
     {
-        if (is_array($value) && count($value) === 1) {
+        if (is_array($value) && count($value) === 1 && !is_array(current($value))) {
             $value = current($value);
         }
         
