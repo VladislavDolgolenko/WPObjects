@@ -22,6 +22,21 @@ if (!function_exists("WP_Filesystem")) {
  * Enables the use of LESS in WordPress
  *
  * See README.md for usage information
+ * 
+ * WP Filters:
+ *      $this->namespace + less_vars
+ *      $this->namespace + less_compression
+ *      $this->namespace + less_preserve_comments
+ *      $this->namespace + less_import_dirs
+ *      $this->namespace + less_force_compile
+ *      $this->namespace + less_save_css
+ *      $this->namespace + wp_less_cache_path
+ *      $this->namespace + wp_less_cache_url
+ * 
+ * WP Option:
+ *      $this->namespace + wp_less_always_compile_less
+ *      $this->namespace + wp_less_always_compile_less
+ *      $this->namespace + wp_less_cached_files
  *
  * @author  Robert "sancho the fat" O'Rourke
  * @link    http://sanchothefat.com/
@@ -35,6 +50,8 @@ class WPless {
          * @var    \mdl__wp_less Reusable object instance.
          */
         protected static $instance = null;
+        
+        protected $namespace = null;
 
 
         /**
@@ -85,13 +102,15 @@ class WPless {
          * @var array Default import directory paths for Lessc to scan
          */
         public $import_dirs = array();
-
+        
 
         /**
          * Constructor
          */
-        public function __construct() {
-
+        public function __construct($namespace = 'wpobjects_')
+        {
+                $this->namespace = $namespace;
+            
                 // every CSS file URL gets passed through this filter
                 add_filter( 'style_loader_src', array( $this, 'parse_stylesheet' ), 1000, 2 );
 
@@ -108,6 +127,10 @@ class WPless {
          */
         public function parse_stylesheet( $src, $handle ) {
 
+                if (!preg_match('/^'. $this->namespace . '.*/', $handle)) {
+                    return $src;
+                }
+                
                 // we only want to handle .less files
                 if ( ! preg_match( '/\.less(\.php)?$/', preg_replace( '/\?.*$/', '', $src ) ) ) {
                         return $src;
@@ -132,7 +155,7 @@ class WPless {
                 // vars to pass into the compiler - default @themeurl var for image urls etc...
                 $this->vars['themeurl'] = '~"' . get_stylesheet_directory_uri() . '"';
                 $this->vars['lessurl']  = '~"' . dirname( $src ) . '"';
-                $this->vars             = apply_filters( 'mdl__less_vars', $this->vars, $handle );
+                $this->vars             = apply_filters( $this->namespace . 'less_vars', $this->vars, $handle );
 
                 // The overall "version" of the LESS file is all it's vars, src etc.
                 $less_version           = md5( serialize( array( $this->vars, $src ) ) );
@@ -147,7 +170,7 @@ class WPless {
                  * necessarily cause a (re)generation, one would need to bump the $ver param
                  * on wp_enqueue_script() to cause that.
                  */
-                if ( ! get_option( 'mdl__wp_less_always_compile_less', true ) ) {
+                if ( ! get_option( $this->namespace . 'wp_less_always_compile_less', true ) ) {
                         if ( ( ! empty( $cache['version'] ) ) && $cache['version'] === $less_version ) {
                                 // restore query string it had if any
                                 $url = $cache['url'] . ( ! empty( $query_string ) ? "?{$query_string}" : '' );
@@ -171,12 +194,12 @@ class WPless {
                         }
 
                         // less config
-                        $less->setFormatter( apply_filters( 'mdl__less_compression', $this->compression ) );
-                        $less->setPreserveComments( apply_filters( 'mdl__less_preserve_comments', $this->preserve_comments ) );
+                        $less->setFormatter( apply_filters( $this->namespace . 'less_compression', $this->compression ) );
+                        $less->setPreserveComments( apply_filters( $this->namespace . 'less_preserve_comments', $this->preserve_comments ) );
                         $less->setVariables( $this->vars );
 
                         // add directories to scan for imports
-                        $import_dirs = apply_filters( 'mdl__less_import_dirs', $this->import_dirs );
+                        $import_dirs = apply_filters( $this->namespace . 'less_import_dirs', $this->import_dirs );
                         if ( ! empty( $import_dirs ) ) {
                                 foreach ( (array) $import_dirs as $dir ) {
                                         $less->addImportDir( $dir );
@@ -202,7 +225,7 @@ class WPless {
                         } else {
                                 $force = false;
                         }
-                        $less_cache = $less->cachedCompile( $cache['less'], apply_filters( 'mdl__less_force_compile', $force ) );
+                        $less_cache = $less->cachedCompile( $cache['less'], apply_filters( $this->namespace . 'less_force_compile', $force ) );
 
                         if ( empty( $cache ) || empty( $cache['less']['updated'] ) || md5( $less_cache['compiled'] ) !== md5( $cache['less']['compiled'] ) || $this->vars !== $cache['vars'] ) {
 
@@ -224,7 +247,7 @@ class WPless {
                                  *
                                  * This saves space on the options table for high performance environments.
                                  */
-                                if ( get_option( 'mdl__wp_less_always_compile_less', true ) ) {
+                                if ( get_option( $this->namespace . 'wp_less_always_compile_less', true ) ) {
                                         $cache['less'] = $less_cache;
                                 }
 
@@ -241,7 +264,7 @@ class WPless {
                 // restore original url scheme
                 $url = set_url_scheme( $url, $src_scheme );
 
-                if ( get_option( 'mdl__wp_less_always_compile_less', true ) ) {
+                if ( get_option( $this->namespace . 'wp_less_always_compile_less', true ) ) {
                         return add_query_arg( 'ver', $less_cache['updated'], $url );
                 } else {
                         return add_query_arg( 'ver', $less_version, $url );
@@ -256,7 +279,7 @@ class WPless {
          * @return bool
          */
         public function get_cached_file_data( $path ) {
-                $caches = get_option( 'mdl__wp_less_cached_files', array() );
+                $caches = get_option( $this->namespace . 'wp_less_cached_files', array() );
 
                 if ( isset( $caches[ $path ] ) ) {
                         return $caches[ $path ];
@@ -266,7 +289,7 @@ class WPless {
         }
 
         public function save_parsed_css( $css_path, $file_contents ) {
-                if ( ! apply_filters( 'mdl__less_save_css', $css_path, $file_contents ) ) {
+                if ( ! apply_filters( $this->namespace . 'less_save_css', $css_path, $file_contents ) ) {
                         return;
                 }
 
@@ -287,11 +310,11 @@ class WPless {
         public function update_cached_file_data( $path, $file_data ) {
                 $file_data['less']['compiled'] = '';
 
-                $caches = get_option( 'mdl__wp_less_cached_files', array() );
+                $caches = get_option( $this->namespace . 'wp_less_cached_files', array() );
 
                 $caches[ $path ] = $file_data;
 
-                update_option( 'mdl__wp_less_cached_files', $caches );
+                update_option( $this->namespace . 'wp_less_cached_files', $caches );
         }
 
         /**
@@ -349,13 +372,13 @@ class WPless {
                 $upload_dir = wp_upload_dir();
 
                 if ( $path ) {
-                        $dir = apply_filters( 'mdl__wp_less_cache_path', path_join( $upload_dir['basedir'], 'wp-less-cache' ) );
+                        $dir = apply_filters( $this->namespace . 'wp_less_cache_path', path_join( $upload_dir['basedir'], $this->namespace . 'less-cache' ) );
                         // create folder if it doesn't exist yet
                         if ( ! file_exists( $dir ) ) {
                                 wp_mkdir_p( $dir );
                         }
                 } else {
-                        $dir = apply_filters( 'mdl__wp_less_cache_url', path_join( $upload_dir['baseurl'], 'wp-less-cache' ) );
+                        $dir = apply_filters( $this->namespace . 'wp_less_cache_url', path_join( $upload_dir['baseurl'], $this->namespace . 'less-cache' ) );
                 }
 
                 return rtrim( $dir, '/' );

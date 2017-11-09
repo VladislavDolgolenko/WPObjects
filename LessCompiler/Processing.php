@@ -1,9 +1,11 @@
 <?php
 
-/* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+/**
+ * @encoding     UTF-8
+ * @copyright    Copyright (C) 2016 Torbara (http://torbara.com). All rights reserved.
+ * @license      Envato Standard License http://themeforest.net/licenses/standard?ref=torbara
+ * @author       Vladislav Dolgolenko (vladislavdolgolenko.com)
+ * @support      support@torbara.com
  */
 
 namespace WPObjects\LessCompiler;
@@ -13,7 +15,7 @@ use WPObjects\EventManager\ListenerInterface;
 class Processing implements 
     ListenerInterface
 {
-    protected $namespae = 'msp_';
+    protected $namespace = 'wpobjects_';
     
     protected $Factory;
     
@@ -24,8 +26,8 @@ class Processing implements
         \add_action( 'init', array( $this, 'initCompeleHandler' ) );
         \add_action('wp_enqueue_scripts', array($this, 'enqueueColorsVariables'));
         \add_action('wp_enqueue_scripts', array($this, 'chackDebag'));
-        \add_action('mdl__less_vars', array($this, 'getLessParams'));
-        \add_action('wp_less_cache_path', array($this, 'getCssCachePath'));
+        \add_action( $this->getNamespace() . 'less_vars', array($this, 'getLessParams'));
+        \add_action( $this->getNamespace() . 'wp_less_cache_path', array($this, 'getCssCachePath'));
         \add_action('customize_register', array($this, 'registerCustomizeDefaultColors'));
     }
     
@@ -36,7 +38,7 @@ class Processing implements
     
     public function initCompeleHandler()
     {
-        $this->WPless = new WPless();
+        $this->WPless = new WPless($this->getNamespace());
     }
     
     public function enqueueColorsVariables()
@@ -48,7 +50,7 @@ class Processing implements
     public function chackDebag()
     {
         if (defined('WP_DEBUG') && WP_DEBUG) {
-           delete_option('mdl__wp_less_cached_files');
+            delete_option( $this->getNamespace() .'wp_less_cached_files');
         }
     }
     
@@ -117,5 +119,21 @@ class Processing implements
     public function getParamsFactory()
     {
         return $this->Factory;
+    }
+    
+    public function setNamespace($namespace)
+    {
+        if (!is_string($namespace) || strlen($namespace) < 2) {
+            throw new \Exception('Incorrect namespace setted fot LessCompiler Processing');
+        }
+        
+        $this->namespace = $namespace;
+        
+        return;
+    }
+    
+    public function getNamespace()
+    {
+        return $this->namespace;
     }
 }

@@ -1,9 +1,11 @@
 <?php
 
-/* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+/**
+ * @encoding     UTF-8
+ * @copyright    Copyright (C) 2016 Torbara (http://torbara.com). All rights reserved.
+ * @license      Envato Standard License http://themeforest.net/licenses/standard?ref=torbara
+ * @author       Vladislav Dolgolenko (vladislavdolgolenko.com)
+ * @support      support@torbara.com
  */
 
 namespace WPObjects\LessCompiler;
@@ -71,7 +73,9 @@ class ParamsFactory extends AbstractData
         
         $result = array();
         foreach ($Params as $Param) {
-            $Param['default'] = $Param->getCurrentValue();
+            $new_param = $Param->getArrayCopy();
+            $new_param['default'] = $Param->getCurrentValue();
+            $result[] = $new_param;
         }
         
         return $result;
