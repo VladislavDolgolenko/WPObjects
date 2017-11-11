@@ -98,11 +98,11 @@ abstract class AdminPage implements
     
     public function getUrl($get_params = null)
     {
-        if (is_null($this->perent_menu_id)) {
+        //if (is_null($this->perent_menu_id)) {
             $base = admin_url( 'admin.php?page=' . $this->id );
-        } else {
-            $base = admin_url( add_query_arg( 'page', $this->id, $this->perent_menu_id ) );
-        }
+        //} else {
+        //    $base = admin_url( add_query_arg( 'page', $this->id, $this->perent_menu_id ) );
+        //}
         
         if (is_null($get_params)) {
             return $base;
@@ -119,6 +119,20 @@ abstract class AdminPage implements
     abstract protected function enqueues();
     
     abstract protected function getTemplatePath();
+    
+    public function getId()
+    {
+        return $this->id;
+    }
+    
+    public function getPageId()
+    {
+        if ($this->perent_menu_id) {
+            return $this->perent_menu_id . '_page_' . $this->id;
+        }
+        
+        return $this->id;
+    }
     
     public function setServiceManager(\WPObjects\Service\Manager $ServiceManager)
     {
