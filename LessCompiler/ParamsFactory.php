@@ -34,7 +34,7 @@ class ParamsFactory extends AbstractData
 
         $groups = array();
         foreach ($colors as $name => $color) {
-            $group = $color['group'];
+            $group = isset($color['group']) ? $color['group'] : 'other';
             if (!isset($groups[$group])) {
                 $groups[$group] = array();
             }

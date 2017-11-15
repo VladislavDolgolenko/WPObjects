@@ -106,8 +106,10 @@ abstract class AbstractTypicalModel extends AbstractModel implements
     public function getRelativeId($RelativeModelType, $single = true)
     {
         $Relatives = $this->getRelative($RelativeModelType, array(), $single);
-        if ($single) {
+        if ($single && $Relatives) {
             return $Relatives->getId();
+        } else if ($single && !$Relatives) {
+            return null;
         }
         
         $result_ids = array();
