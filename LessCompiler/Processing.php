@@ -28,7 +28,7 @@ class Processing implements
         \add_action('wp_enqueue_scripts', array($this, 'chackDebag'));
         \add_action( $this->getNamespace() . 'less_vars', array($this, 'getLessParams'));
         \add_action( $this->getNamespace() . 'wp_less_cache_path', array($this, 'getCssCachePath'));
-        \add_action('customize_register', array($this, 'registerCustomizeDefaultColors'));
+        \add_action('customize_register', array($this, 'registerCustomizeDefaultColors'), 100);
     }
     
     public function detach()
@@ -56,6 +56,10 @@ class Processing implements
     
     public function registerCustomizeDefaultColors($wp_customize)
     {
+        if ($wp_customize->get_panel('mdl__color')) {
+            return;
+        }
+        
         $wp_customize->add_panel( 'mdl__color' , array(
             'title'      => esc_html__( 'Color scheme', 'team' ),
             'priority'   => 30,

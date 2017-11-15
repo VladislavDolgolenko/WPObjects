@@ -14,6 +14,8 @@ use WPObjects\Factory\AbstractData;
 
 class ParamsFactory extends AbstractData
 {
+    protected $result_as_theme_mode_defaults = null;
+    
     public function initModel($post)
     {
         return new ParamModel($post, \ArrayObject::ARRAY_AS_PROPS);
@@ -73,9 +75,9 @@ class ParamsFactory extends AbstractData
         
         $result = array();
         foreach ($Params as $Param) {
-            $new_param = $Param->getArrayCopy();
-            $new_param['default'] = $Param->getCurrentValue();
-            $result[] = $new_param;
+            $object = $Param->getArrayCopy();
+            $object['default'] = $Param->getCurrentValue();
+            $result[$Param->id] = $object;
         }
         
         return $result;
