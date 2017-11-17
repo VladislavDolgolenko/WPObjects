@@ -484,6 +484,24 @@ class PostType extends AbstractModelType implements
     }
     
     /**
+     * Checks whether the meta value is registered for a given post type.
+     * 
+     * @param string $param_name
+     * @return boolean
+     */
+    public function validateMetaParam($param_name)
+    {
+        $register_list = $this->getRegisterMetas();
+        foreach ($register_list as $name) {
+            if (preg_match('/('. $name .')/', $param_name) === 1) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    
+    /**
      * Set WordPress post-type config
      * @param type $config
      * @return $this

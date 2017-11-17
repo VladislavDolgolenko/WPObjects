@@ -168,7 +168,7 @@ abstract class AbstractPostModel extends AbstractTypicalModel
             $value = unserialize($value);
         }
         
-        if ($this->validateMetaParam($key) === false) {
+        if ($this->getModelType()->validateMetaParam($key) === false) {
             return $this;
         }
         
@@ -179,24 +179,6 @@ abstract class AbstractPostModel extends AbstractTypicalModel
         $this->metas[$key] = $value;
         
         return $this;
-    }
-    
-    /**
-     * Checks whether the meta value is registered for a given post type.
-     * 
-     * @param string $param_name
-     * @return boolean
-     */
-    protected function validateMetaParam($param_name)
-    {
-        $register_list = $this->getModelType()->getRegisterMetas();
-        foreach ($register_list as $name) {
-            if (preg_match('/('. $name .')/', $param_name) === 1) {
-                return true;
-            }
-        }
-        
-        return false;
     }
     
     /**
