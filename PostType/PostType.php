@@ -232,7 +232,6 @@ class PostType extends AbstractModelType implements
         }
         
         $Post->saveMetas();
-        //exit();
         return $this;
     }
     
@@ -393,7 +392,7 @@ class PostType extends AbstractModelType implements
     {
         if (is_array($values)) {
             foreach ($values as $key => $value) {
-                if (!$value || $value == " ") {
+                if ($value === "" || $value === " ") {
                     unset($values[$key]);
                 } else {
                     $values[$key] = self::sanitizeValue($value);
