@@ -74,7 +74,7 @@ class Manager
         } else if (class_exists($service_factory, true)) {
             $Object = new $service_factory();
         } else {
-            throw new \Exception("Invoke undefined service: $name.");
+            return $service_factory;
         }
         
         $this->set($name, $Object);
@@ -84,7 +84,7 @@ class Manager
     public function set($name, $value)
     {
         $this->initialized[$name] = $value;
-        \WPObjects\Log\Loger::getInstance()->write("Service: $name instance of ". get_class($value));
+        //\WPObjects\Log\Loger::getInstance()->write("Service: $name instance of ". get_class($value));
         $this->inject($value);
         
         return $this;

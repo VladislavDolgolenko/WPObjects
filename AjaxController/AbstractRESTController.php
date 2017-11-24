@@ -12,7 +12,8 @@ namespace WPObjects\AjaxController;
 
 abstract Class AbstractRESTController implements
     \WPObjects\EventManager\ListenerInterface,
-    \WPObjects\AjaxController\RESTInterface
+    \WPObjects\AjaxController\RESTInterface,
+    \WPObjects\Service\NamespaceInterface
 {
     protected $namespace = null;
     protected $object_type_name = null;

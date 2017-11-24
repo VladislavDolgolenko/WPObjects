@@ -10,7 +10,9 @@
 
 namespace WPObjects\Data;
 
-class Data {
+class Data implements
+    \WPObjects\Service\NamespaceInterface
+{
 
     /**
      * Singleton instance  
@@ -319,6 +321,16 @@ class Data {
         return $this->wp_option_prefix . '_data_' . $datas_type_id . '_disables';
     }
     
+    public function setNamespace($string)
+    {
+        $this->wp_option_prefix = $string;
+    }
+    
+    public function getNamespace()
+    {
+        return $this->wp_option_prefix;
+    }
+    
 /*
  * Export & Import
  */
@@ -372,7 +384,5 @@ class Data {
         
         return true;
     }
-    
-    
 
 }

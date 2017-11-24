@@ -1,0 +1,325 @@
+.msp-dashboard {
+    padding: 0px 60px 30px 20px;
+}
+
+.msp-dashboard .dashboard-header {
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+.msp-dashboard .dashboard-header hgroup {
+    float: left;
+}
+
+.msp-dashboard .dashboard-header h1 {
+    color: #444444;
+    font-size: 24px;
+    font-weight: 400;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.msp-dashboard .dashboard-header h2 {
+    color: #999999;
+    font-size: 16px;
+    font-weight: 400;
+    margin-top: 0px;
+}
+
+.msp-dashboard .dashboard-header .logo {
+    width: 60px;
+    height: 60px;
+    float: left;
+    margin-right: 30px;
+}
+
+.msp-dashboard .dashboard-header .logo img {
+    max-width: 60px;
+}
+
+.msp-dashboard .dashboard-header .header-link a {
+    color: #2965bc;
+    font-size: 16px;
+    font-weight: 200;
+    border-radius: 4px;
+    border: 1px solid #b3c1db;
+    padding: 15px;
+    text-decoration: none;
+}
+
+.msp-dashboard .main-wrapper {
+    box-shadow: 0 0 8px rgba(68, 68, 68, 0.04);
+    border-radius: 2px;
+    border: 1px solid #e5e5e5;
+    background-color: #ffffff;
+}
+
+.msp-dashboard .main-content {
+    padding: 40px;
+}
+
+.msp-dashboard  .main-nav {
+    padding: 0px;
+    background-color: #f6f6f6;
+    background-image: linear-gradient(to right, #ffffff 0%, #f5f5f5 100%);
+    padding-bottom: 60px;
+}
+
+.msp-dashboard .main-nav ul > li > a {
+    display: block;
+    color: #2965bc;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 52px;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding-left: 28px;
+    border-left: 2px solid rgba(70, 122, 198, 0.2); 
+    border-bottom: 1px solid #dddddd;
+    border-top: 1px solid #ffffff;
+    transition: all 400ms;
+    outline: 0;
+    box-shadow: none;
+}
+
+.msp-dashboard .main-nav ul > li:hover > a {
+    border-left: 4px solid #467ac6; 
+    padding-left: 26px;
+}
+
+.msp-dashboard .main-nav ul > li.active > a {
+    border-left: 4px solid #467ac6; 
+    background: #fff;
+    padding-left: 26px;
+}
+
+.msp-dashboard .main-nav ul > li {
+    display: block;
+    float: none;
+    margin: 0px;
+}
+
+.msp-dashboard .hor-tabs {
+    margin-bottom: 30px;
+    box-shadow: 0 0 8px rgba(68, 68, 68, 0.04), inset 0 0 5px rgba(0, 0, 0, 0.13);
+    border-radius: 4px;
+    border: 1px solid #e5e5e5;
+    background-color: #f5f5f5;
+}
+
+.msp-dashboard .hor-tabs li {
+    display: block;
+    float: left;
+    margin: 0px;
+    border-right: 1px solid #e0e0e0;
+}
+
+.msp-dashboard .hor-tabs li > a {
+    padding: 0px 10px;
+    color: #666666;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 42px;
+    text-transform: uppercase;
+    display: inline-block;
+    text-decoration: none;
+    box-shadow: none;
+}
+
+.msp-dashboard .hor-tabs li.active > a {
+    color: #444444;
+    background: #fff;
+    line-height: 40px;
+    border-top: 1px solid #e5e5e5;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.msp-dashboard .hor-tabs li > a img {
+    width: 20px;
+    height: 20px;
+    margin-right: 7px;
+    margin-top: -2px;
+}
+
+.msp-dashboard .dashboard-table {
+    width: 100%;
+    border-collapse: separate;
+    margin-bottom: 30px;
+    border-spacing:0 2px;
+    table-layout: fixed;
+}
+
+.msp-dashboard .dashboard-table thead {
+    margin-bottom: 10px;
+}
+
+.msp-dashboard .dashboard-table th {
+    color: #666666;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 42px;
+    border-bottom: 1px solid #e5e5e5;
+    border-top: 1px solid #e5e5e5;
+}
+
+.msp-dashboard .dashboard-table th:first-child {
+    border-top-left-radius: 4px;
+    border-left: 1px solid #e5e5e5;
+}
+
+.msp-dashboard .dashboard-table th:last-child {
+    border-top-right-radius: 4px;
+    border-right: 1px solid #e5e5e5;
+}
+
+.msp-dashboard .dashboard-table > tbody > tr:nth-of-type(odd) td {
+    background-color: #fcfcfc;
+}
+
+.msp-dashboard .dashboard-table tr td {
+    color: #666666;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 16px;
+    padding: 10px 0;
+    border-bottom: 1px solid #e5e5e5;
+    border-top: 1px solid #e5e5e5;
+    background-color: #f5f5f5;
+    word-wrap: break-word;
+}
+
+.msp-dashboard .dashboard-table tr td span {
+    word-wrap: break-word;
+    line-height: 16px;
+    display: block;
+}
+
+.msp-dashboard .dashboard-table tr td .activity {
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+.msp-dashboard .dashboard-table tr td .activity:hover {
+    color: #3c763d;
+}
+
+.msp-dashboard .dashboard-table > tbody > tr.disable > td {
+    background-color: rgb(230, 224, 224);
+}
+
+.msp-dashboard .dashboard-table tr td:first-child {
+    border-left: 1px solid #e5e5e5;
+}
+
+.msp-dashboard .dashboard-table tr td:last-child {
+    border-right: 1px solid #e5e5e5;
+}
+
+.msp-dashboard .dashboard-table tr td:first-child {
+    font-weight: 700;
+}
+
+.msp-dashboard .dashboard-table tr td,
+.msp-dashboard .dashboard-table tr th {
+    padding-left: 20px;
+}
+
+.msp-dashboard .dashboard-adding-form {
+    padding-left: 5px;
+}
+
+.msp-dashboard .dashboard-adding-form h3 {
+    border-radius: 4px 4px 0 0;
+    line-height: 42px;
+    padding: 0 22px;
+    border: 1px solid #e5e5e5;
+    background-color: #ffffff;
+    color: #444444;
+    font-size: 16px;
+    font-weight: 500;
+    margin: 2px 0px 2px 0px; 
+}
+
+.msp-dashboard .dashboard-adding-form  form {
+    padding: 20px 20px 5px 20px;
+    border-radius: 0 0 4px 4px;
+    border: 1px solid #e5e5e5;
+    background-color: #ffffff;
+}
+
+.msp-dashboard .dashboard-adding-form  form .edit-entry {
+    padding: 5px;
+    border: 1px solid #e5e5e5;
+    display: none;
+    margin-bottom: 15px;
+}
+
+.msp-dashboard .dashboard-adding-form  form .edit-entry label {
+    margin-bottom: 0px;
+    font-size: 14px;
+    font-weight: normal;
+}
+
+.msp-dashboard .dashboard-adding-form  form .edit-entry label span{
+    font-weight: bold;
+}
+
+.msp-dashboard .dashboard-adding-form  form .edit-entry .cancel-edit {
+    float: right;
+    color: #d9534f;
+    cursor: pointer;
+}
+
+.msp-dashboard .dashboard-adding-form  form  .input-field {
+    margin-bottom: 15px;
+}
+
+
+.msp-dashboard .dashboard-adding-form  form  .input-field lable {
+    color: #666666;
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 26px;
+}
+
+.msp-dashboard .dashboard-adding-form input[required="true"] {
+    border-color: #d9534f;
+}
+
+.row-eq-height {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+/*
+    Modal backdrop global styles
+*/
+
+.bootstrap-wrapper .modal-dialog {
+    width: 600px;
+    margin: 60px auto;
+}
+
+.modal-backdrop {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1040;
+    background-color: #000;
+}
+
+.modal-backdrop.in {
+    filter: alpha(opacity=50);
+    opacity: .5;
+}
+
+.fade {
+    opacity: 0;
+    -webkit-transition: opacity .15s linear;
+    -o-transition: opacity .15s linear;
+    transition: opacity .15s linear;
+}

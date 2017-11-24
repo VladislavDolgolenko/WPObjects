@@ -30,6 +30,8 @@ abstract class AdminPage implements
     protected $icon_url = null;
     
     /**
+     * Multi singleton for any classes realizations
+     * 
      * @return \WPObjects\Page\AdminPage
      */
     static public function getInstance()
@@ -47,37 +49,37 @@ abstract class AdminPage implements
         \add_action('admin_menu', array($this, 'init'));
     }
     
+    public function detach()
+    {
+        \remove_action('admin_menu', array($this, 'init'));
+    }
+    
     public function init()
     {
-        if (is_null($this->perent_menu_id)) {
+        if (is_null($this->getParentPageId())) {
         
             \add_menu_page(
-                $this->title, 
-                $this->menu_name, 
-                $this->permission, 
-                $this->id, 
+                $this->getTitle(), 
+                $this->getMenuName(), 
+                $this->getPermission(), 
+                $this->getId(), 
                 array($this, 'render'),
-                $this->icon_url,
-                $this->position
+                $this->getIconUrl(),
+                $this->getMenuPosition()
             );
         
         } else {
             
             \add_submenu_page( 
-                $this->perent_menu_id,
-                $this->title, 
-                $this->menu_name, 
-                $this->permission, 
-                $this->id, 
+                $this->getParentPageId(),
+                $this->getTitle(), 
+                $this->getMenuName(), 
+                $this->getPermission(), 
+                $this->getId(), 
                 array($this, 'render')
             );
             
         }
-    }
-    
-    public function detach()
-    {
-        \remove_action('admin_menu', array($this, 'init'));
     }
     
     public function render()
@@ -125,6 +127,11 @@ abstract class AdminPage implements
         return $this->id;
     }
     
+    public function setId($string)
+    {
+        $this->id = $string;
+    }
+    
     public function getPageId()
     {
         if ($this->perent_menu_id) {
@@ -148,5 +155,65 @@ abstract class AdminPage implements
         }
         
         return $this->ServiceManager;
+    }
+    
+    public function getParentPageId()
+    {
+        return $this->perent_menu_id;
+    }
+    
+    public function setParentPageId($string)
+    {
+        $this->perent_menu_id = $string;
+    }
+    
+    public function setIconUrl($string)
+    {
+        $this->icon_url = $string;
+    }
+    
+    public function getIconUrl()
+    {
+        return $this->icon_url;
+    }
+    
+    public function setMenuPosition($number)
+    {
+        $this->position = $number;
+    }
+    
+    public function getMenuPosition()
+    {
+        return $this->position;
+    }
+    
+    public function setTitle($string)
+    {
+        $this->title = $string;
+    }
+    
+    public function getTitle()
+    {
+        return $this->title;
+    }
+    
+    public function setMenuName($string)
+    {
+        $this->menu_name = $string;
+    }
+    
+    public function getMenuName()
+    {
+        return $this->menu_name;
+    }
+    
+    public function setPermission($string)
+    {
+        $this->permission = $string;
+    }
+    
+    public function getPermission()
+    {
+        return $this->permission;
     }
 }

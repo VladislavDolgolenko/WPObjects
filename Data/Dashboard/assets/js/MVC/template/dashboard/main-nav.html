@@ -1,0 +1,8 @@
+
+<% Collection.each(function(Model, index){ %> 
+    <li class="<%= index === 0 ? 'active' : '' %>">
+        <a href="#" data-type-id="<%= Model.id %>">
+            <%= Model.get('name') %>
+        </a>
+    </li>
+<% }) %>
