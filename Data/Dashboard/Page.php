@@ -28,18 +28,20 @@ class Page extends \WPObjects\Page\AdminPage implements
         $this->setId($this->getNamespace() . 'database');
         $this->setMenuPosition(30);
         
-        $this->global_assets = array('backbone');
+        $this->global_assets = array('backbone', 'bootstrap', 'jquery', 'font-awesome');
         $this->setAssetsVersion('1.0.0');
     }
     
     public function enqueues()
     {
+        $this->enqueueCSS('font-awesome', 'css/library/font-awesome.min.css');
         $this->enqueueCSS('bootstrap-wrapper', 'css/library/bootstrap-wrapper.css');
-        $this->enqueueCSS('database', 'css/dashboard.css', array('bootstrap-wrapper'));
+        $this->enqueueCSS('database', 'css/dashboard.css', array('bootstrap-wrapper', 'font-awesome'));
         
         wp_enqueue_script('backbone');
         wp_localize_script('backbone', 'MSP', $this->getJSObject());
         
+        $this->enqueueJS('bootstrap', 'js/library/bootstrap.min.js', array('jquery'));
         $this->enqueueJS('model-data-type', 'js/MVC/model/data-type.js', array('backbone'));
         $this->enqueueJS('collection-data-type', 'js/MVC/collection/data-type.js', array('backbone', 'model-data-type'));
         $this->enqueueJS('view-dashboard-main-nav', 'js/MVC/view/dashboard/main-nav.js', array('backbone'));
@@ -47,7 +49,7 @@ class Page extends \WPObjects\Page\AdminPage implements
         $this->enqueueJS('view-dashboard-list', 'js/MVC/view/dashboard/list.js', array('backbone', 'view-dashboard-line'));
         $this->enqueueJS('view-dashboard-filters', 'js/MVC/view/dashboard/filters.js', array('backbone'));
         $this->enqueueJS('view-dashboard-field', 'js/MVC/view/dashboard/field.js', array('backbone'));
-        $this->enqueueJS('view-dashboard-form', 'js/MVC/view/dashboard/form.js', array('backbone', 'view-dashboard-field'));
+        $this->enqueueJS('view-dashboard-form', 'js/MVC/view/dashboard/form.js', array('backbone', 'view-dashboard-field', 'bootstrap'));
         $this->enqueueJS('view-dashboard', 'js/MVC/view/dashboard/dashboard.js', array(
             'backbone', 
             'view-dashboard-main-nav', 
