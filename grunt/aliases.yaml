@@ -1,0 +1,9 @@
+default:
+  tasks:
+    - build
+build:
+  tasks:
+    - 'copy:build_namespace'
+
+    
+
