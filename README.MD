@@ -6,7 +6,9 @@
 ## Plugins built on the WPObjects
 
 [MSP - MultiSport & eSport WordPress plugin with 90 Visual Composer addons](https://codecanyon.net/item/msp-multisport-esport-wordpress-plugin-with-90-visual-composer-addons/20954667)
+
 [WordPress Demo Content Manager](https://codecanyon.net/item/wordpress-demo-content-manager/20669604)
+
 [WordPress Layouts Builder](https://codecanyon.net/item/wordpress-layouts-builder/20968348)
 
 ## Build creation
