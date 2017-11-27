@@ -8,15 +8,3 @@
  * @support      support@torbara.com
  */
 
-namespace WPObjects\View;
-
-interface ViewInterface
-{
-    public function getTemplatePath();
-    
-    public function setTemplatePath();
-    
-    public function enqueues();
-    
-    public function render();
-}

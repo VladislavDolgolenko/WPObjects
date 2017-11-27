@@ -8,18 +8,12 @@
 
 namespace WPObjects\Page;
 
-abstract class AdminPage implements 
-    \WPObjects\EventManager\ListenerInterface,
-    \WPObjects\Service\ManagerInterface
+use WPObjects\View\View;
+
+abstract class AdminPage extends View implements 
+    \WPObjects\EventManager\ListenerInterface
 {
     private static $_instances = array();
-    
-    /**
-     * Global service manager
-     * 
-     * @var \WPobjects\Service\Manager
-     */
-    protected $ServiceManager = null;
     
     protected $perent_menu_id = null;
     protected $menu_name = null;
@@ -89,13 +83,7 @@ abstract class AdminPage implements
             $this->POSTAction($_POST);
         }
         
-        $template_path = $this->getTemplatePath();
-        if (!\file_exists($template_path)) {
-            return;
-        }
-        
-        $this->enqueues();
-        include($template_path);
+        parent::render();
     }
     
     public function getUrl($get_params = null)
@@ -118,10 +106,6 @@ abstract class AdminPage implements
         return;
     }
     
-    abstract protected function enqueues();
-    
-    abstract protected function getTemplatePath();
-    
     public function getId()
     {
         return $this->id;
@@ -139,22 +123,6 @@ abstract class AdminPage implements
         }
         
         return $this->id;
-    }
-    
-    public function setServiceManager(\WPObjects\Service\Manager $ServiceManager)
-    {
-        $this->ServiceManager = $ServiceManager;
-        
-        return $this;
-    }
-    
-    public function getServiceManager()
-    {
-        if (is_null($this->ServiceManager)) {
-            throw new \Exception('Undefined service manager');
-        }
-        
-        return $this->ServiceManager;
     }
     
     public function getParentPageId()

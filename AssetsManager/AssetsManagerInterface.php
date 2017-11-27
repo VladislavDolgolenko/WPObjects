@@ -8,15 +8,11 @@
  * @support      support@torbara.com
  */
 
-namespace WPObjects\View;
+namespace WPObjects\AssetsManager;
 
-interface ViewInterface
+interface AssetsManagerInterface
 {
-    public function getTemplatePath();
+    public function setAssetsManager();
     
-    public function setTemplatePath();
-    
-    public function enqueues();
-    
-    public function render();
+    public function getAssetsManager();
 }

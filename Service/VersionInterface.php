@@ -8,15 +8,11 @@
  * @support      support@torbara.com
  */
 
-namespace WPObjects\View;
+namespace WPObjects\Service;
 
-interface ViewInterface
+interface VersionInterface
 {
-    public function getTemplatePath();
+    public function setVersion($string);
     
-    public function setTemplatePath();
-    
-    public function enqueues();
-    
-    public function render();
+    public function getVersion();
 }
