@@ -1,6 +1,6 @@
 module.exports = function(grunt) {
     
-    grunt.option('namespace', 'area');
+    grunt.option('namespace', 'AREA');
     
     require('time-grunt')(grunt);
     

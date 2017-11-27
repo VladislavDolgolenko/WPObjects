@@ -10,7 +10,7 @@
     "grunt-contrib-copy": "*",
     "grunt-git": "*",
     "grunt-mkdir": "*",
-    "load-grunt-config": "^0.19.2",
+    "load-grunt-config": "^0.19.2"
   },
   "dependencies": {
     "time-grunt": "*"
