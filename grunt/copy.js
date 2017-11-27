@@ -46,6 +46,8 @@ module.exports = function (grunt) {
             dest: dest,
             
             options: {
+                processContentExclude: ['**/*.{png,gif,jpg,ico,psd,woff,woff2,ttf}'],
+                
                 process: function (content, srcpath) {
                     var content_replacement = content;
                     
@@ -64,8 +66,10 @@ module.exports = function (grunt) {
                         // JS global varialbe
                         var needed = namespace;
                         var replacer = "MSP";
-                        content_replacement = content_replacement.replace( new RegExp(replacer, "gi"), needed);
+                        content_replacement = content_replacement.replace( new RegExp(replacer, "g"), needed);
                         
+                    } else {
+                        return content;
                     }
                     
                     return content_replacement;

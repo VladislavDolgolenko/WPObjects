@@ -25,7 +25,8 @@ class AssetsManager implements
     
     public function __construct()
     {
-        $this->updateJSObject();
+        \add_action('wp_print_footer_scripts', array($this, 'updateJSObject'), -10);
+        \add_action('admin_print_footer_scripts', array($this, 'updateJSObject'), -10);
     }
     
     public function registerScripts($config)
@@ -79,7 +80,6 @@ class AssetsManager implements
     {
         $this->js_templates[$name] = $path;
         
-        $this->updateJSObject();
         return $this;
     }
     
@@ -149,7 +149,6 @@ class AssetsManager implements
     {
         $this->namespace = $string;
         
-        $this->updateJSObject();
         return $this;
     }
     

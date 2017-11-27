@@ -12,7 +12,7 @@ namespace WPObjects\AssetsManager;
 
 interface AssetsManagerInterface
 {
-    public function setAssetsManager();
+    public function setAssetsManager(\WPObjects\AssetsManager\AssetsManager $AM);
     
     public function getAssetsManager();
 }

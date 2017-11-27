@@ -14,7 +14,7 @@ interface ViewInterface
 {
     public function getTemplatePath();
     
-    public function setTemplatePath();
+    public function setTemplatePath($string);
     
     public function enqueues();
     

@@ -11,10 +11,7 @@
 namespace WPObjects\Data\Dashboard;
 
 class Page extends \WPObjects\Page\AdminPage
-    \WPObjects\Service\NamespaceInterface
 {
-    protected $namespace = '';
-    protected $template_path = null;
     protected $assets_dir_url = null;
     protected $assets_dir_path = null;
     
@@ -23,8 +20,13 @@ class Page extends \WPObjects\Page\AdminPage
         $this->setMenuName(__( 'Database', 'msp' ));
         $this->setTitle(__( 'Database', 'msp' ));
         $this->setPermission('manage_options');
-        $this->setId($this->getNamespace() . 'database');
+        $this->setId('database');
         $this->setMenuPosition(30);
+        
+        $assets_dit_path = dirname(__FILE__) . '/assets';
+        $this->setAssetsDirPath($assets_dit_path);
+        $this->setAssetsDirUrl(plugin_dir_url($assets_dit_path . '/custom'));
+        $this->setTemplatePath(dirname(__FILE__) . '/templates/dashboard.php');
     }
     
     public function enqueues()
@@ -88,15 +90,5 @@ class Page extends \WPObjects\Page\AdminPage
     public function setAssetsDirPath($string)
     {
         $this->assets_dir_path = $string;
-    }
-    
-    public function setNamespace($string)
-    {
-        $this->namespace = $string;
-    }
-    
-    public function getNamespace()
-    {
-        return $this->namespace;
     }
 }
