@@ -32,15 +32,23 @@ class AssetsManager implements
     public function registerScripts($config)
     {
         foreach ($config as $script) {
-            list($name, $path, $deps, $v) = $script;
-            $this->registerScript($name, $path, $deps, $v);
+            list($name, $path, $deps, $v, $global) = $script;
+            $this->registerScript($name, $path, $deps, $v, $global);
         }
         
         return $this;
     }
     
-    public function registerScript($name, $path, $deps = array(), $v = null)
+    public function registerScript($name, $path, $deps = array(), $v = null, $global = false)
     {
+        if (\wp_script_is($name, 'registered')) {
+            return $this;
+        }
+        
+        if ($global) {
+            $this->addGlobalScript($name);
+        }
+        
         $version = $v ? $v : $this->getVersion();
         
         \wp_register_script($this->prepareAssetName($name), $path, $this->prepareAssetsDeps($deps), $version);
@@ -51,15 +59,23 @@ class AssetsManager implements
     public function registerStyles($config)
     {
         foreach ($config as $style) {
-            list($name, $path, $deps, $v) = $style;
-            $this->registerStyle($name, $path, $deps, $v);
+            list($name, $path, $deps, $v, $global) = $style;
+            $this->registerStyle($name, $path, $deps, $v, $global);
         }
         
         return $this;
     }
     
-    public function registerStyle($name, $path, $deps = array(), $v = null)
+    public function registerStyle($name, $path, $deps = array(), $v = null, $global = false)
     {
+        if (\wp_style_is($name, 'registered')) {
+            return $this;
+        }
+        
+        if ($global) {
+            $this->addGlobalScript($name);
+        }
+        
         $version = $v ? $v : $this->getVersion();
         
         \wp_register_style($this->prepareAssetName($name), $path, $this->prepareAssetsDeps($deps), $version);

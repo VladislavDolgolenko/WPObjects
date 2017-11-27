@@ -1,0 +1,554 @@
+/*
+    Styles for wordpress editing posts forms
+    @require: bootstrap, selectize, wordpress defaul styles
+    @author: vladislav dolgolenko
+*/
+
+.inside > .msp-form {
+    padding: 9px 3px 3px 3px;
+}
+
+.msp-form hr {
+    height: 2px;
+    background: #f3f3f3;
+    display: block;
+    width: 100%;
+    margin: 0 0 10px 0;
+    border: none;
+}
+
+.msp-form p {
+    font-size: 14px;
+}
+
+.msp-form > p:last-child {
+    margin-bottom: 0px;
+}
+
+.msp-form p.help-block {
+    font-size: 13px;
+}
+
+.msp-form-group {
+    margin-bottom: 10px;
+}
+
+.msp-form-group:last-child {
+    margin-bottom: 0px;
+}
+
+.msp-form-group.horizont {
+    border: 1px solid #cecece;
+    border-radius: 2px;
+    background: #eeeeee;
+}
+
+/*
+    Gred system
+*/
+
+.msp-form .row {
+    margin-left: -5px;
+    margin-right: -5px;
+}
+
+.msp-form .col-xs-1, .msp-form .col-sm-1, .msp-form .col-md-1, .msp-form .col-lg-1, .msp-form .col-xs-2, .msp-form .col-sm-2, .msp-form .col-md-2, .msp-form .col-lg-2, .msp-form .col-xs-3, .msp-form .col-sm-3, .msp-form .col-md-3, .msp-form .col-lg-3, .msp-form .col-xs-4, .msp-form .col-sm-4, .msp-form .col-md-4, .msp-form .col-lg-4, .msp-form .col-xs-5, .msp-form .col-sm-5, .msp-form .col-md-5, .msp-form .col-lg-5, .msp-form .col-xs-6, .msp-form .col-sm-6, .msp-form .col-md-6, .msp-form .col-lg-6, .msp-form .col-xs-7, .msp-form .col-sm-7, .msp-form .col-md-7, .msp-form .col-lg-7, .msp-form .col-xs-8, .msp-form .col-sm-8, .msp-form .col-md-8, .msp-form .col-lg-8, .msp-form .col-xs-9, .msp-form .col-sm-9, .msp-form .col-md-9, .msp-form .col-lg-9, .msp-form .col-xs-10, .msp-form .col-sm-10, .msp-form .col-md-10, .msp-form .col-lg-10, .msp-form .col-xs-11, .msp-form .col-sm-11, .msp-form .col-md-11, .msp-form .col-lg-11, .msp-form .col-xs-12, .msp-form .col-sm-12, .msp-form .col-md-12, .msp-form .col-lg-12 {
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+/*
+    Box
+*/
+.msp-form .msp-box {
+    border: 1px solid #cccccc;
+    border-radius: 2px;
+    padding: 14px;
+}
+
+.msp-form .box-title {
+    margin: -15px -15px 15px -15px; 
+    padding: 12px;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+/*
+    Lable
+*/
+.msp-form-group label {
+    font-size: 14px;
+    margin-bottom: 5px;
+    font-weight: normal;
+    display: block;
+    margin-bottom: 10px;
+}
+
+.msp-form-group.horizont label {
+    float: left;
+    width: 20%;
+    white-space: nowrap;
+    padding: 10px 15px 0 15px;
+    margin-bottom: 0;
+}
+
+.msp-form-group.horizont.invert-with label {
+    width: 65%;
+}
+
+.msp-form-group.horizont.balance-with label {
+    width: 50%;
+}
+
+/*
+    Add new entry button
+*/
+
+.msp-form-group label a.add-new {
+    float: right;
+    color: #307bb8;
+    text-decoration: none;
+    font-size: 12px;
+}
+
+.msp-form-group.horizont label a.add-new {
+    outline: none;
+    box-shadow: none;
+}
+
+.msp-form-group.horizont label a.add-new {
+    color: inherit;
+}
+
+.msp-form-group label a.add-new i {
+    border-radius: 3px;
+    font-size: 14px;
+    color: #fff;
+    background: #347cb5;
+    width: inherit;
+    height: inherit;
+    padding: 2px 1px 1px 1px;
+    margin-left: 3px;
+}
+
+.msp-form-group.horizont label a.add-new i {
+    background: #cecece;
+}
+
+.msp-form-group.horizont label a.add-new i:hover {
+    background: #347cb5;
+}
+
+.msp-form-group.horizont label a.add-new span {
+    display: none;
+}
+
+/*
+    Input group
+*/
+
+.msp-input-group {
+    border: 1px solid #cecece;
+    border-radius: 2px;
+    background: #fff;
+}
+
+.msp-form-group.horizont .msp-input-group {
+    float: right;
+    width: 80%;
+    border: none;
+    border-left: 1px solid #cecece;
+}
+
+.msp-form-group.horizont.invert-with .msp-input-group {
+    width: 35%;
+}
+
+.msp-form-group.horizont.balance-with .msp-input-group {
+    width: 50%;
+}
+
+.msp-input-group input, 
+.msp-input-group select {
+    background: #fff;
+    font-size: 14px;
+    display: block;
+    padding: 10px 15px;
+    border: none;
+    width: 100%;
+}
+
+.msp-input-group input[type="number"] {
+    height: 38px;
+    text-align: center;
+}
+
+.msp-input-group input[type="number"],
+.msp-input-group input[type="date"], 
+.msp-input-group input[type="date"] {
+    padding: 10px 5px 10px 15px;
+}
+
+.msp-input-group input[type="checkbox"] {
+    margin: 11px auto;
+    border-radius: 3px;
+    padding: 50px;
+    width: inherit;
+    background: #f8f8f8;
+}
+
+.msp-input-group input[type="checkbox"]:checked {
+    background: #347cb5;
+    color: #347cb5;
+}
+
+.msp-input-group input[type="checkbox"]:focus {
+    outline: 0px;
+    outline-offset: 0px;
+    box-shadow: none;
+}
+
+.msp-input-group input[type="checkbox"]:checked:before {
+    color: #347cb5;
+}
+
+.msp-input-group .selectize-input {
+    background: #fff;
+    font-size: 14px;
+    padding: 10px 15px;
+    border: none;
+    display: block;
+}
+
+.msp-input-group .selectize-input .item img {
+    width: 60px;
+    height: 40px;
+    object-fit: cover;
+    margin: -15px 5px -15px -15px;
+}
+
+.msp-input-group .multi .selectize-input .item img {
+    height: 22px;
+    width: 32px;
+    margin: -2px 5px -2px -6px;
+}
+
+.msp-input-group .selectize-control.single .selectize-input.input-active {
+    display: block;
+}
+
+.msp-input-group .selectize-dropdown {
+    right: -1px;
+    left: -1px;
+}
+
+/*
+    Input group date time
+*/
+.msp-input-group.datetime {
+    border: none;
+}
+
+.msp-input-group.datetime input {
+    border: 1px solid #cecece;
+    border-radius: 2px;
+    font-size: 12px;
+    padding: 6px 10px;
+}
+
+.msp-input-group.datetime input[type="date"]{
+    width: 55%;
+    float: left;
+}
+
+.msp-input-group.datetime input[type="time"]{
+    float: right;
+    width: 40%;
+}
+
+/*
+    Image picker
+*/
+.msp-image-picker {
+    
+}
+
+.msp-image-picker img {
+    margin-bottom: 10px;
+    border: 1px solid #cecece;
+    border-radius: 2px;
+}
+
+/* 
+    Buttons
+*/
+
+.msp-form .button {
+    font-size: 14px;
+    height: inherit;
+    padding: 6px 18px 5px 18px;
+    background: #0085ba;
+    border-color: #0073aa #006799 #006799;
+    box-shadow: 0 1px 0 #006799;
+    color: #fff;
+    text-decoration: none;
+    text-shadow: 0 -1px 1px #006799,
+            1px 0 1px #006799,
+            0 1px 1px #006799,
+            -1px 0 1px #006799;
+}
+
+.msp-form .button-sm {
+    padding: 0px 6px 0px 6px;
+}
+
+.msp-form .button-sm i {
+    margin: 0px;
+    padding: 0px;
+}
+
+.msp-form .button-width {
+    width: 100%;
+    display: block;
+} 
+
+.msp-form .button:hover,
+.msp-form .button:focus {
+    background: #008ec2;
+    border-color: #006799;
+    color: #fff;
+    text-decoration: none;
+}
+
+.msp-form .button.focus,
+.msp-form .button:focus {
+    box-shadow: 0 1px 0 #0073aa,
+            0 0 2px 1px #33b3db;
+}
+
+.msp-form .button:active {
+    color: inherit;
+    background: #0073aa;
+    border-color: #006799;
+    box-shadow: inset 0 2px 0 #006799;
+    vertical-align: top;
+    text-decoration: none;
+}
+
+.msp-form .button.button-default {
+    color: #555;
+    border-color: #cccccc;
+    background: #f7f7f7;
+    box-shadow: 0 1px 0 #cccccc;
+    text-shadow: none;
+    text-decoration: none;
+}
+
+.msp-form .button.button-default:focus,
+.msp-form .button.button-default:hover, 
+.msp-form .button.button-default:active {
+    background: #fafafa;
+    border-color: #999;
+    color: #23282d;
+}
+
+.msp-form .button.button-default:focus,
+.msp-form .button.button-default:active {
+    border-color: #999;
+    box-shadow: 0 1px 0 #cccccc;
+}
+
+.msp-form .button.button-danger {
+    color: #fff;
+    border-color: #d0021c;
+    background: #ec2227;
+    text-shadow: none;
+    box-shadow: 0 1px 0 #d0021c;
+    text-decoration: none;
+}
+
+.msp-form .button.button-danger:focus,
+.msp-form .button.button-danger:hover, 
+.msp-form .button.button-danger:active,
+.msp-form .button.button-danger:active, 
+.msp-form .button.button-danger:focus {
+    background: #ec2227;
+    border-color: #d0021c;
+    color: #fff;
+}
+
+.msp-form .button .dashicons {
+    margin-top: 4px;
+    margin-left: -9px;
+}
+
+/*
+    Mathes
+*/
+
+.current-match-status {
+    border-bottom: 2px solid #f3f3f3;
+    padding-bottom: 15px;
+    margin-bottom: 10px;
+}
+
+.current-match-status .status-lable {
+    font-size: 14px;
+    line-height: 30px;
+    float: left;
+    width: 50%;
+}
+
+.current-match-status .status-name {
+    text-align: center;
+    color: inherit;
+    background: #f3f3f3;
+    padding: 5px;
+    border-radius: 12px;
+    font-size: 14px;
+    float: left;
+    width: 50%;
+}
+
+.current-match-status .status-name.status3,
+.current-match-status .status-name.status4 {
+    background: #f4a537; 
+    color: #fff;
+}
+
+.current-match-status .status-name.status5 {
+    background: #cf071f; 
+    color: #fff;
+}
+
+.current-match-status .status-name.status1,
+.current-match-status .status-name.status0 {
+    background: #3acd89; 
+    color: #fff;
+}
+
+.msp-matchmaking .teams-continue {
+    padding-top: 28px;
+}
+
+
+/*
+    Match teams
+*/
+
+.msp-match-teams .team-title {
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+.msp-match-teams .team-title img.team-logo {
+    float: left;
+    width: 60px;
+    height: 50px;
+    object-fit: cover;
+    margin-right: 15px;
+}
+
+.msp-match-teams .col-md-12 {
+    padding: 0;
+}
+
+.msp-match-teams .msp-box.teams-stats {
+    padding-bottom: 4px;
+}
+
+.msp-match-teams .msp-box {
+    margin-bottom: 15px;
+}
+
+/*
+    Match players
+*/
+
+.msp-match-players .box-title {
+    margin: -15px -15px 15px -15px; 
+    padding: 0px;
+    line-height: 35px;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.msp-match-players .box-title img {
+    float: left;
+    height: 35px;
+    width: 60px;
+    object-fit: cover;
+    margin-right: 15px;
+}
+
+.msp-match-players .player-title {
+    margin-bottom: 15px;
+    font-size: 16px;
+}
+
+.msp-match-players .player-title img {
+    float: left;
+    width: 75px;
+    height: 75px;
+    margin-right: 15px;
+    border: 1px solid #cccccc;
+    border-radius: 2px;
+}
+
+.msp-match-players .msp-box {
+    border: 1px solid #e5e5e5;
+}
+
+.msp-match-players .msp-box.player {
+    border: 1px solid #cccccc;
+    padding-bottom: 4px;
+}
+
+.msp-match-players .msp-box.player.non-active {
+    background: #f5f5f5;
+}
+
+.msp-match-players .col-md-12 {
+    padding: 0;
+}
+
+.msp-match-players .msp-box {
+    margin-bottom: 15px;
+}
+
+/*
+    Custom attributes
+*/
+
+.msp-form.custom-attrs {
+    
+}
+
+.msp-form.custom-attrs .attr {
+    position: relative;
+    padding: 13px 36px;
+    border: 1px solid #e5e5e5;
+    background-color: #f5f5f5;
+    border-radius: 2px;
+    margin-bottom: 10px;
+    display: block;
+}
+
+.msp-form.custom-attrs .attr > i {
+    position: absolute;
+    color: #cccccc;
+    font-size: 11px;
+    font-weight: 400;
+    margin-top: -5px;
+    top: 50%;
+    cursor: pointer;
+}
+
+.msp-form.custom-attrs .attr > i.cursor-move {
+    left: 12px;
+}
+
+.msp-form.custom-attrs .attr > i.delete-feature {
+    right: 12px;
+    font-size: 14px;
+    margin-top: -7px;
+    color: #555555;
+}

@@ -8,11 +8,3 @@
  * @support      support@torbara.com
  */
 
-namespace WPObjects\PostType\MetaBox;
-
-use WPObjects\PostType\MetaBox;
-
-abstract class AbstractMetaBox extends MetaBox
-{
-    
-}

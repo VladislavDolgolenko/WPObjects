@@ -19,7 +19,7 @@ abstract class AbstractUI extends \WPObjects\View\View
            ->addGlobalScript('selectize')
            ->addGlobalScript('font-awesome');
         
-        $assets_path = dirname(__FILE__) . '/assets';
+        $assets_path = plugin_dir_url(dirname(__FILE__) . '/assets/custom');
         
         $AM->registerStyle('font-awesome', $assets_path . '/' . 'css/library/font-awesome.min.css')
            ->registerStyle('bootstrap-wrapper', $assets_path . '/' . 'css/library/bootstrap-wrapper.css')

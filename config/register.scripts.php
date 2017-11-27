@@ -8,11 +8,15 @@
  * @support      support@torbara.com
  */
 
-namespace WPObjects\PostType\MetaBox;
+$assets_path = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'assets/custom';
+$assets_url = plugin_dir_url($assets_path);
 
-use WPObjects\PostType\MetaBox;
-
-abstract class AbstractMetaBox extends MetaBox
-{
-    
-}
+return array(
+    array(
+        'selectize',
+        $assets_url . '/js/library/selectize.js',
+        array('jquery'),
+        null,
+        true
+    ),
+);
