@@ -23,11 +23,12 @@ class Selector extends AbstractUI
     protected $has_image = false;
     protected $add_new_link = '';
     
-    public function enqueues()
+    public function __construct()
     {
-        
+        $template_dir = dirname(__FILE__) . DIRECTORY_SEPARATOR . 'template';
+        $this->setTemplatePath($template_dir . DIRECTORY_SEPARATOR . 'selector.php');
     }
-
+    
     public function setName($string)
     {
         $this->name = $string;
