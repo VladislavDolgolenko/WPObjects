@@ -1,6 +1,23 @@
+/**
+ * @encoding     UTF-8
+ * @copyright    Copyright (C) 2017 Torbara (http://torbara.com). All rights reserved.
+ * @license      Envato Standard License http://themeforest.net/licenses/standard?ref=torbara
+ * @author       Vladislav Dolgolenko (vladislavdolgolenko.com)
+ * @support      support@torbara.com
+ */
+
+
 module.exports = function (grunt) { 
     
     var namespace = grunt.option('namespace');
+    if (!namespace) {
+        throw new Error("Undefined namespace, please use --namespace= when start grunt!");
+    }
+    
+    var dest = grunt.option('dest');
+    if (!dest) {
+        dest = './build/WPObjects';
+    }
     
     return {
         
@@ -26,7 +43,7 @@ module.exports = function (grunt) {
                 './View/**/*',
                 './license.txt'
             ], 
-            dest: './build/WPObjects',
+            dest: dest,
             
             options: {
                 process: function (content, srcpath) {
