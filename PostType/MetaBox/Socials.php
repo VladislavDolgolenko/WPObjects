@@ -32,7 +32,7 @@ class Socials extends AbstractMetaBox
         $this->getAssetsManager()->enqueueScript('metabox_attributes');
     }
     
-    public function processing(\MSP\WPObjects\Model\AbstractPostModel $Post, $data)
+    public function processing(\WPObjects\Model\AbstractPostModel $Post, $data)
     {
         if (!isset($data['social_counter']) || !is_array($data['social_counter'])) {
             return array();
@@ -79,10 +79,13 @@ class Socials extends AbstractMetaBox
             );
         }
         
-        $Selector = new Selector();
+        $Selector = $this->getServiceManager()->inject(new Selector());
         $Selector->setName('social_icon_class')
+                ->setOptions($options)
+                ->setSelected($selected)
                 ->setVertical(true)
                 ->setMultiple(false)
+                ->setHasImage(true)
                 ->setArrayResult(true);
         
         $Selector->render();

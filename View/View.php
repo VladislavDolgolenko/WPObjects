@@ -79,6 +79,10 @@ class View implements
         return $this;
     }
     
+    /**
+     * @return \WPObjects\Service\Manager
+     * @throws \Exception
+     */
     public function getServiceManager()
     {
         if (is_null($this->ServiceManager)) {

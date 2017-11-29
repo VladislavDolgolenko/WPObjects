@@ -9,6 +9,9 @@
  */
 
 
+$post = $this->getPost();
+$box = $this->getBox();
+
 $meta_key = '_' . $box['id'];
 $attachment_id = get_post_meta( $post->ID, $meta_key, true );
 $url_attachment = wp_get_attachment_image_url($attachment_id, 'medium');

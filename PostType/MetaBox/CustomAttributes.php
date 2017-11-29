@@ -29,7 +29,7 @@ class CustomAttributes extends AbstractMetaBox
         $this->getAssetsManager()->enqueueScript('metabox_attributes');
     }
     
-    public function processing(\MSP\WPObjects\Model\AbstractPostModel $Post, $data)
+    public function processing(\WPObjects\Model\AbstractPostModel $Post, $data)
     {
         if (!isset($data['attrs_counter']) || !is_array($data['attrs_counter'])) {
             return array();

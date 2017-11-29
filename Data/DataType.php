@@ -52,4 +52,9 @@ class DataType extends AbstractModelType implements
         
         return $this->model_class_name;
     }
+        
+    public function getAddNewLink()
+    {
+        return admin_url( 'admin.php?page=database');
+    }
 }

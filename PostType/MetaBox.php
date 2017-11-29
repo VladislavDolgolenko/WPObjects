@@ -12,7 +12,8 @@ namespace WPObjects\PostType;
 
 use WPObjects\View\View;
 
-abstract class MetaBox extends View
+abstract class MetaBox extends View implements
+    \WPObjects\PostType\PostTypeFactoryInterface
 {
     protected $id = null;
     protected $title = null;
@@ -20,11 +21,21 @@ abstract class MetaBox extends View
     protected $priotity = null;
     
     /**
+     * @var \WPObjects\PostType\PostTypeFactory
+     */
+    protected $PostTypeFactory = null;
+    
+    /**
      * @var \WP_Post
      */
     protected $Post = null;
     
     protected $box = null;
+    
+    /**
+     * @var \WPObjects\Model\AbstractPostModel
+     */
+    protected $PostModel = null;
     
     /**
      * @return array
@@ -41,6 +52,28 @@ abstract class MetaBox extends View
         $this->box = $box;
         
         $this->render();
+    }
+    
+    /**
+     * @return \WPObjects\Model\AbstractPostModel
+     */
+    protected function getPostModel()
+    {
+        if (is_null($this->PostModel) && $this->getPost()) {
+            $PostType = $this->getPostType();
+            $this->PostModel = $PostType->createModel($this->getPost());
+        }
+        
+        return $this->PostModel;
+    }
+    
+    /**
+     * @return \WPObjects\PostType\PostType
+     */
+    protected function getPostType()
+    {
+        $Factory = $this->getPostTypeFactory();
+        return $Factory->get($this->getPost()->post_type);
     }
 
     public function getPost()
@@ -104,6 +137,25 @@ abstract class MetaBox extends View
     public function getPriority()
     {
         return $this->priotity;
+    }
+    
+    /**
+     * @return \WPObjects\PostType\PostTypeFactory
+     */
+    public function getPostTypeFactory()
+    {
+        return $this->PostTypeFactory;
+    }
+    
+    /**
+     * @param \WPObjects\PostType\PostTypeFactory $PostTypeFactory
+     * @return $this
+     */
+    public function setPostTypeFactory(\WPObjects\PostType\PostTypeFactory $PostTypeFactory)
+    {
+        $this->PostTypeFactory = $PostTypeFactory;
+        
+        return $this;
     }
     
 }

@@ -45,7 +45,7 @@ class CustomImagePicker extends AbstractMetaBox
         }
     }
     
-    public function processing(\MSP\WPObjects\Model\AbstractPostModel $Post, $data)
+    public function processing(\WPObjects\Model\AbstractPostModel $Post, $data)
     {
         return $data;
     }

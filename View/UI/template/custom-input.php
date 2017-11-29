@@ -11,19 +11,21 @@
 ?>
 
 <div class="msp-form-group 
-    <?php echo $vertical === false ? 'horizont' : ''; ?> 
-    <?php echo isset($invert_with) && $invert_with === true ? 'invert-with' : ''; ?>
-    <?php echo isset($balance_with) && $balance_with === true ? 'balance-with' : ''; ?>
+    <?php echo $this->vertical === false ? 'horizont' : ''; ?> 
+    <?php echo isset($this->invert_with) && $this->invert_with === true ? 'invert-with' : ''; ?>
+    <?php echo isset($this->balance_with) && $this->balance_with === true ? 'balance-with' : ''; ?>
 ">
     
-    <label for="<?php echo esc_attr($meta_attr_name); ?>"><?php echo esc_html($lable); ?></label>
+    <label for="<?php echo esc_attr($this->name); ?>">
+        <?php echo esc_html($this->lable); ?>
+    </label>
     <div class="msp-input-group">
         <input 
-            type="<?php echo esc_attr($type); ?>" 
-            name="<?php echo esc_attr($meta_attr_name); ?>" 
-            id="<?php echo esc_attr($meta_attr_name); ?>"  
-            value="<?php echo esc_attr($value);?>" 
-            <?php echo isset($step) && $step ? 'step="$step"' : ''; ?>
+            type="<?php echo esc_attr($this->type); ?>" 
+            name="<?php echo esc_attr($this->name); ?>" 
+            id="<?php echo esc_attr($this->name); ?>"  
+            value="<?php echo esc_attr($this->value);?>" 
+            <?php echo isset($this->step) && $this->step ? 'step="$step"' : ''; ?>
         />
         <div class="clearfix"></div>
     </div>

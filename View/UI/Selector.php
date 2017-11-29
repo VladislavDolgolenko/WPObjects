@@ -12,42 +12,19 @@ namespace WPObjects\View\UI;
 
 class Selector extends AbstractUI
 {
-    protected $name = null;
-    protected $lable = null;
     protected $options = array();
     protected $selected = array();
     protected $multibple = false;
     protected $desctiption = '';
     protected $array_result = false;
-    protected $vertical = false;
-    protected $has_image = false;
+    protected $has_images = false;
     protected $add_new_link = '';
+    protected $add_new_text = '';
     
     public function __construct()
     {
         $template_dir = dirname(__FILE__) . DIRECTORY_SEPARATOR . 'template';
         $this->setTemplatePath($template_dir . DIRECTORY_SEPARATOR . 'selector.php');
-    }
-    
-    public function setName($string)
-    {
-        $this->name = $string;
-        
-        return $this;
-    }
-    
-    public function setLable($text)
-    {
-        $this->lable = $text;
-        
-        return $this;
-    }
-    
-    public function setVertical($bollean)
-    {
-        $this->vertical = $bollean ? true : false;
-        
-        return $this;
     }
     
     public function setOptions($options)
@@ -100,7 +77,7 @@ class Selector extends AbstractUI
     
     public function setHasImage($bollean)
     {
-        $this->has_image = $bollean;
+        $this->has_images = $bollean;
         
         return $this;
     }
