@@ -14,5 +14,9 @@ use WPObjects\PostType\MetaBox;
 
 abstract class AbstractMetaBox extends MetaBox
 {
-    
+    public function enqueues()
+    {
+        $AM = $this->getAssetsManager();
+        $AM->enqueueStyle('form');
+    }
 }

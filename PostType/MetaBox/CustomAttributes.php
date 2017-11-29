@@ -8,7 +8,7 @@
  * @support      support@torbara.com
  */
 
-namespace MSP\MetaBox;
+namespace WPObjects\PostType\MetaBox;
 
 class CustomAttributes extends AbstractMetaBox
 {
@@ -18,6 +18,15 @@ class CustomAttributes extends AbstractMetaBox
         $this->setTitle('Custom attributes');
         $this->setPosition('normal');
         $this->setPriority('default');
+        
+        $template_dir = dirname(__FILE__) . DIRECTORY_SEPARATOR . 'templates';
+        $this->setTemplatePath($template_dir . DIRECTORY_SEPARATOR . 'custom-attributes.php');
+    }
+    
+    public function enqueues()
+    {
+        parent::enqueues();
+        $this->getAssetsManager()->enqueueScript('metabox_attributes');
     }
     
     public function processing(\MSP\WPObjects\Model\AbstractPostModel $Post, $data)
@@ -38,13 +47,6 @@ class CustomAttributes extends AbstractMetaBox
         return array(
             '_attrs' => $atts
         );
-    }
-    
-    public function enqueues()
-    {
-        parent::enqueues();
-        
-        wp_enqueue_script('msp_metabox_attributes', MSP_PATH_URL . 'js/meta-boxes/attributes.js', array('backbone'), null, true);
     }
     
     public function getElements()

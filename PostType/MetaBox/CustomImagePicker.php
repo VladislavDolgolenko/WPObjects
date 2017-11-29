@@ -8,7 +8,7 @@
  * @support      support@torbara.com
  */
 
-namespace MSP\MetaBox;
+namespace WPObjects\PostType\MetaBox;
 
 class CustomImagePicker extends AbstractMetaBox
 {
@@ -17,7 +17,17 @@ class CustomImagePicker extends AbstractMetaBox
         $this->setPosition('side');
         $this->setPriority('default');
         
+        $template_dir = dirname(__FILE__) . DIRECTORY_SEPARATOR . 'templates';
+        $this->setTemplatePath($template_dir . DIRECTORY_SEPARATOR . 'custom-image-picker.php');
+        
         add_action('add_meta_boxes', array($this, 'deleteDefaultThumbnailBox'), 1000, 2);
+    }
+    
+    public function enqueues()
+    {
+        parent::enqueues();
+        
+        $this->getAssetsManager()->enqueueScript('metabox_image_picker');
     }
     
     public function deleteDefaultThumbnailBox($post_type, $post)
@@ -38,17 +48,5 @@ class CustomImagePicker extends AbstractMetaBox
     public function processing(\MSP\WPObjects\Model\AbstractPostModel $Post, $data)
     {
         return $data;
-    }
-    
-    public function getTemplatePath()
-    {
-        return MSP_PATH . 'includes/templates/meta-box/custom-image-picker.php';
-    }
-    
-    public function enqueues() 
-    {
-        parent::enqueues();
-        
-        wp_enqueue_script('msp-image-picker');
     }
 }

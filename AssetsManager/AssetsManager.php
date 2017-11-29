@@ -92,6 +92,16 @@ class AssetsManager implements
         return $this;
     }
     
+    public function addJSTemplates($config)
+    {
+        foreach ($config as $template) {
+            list($name, $path) = $template;
+            $this->addJSTemplate($name, $path);
+        }
+        
+        return $this;
+    }
+    
     public function addJSTemplate($name, $path)
     {
         $this->js_templates[$name] = $path;

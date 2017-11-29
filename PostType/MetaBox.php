@@ -10,9 +10,9 @@
 
 namespace WPObjects\PostType;
 
-use WPObjects\Model\AbstractModel;
+use WPObjects\View\View;
 
-abstract class MetaBox extends AbstractModel
+abstract class MetaBox extends View
 {
     protected $id = null;
     protected $title = null;
@@ -24,6 +24,8 @@ abstract class MetaBox extends AbstractModel
      */
     protected $Post = null;
     
+    protected $box = null;
+    
     /**
      * @return array
      */
@@ -33,28 +35,22 @@ abstract class MetaBox extends AbstractModel
      * @param \WP_Post $post
      * @return $this
      */
-    public function render(\WP_Post $post, $box)
+    public function handler(\WP_Post $post, $box)
     {
         $this->Post = $post;
+        $this->box = $box;
         
-        $template_path = $this->getTemplatePath();
-        if (!\file_exists($template_path)) {
-            return;
-        }
-        
-        $this->enqueues();
-        include($template_path);
-        
-        return $this;
+        $this->render();
     }
 
-    abstract protected function enqueues();
-    
-    abstract protected function getTemplatePath();
-    
     public function getPost()
     {
         return $this->Post;
+    }
+    
+    public function getBox()
+    {
+        return $this->box;
     }
     
     public function setId($int)

@@ -12,6 +12,10 @@ $assets_path = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'assets/custom';
 $assets_url = plugin_dir_url($assets_path);
 
 return array(
+
+/**
+ * Global
+ */
     
     array(
         'font-awesome',
@@ -36,11 +40,25 @@ return array(
         null,
         true
     ),
+
+/**
+ * UI
+ */
     
     array(
         'form',
         $assets_url . '/css/forms.css',
         array('bootstrap-wrapper', 'font-awesome', 'selectize'),
+    ),
+    
+/**
+ * DataBase dashboard
+ */
+    
+    array(
+        'database',
+        $assets_url . '/css/dashboard.css',
+        array('bootstrap-wrapper', 'font-awesome'),
     ),
     
 );

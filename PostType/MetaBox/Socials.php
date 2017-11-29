@@ -8,7 +8,9 @@
  * @support      support@torbara.com
  */
 
-namespace MSP\MetaBox;
+namespace WPObjects\PostType\MetaBox;
+
+use WPObjects\View\UI\Selector;
 
 class Socials extends AbstractMetaBox
 {
@@ -18,6 +20,16 @@ class Socials extends AbstractMetaBox
         $this->setTitle('Socials links');
         $this->setPosition('normal');
         $this->setPriority('default');
+        
+        $template_dir = dirname(__FILE__) . DIRECTORY_SEPARATOR . 'templates';
+        $this->setTemplatePath($template_dir . DIRECTORY_SEPARATOR . 'socials.php');
+    }
+    
+    public function enqueues()
+    {
+        parent::enqueues();
+        
+        $this->getAssetsManager()->enqueueScript('metabox_attributes');
     }
     
     public function processing(\MSP\WPObjects\Model\AbstractPostModel $Post, $data)
@@ -67,21 +79,13 @@ class Socials extends AbstractMetaBox
             );
         }
         
-        $name = 'social_icon_class';
-        $vertical = true;
-        $desctiption = '';
-        $multibple = false;
-        $array_result = true;
-        $lable = null;
+        $Selector = new Selector();
+        $Selector->setName('social_icon_class')
+                ->setVertical(true)
+                ->setMultiple(false)
+                ->setArrayResult(true);
         
-        include $this->getPartTemplatePath('selector');
-    }
-    
-    public function enqueues()
-    {
-        parent::enqueues();
-        
-        wp_enqueue_script('msp_metabox_attributes', MSP_PATH_URL . 'js/meta-boxes/attributes.js', array('backbone'), null, true);
+        $Selector->render();
     }
     
     public function getElements()

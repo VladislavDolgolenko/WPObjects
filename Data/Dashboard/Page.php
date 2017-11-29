@@ -33,43 +33,8 @@ class Page extends \WPObjects\Page\AdminPage
     {
         $AM = $this->getAssetsManager();
         
-        $AM->addGlobalScript('backbone')
-           ->addGlobalScript('bootstrap')
-           ->addGlobalScript('jquery')
-           ->addGlobalScript('font-awesome');
-        
-        $AM->registerStyle('font-awesome', $this->getAssetsDirUrl() . '/' . 'css/library/font-awesome.min.css')
-           ->registerStyle('bootstrap-wrapper', $this->getAssetsDirUrl() . '/' . 'css/library/bootstrap-wrapper.css')
-           ->registerStyle('database', $this->getAssetsDirUrl() . '/' . 'css/dashboard.css', array('bootstrap-wrapper', 'font-awesome'));
-        
-        $AM->registerScript('bootstrap', $this->getAssetsDirUrl() . '/' . 'js/library/bootstrap.min.js', array('jquery'))
-           ->registerScript('model-data-type', $this->getAssetsDirUrl() . '/' . 'js/MVC/model/data-type.js', array('backbone'))
-           ->registerScript('collection-data-type', $this->getAssetsDirUrl() . '/' . 'js/MVC/collection/data-type.js', array('backbone', 'model-data-type'))
-           ->registerScript('view-dashboard-main-nav', $this->getAssetsDirUrl() . '/' . 'js/MVC/view/dashboard/main-nav.js', array('backbone'))
-           ->registerScript('view-dashboard-line', $this->getAssetsDirUrl() . '/' . 'js/MVC/view/dashboard/line.js', array('backbone'))
-           ->registerScript('view-dashboard-list', $this->getAssetsDirUrl() . '/' . 'js/MVC/view/dashboard/list.js', array('backbone', 'view-dashboard-line'))
-           ->registerScript('view-dashboard-filters', $this->getAssetsDirUrl() . '/' . 'js/MVC/view/dashboard/filters.js', array('backbone'))
-           ->registerScript('view-dashboard-field', $this->getAssetsDirUrl() . '/' . 'js/MVC/view/dashboard/field.js', array('backbone'))
-           ->registerScript('view-dashboard-form', $this->getAssetsDirUrl() . '/' . 'js/MVC/view/dashboard/form.js', array('backbone', 'view-dashboard-field', 'bootstrap'))
-           ->registerScript('view-dashboard', $this->getAssetsDirUrl() . '/' . 'js/MVC/view/dashboard/dashboard.js', array(
-                'backbone', 
-                'view-dashboard-main-nav', 
-                'collection-data-type', 
-                'view-dashboard-list',
-                'view-dashboard-filters',
-                'view-dashboard-form'
-            ))
-           ->registerScript('page-dashboard', $this->getAssetsDirUrl() . '/' . '/js/page/dashboard.js', array('view-dashboard'));
-        
-        $AM->addJSTemplate('TmplDashboardMainNav', $this->getAssetsDirPath() . DIRECTORY_SEPARATOR . 'js/MVC/template/dashboard/main-nav.html')
-           ->addJSTemplate('TmplDashboardList', $this->getAssetsDirPath() . DIRECTORY_SEPARATOR . 'js/MVC/template/dashboard/list.html')
-           ->addJSTemplate('TmplDashboardLine', $this->getAssetsDirPath() . DIRECTORY_SEPARATOR . 'js/MVC/template/dashboard/line.html')
-           ->addJSTemplate('TmplDashboardFilters', $this->getAssetsDirPath() . DIRECTORY_SEPARATOR . 'js/MVC/template/dashboard/filters.html')
-           ->addJSTemplate('TmplDashboardForm', $this->getAssetsDirPath() . DIRECTORY_SEPARATOR . 'js/MVC/template/dashboard/form.html')
-           ->addJSTemplate('TmplDashboardField', $this->getAssetsDirPath() . DIRECTORY_SEPARATOR . 'js/MVC/template/dashboard/field.html');
-        
-        $AM->enqueueScript('page-dashboard');
-        $AM->enqueueStyle('database');
+        $AM->enqueueScript('page-dashboard')
+           ->enqueueStyle('database');
     }
     
     public function getAssetsDirUrl()

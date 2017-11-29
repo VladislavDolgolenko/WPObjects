@@ -43,6 +43,13 @@ class Selector extends AbstractUI
         return $this;
     }
     
+    public function setVertical($bollean)
+    {
+        $this->vertical = $bollean ? true : false;
+        
+        return $this;
+    }
+    
     public function setOptions($options)
     {
         $this->options = $options;
@@ -77,7 +84,7 @@ class Selector extends AbstractUI
         return $this;
     }
     
-    public function getDescription($text)
+    public function setDescription($text)
     {
         $this->desctiption = $text;
         
