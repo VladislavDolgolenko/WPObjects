@@ -42,6 +42,8 @@ module.exports = function (grunt) {
                 './Service/**/*',
                 './View/**/*',
                 './UI/**/*',
+                './config/**/*',
+                './assets/**/*',
                 './license.txt'
             ], 
             dest: dest,

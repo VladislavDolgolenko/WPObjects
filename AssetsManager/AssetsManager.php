@@ -10,10 +10,6 @@
 
 namespace WPObjects\AssetsManager;
 
-/**
- * - логика работы с глобальной JS переменной и шаблонами 
- * - регистрировать глобальные скрипты
- */
 class AssetsManager implements
     \WPObjects\Service\NamespaceInterface,
     \WPObjects\Service\VersionInterface
@@ -22,63 +18,41 @@ class AssetsManager implements
     protected $global_assets = array('jquery', 'backbone');
     protected $assets_version = '';
     protected $js_templates = array();
+    protected $wp_register_scripts = array();
+    protected $wp_register_styles = array();
     
     public function __construct()
     {
         \add_action('wp_print_footer_scripts', array($this, 'updateJSObject'), -10);
         \add_action('admin_print_footer_scripts', array($this, 'updateJSObject'), -10);
+        \add_action('wp_enqueue_scripts', array($this, 'registerWPAssets'), -10);
+        \add_action('admin_enqueue_scripts', array($this, 'registerWPAssets'), -10);
     }
     
     public function registerScripts($config)
     {
-        foreach ($config as $script) {
-            list($name, $path, $deps, $v, $global) = $script;
-            $this->registerScript($name, $path, $deps, $v, $global);
-        }
+        $this->registerAssets('wp_register_scripts', $config);
         
         return $this;
     }
     
     public function registerScript($name, $path, $deps = array(), $v = null, $global = false)
     {
-        if (\wp_script_is($name, 'registered')) {
-            return $this;
-        }
-        
-        if ($global) {
-            $this->addGlobalScript($name);
-        }
-        
-        $version = $v ? $v : $this->getVersion();
-        
-        \wp_register_script($this->prepareAssetName($name), $path, $this->prepareAssetsDeps($deps), $version);
+        $this->registerAsset('wp_register_scripts', $name, $path, $deps, $v, $global);
         
         return $this;
     }
     
     public function registerStyles($config)
     {
-        foreach ($config as $style) {
-            list($name, $path, $deps, $v, $global) = $style;
-            $this->registerStyle($name, $path, $deps, $v, $global);
-        }
+        $this->registerAssets('wp_register_styles', $config);
         
         return $this;
     }
     
     public function registerStyle($name, $path, $deps = array(), $v = null, $global = false)
     {
-        if (\wp_style_is($name, 'registered')) {
-            return $this;
-        }
-        
-        if ($global) {
-            $this->addGlobalScript($name);
-        }
-        
-        $version = $v ? $v : $this->getVersion();
-        
-        \wp_register_style($this->prepareAssetName($name), $path, $this->prepareAssetsDeps($deps), $version);
+        $this->registerAsset('wp_register_styles', $name, $path, $deps, $v, $global);
         
         return $this;
     }
@@ -105,6 +79,52 @@ class AssetsManager implements
     public function addJSTemplate($name, $path)
     {
         $this->js_templates[$name] = $path;
+        
+        return $this;
+    }
+    
+    protected function registerAssets($var, $config)
+    {
+        foreach ($config as $style) {
+            list($name, $path, $deps, $v, $global) = array_pad($style, 5, null);
+            $this->registerAsset($var, $name, $path, $deps, $v, $global);
+        }
+    }
+    
+    protected function registerAsset($var, $name, $path, $deps = array(), $v = null, $global = false)
+    {
+        if ($global) {
+            $this->addGlobalScript($name);
+        }
+        
+        $version = $v ? $v : $this->getVersion();
+        
+        $this->$var[] = array(
+            $this->prepareAssetName($name),
+            $path,
+            $this->prepareAssetsDeps($deps),
+            $version
+        );
+        
+        $this->registerWPAssets();
+    }
+    
+    public function registerWPAssets()
+    {
+        if (!did_action('wp_enqueue_scripts') && 
+            !did_action('admin_enqueue_scripts')) {
+            return;
+        }
+        
+        while ($script = array_pop($this->wp_register_scripts) ) {
+            list($name, $path, $deps, $v) = array_pad($script, 4, null);
+            \wp_register_script($name, $path, $deps, $v);
+        }
+        
+        while ($script = array_pop($this->wp_register_styles) ) {
+            list($name, $path, $deps, $v) = array_pad($script, 4, null);
+            \wp_register_style($name, $path, $deps, $v);
+        }
         
         return $this;
     }
@@ -154,6 +174,10 @@ class AssetsManager implements
      */
     public function prepareAssetsDeps($deps)
     {
+        if (!is_array($deps)) {
+            $deps = array();
+        }
+        
         $result = array();
         foreach ($deps as $dep) {
             $result[] = $this->prepareAssetName($dep);
@@ -194,4 +218,5 @@ class AssetsManager implements
     {
         return $this->assets_version;
     }
+    
 }
