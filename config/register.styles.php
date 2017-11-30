@@ -46,9 +46,15 @@ return array(
  */
     
     array(
+        'helpers',
+        $assets_url . '/css/helpers.css',
+        array('bootstrap-wrapper', 'font-awesome', 'selectize'),
+    ),
+    
+    array(
         'form',
         $assets_url . '/css/forms.css',
-        array('bootstrap-wrapper', 'font-awesome', 'selectize'),
+        array('bootstrap-wrapper', 'font-awesome', 'selectize', 'helpers'),
     ),
     
 /**

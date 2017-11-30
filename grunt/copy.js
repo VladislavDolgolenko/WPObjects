@@ -56,6 +56,7 @@ module.exports = function (grunt) {
                     
                     JSregex = /\.js/g;
                     PHPregex = /\.php/g;
+                    CSSregex = /\.css/g;
                     
                     if (PHPregex.exec(srcpath) !== null) {
                         
@@ -64,11 +65,22 @@ module.exports = function (grunt) {
                         var replacer = "WPObjects\\\\";
                         content_replacement = content_replacement.replace( new RegExp(replacer, "gi"), needed);
                         
+                        // Html classes
+                        var needed = namespace.toLowerCase() + '-';
+                        var replacer = "msp-";
+                        content_replacement = content_replacement.replace( new RegExp(replacer, "gi"), needed);
+                        
                     } else if (JSregex.exec(srcpath) !== null) {
                         
                         // JS global varialbe
                         var needed = namespace;
                         var replacer = "MSP";
+                        content_replacement = content_replacement.replace( new RegExp(replacer, "g"), needed);
+                    
+                    } else if (CSSregex.exec(srcpath) !== null) {
+                        
+                        var needed = '.' + namespace.toLowerCase() + '-';
+                        var replacer = ".msp-";
                         content_replacement = content_replacement.replace( new RegExp(replacer, "g"), needed);
                         
                     } else {
