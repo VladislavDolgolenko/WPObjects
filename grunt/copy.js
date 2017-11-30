@@ -57,17 +57,20 @@ module.exports = function (grunt) {
                     JSregex = /\.js/g;
                     PHPregex = /\.php/g;
                     CSSregex = /\.css/g;
+                    Templatesregex = /template/g;
                     
-                    if (PHPregex.exec(srcpath) !== null) {
-                        
-                        // PHP namespaces
-                        var needed = namespace + '\\WPObjects\\';
-                        var replacer = "WPObjects\\\\";
-                        content_replacement = content_replacement.replace( new RegExp(replacer, "gi"), needed);
+                    if (Templatesregex.exec(srcpath) !== null) {
                         
                         // Html classes
                         var needed = namespace.toLowerCase() + '-';
                         var replacer = "msp-";
+                        content_replacement = content_replacement.replace( new RegExp(replacer, "gi"), needed);
+                        
+                    } else if (PHPregex.exec(srcpath) !== null) {
+                        
+                        // PHP namespaces
+                        var needed = namespace + '\\WPObjects\\';
+                        var replacer = "WPObjects\\\\";
                         content_replacement = content_replacement.replace( new RegExp(replacer, "gi"), needed);
                         
                     } else if (JSregex.exec(srcpath) !== null) {
