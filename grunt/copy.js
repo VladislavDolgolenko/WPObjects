@@ -64,7 +64,7 @@ module.exports = function (grunt) {
                         // Html classes
                         var needed = namespace.toLowerCase() + '-';
                         var replacer = "msp-";
-                        content_replacement = content_replacement.replace( new RegExp(replacer, "gi"), needed);
+                        content_replacement = content_replacement.replace( new RegExp(replacer, "g"), needed);
                         
                     } else if (PHPregex.exec(srcpath) !== null) {
                         
@@ -78,6 +78,11 @@ module.exports = function (grunt) {
                         // JS global varialbe
                         var needed = namespace;
                         var replacer = "MSP";
+                        content_replacement = content_replacement.replace( new RegExp(replacer, "g"), needed);
+                        
+                        // Html classes
+                        var needed = namespace.toLowerCase() + '-';
+                        var replacer = "msp-";
                         content_replacement = content_replacement.replace( new RegExp(replacer, "g"), needed);
                     
                     } else if (CSSregex.exec(srcpath) !== null) {
