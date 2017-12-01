@@ -10,8 +10,6 @@
 
 namespace WPObjects\Factory;
 
-use WPObjects\Data\Data;
-
 abstract class AbstractData extends AbstractModelFactory implements
     \WPObjects\Data\StorageInterface
 {
@@ -44,7 +42,7 @@ abstract class AbstractData extends AbstractModelFactory implements
      */
     public function __construct()
     {
-        $this->Data = new Data();
+        
     }
     
     public function setStorage(\WPObjects\Data\Storage $Storage)
@@ -228,7 +226,7 @@ abstract class AbstractData extends AbstractModelFactory implements
      */
     public function pull()
     {
-        if (is_null($this->pull)) {
+        if (is_null($this->pull) && $this->getData()) {
             $this->pull = $this->getData()->getDatas($this->getStorage());
         }
         
@@ -241,6 +239,17 @@ abstract class AbstractData extends AbstractModelFactory implements
     public function getData()
     {
         return $this->Data;
+    }
+    
+    /**
+     * @param \WPObjects\Data\Data $Data instance of data access 
+     * @return $this
+     */
+    public function setData(\WPObjects\Data\Data $Data)
+    {
+        $this->Data = $Data;
+        
+        return $this;
     }
     
 }

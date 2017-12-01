@@ -178,7 +178,7 @@ class PostType extends AbstractModelType implements
         \add_meta_box(
             $MetaBox->getId(), 
             $MetaBox->getTitle(), 
-            array($MetaBox, 'render'), 
+            array($MetaBox, 'handler'), 
             $this->getId(), 
             $MetaBox->getPosition(), 
             $MetaBox->getPriority()

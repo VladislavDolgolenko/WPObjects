@@ -10,9 +10,10 @@
 
 namespace WPObjects\PostType;
 
-use WPObjects\Model\AbstractModel;
+use WPObjects\View\View;
 
-abstract class MetaBox extends AbstractModel
+abstract class MetaBox extends View implements
+    \WPObjects\PostType\PostTypeFactoryInterface
 {
     protected $id = null;
     protected $title = null;
@@ -20,9 +21,21 @@ abstract class MetaBox extends AbstractModel
     protected $priotity = null;
     
     /**
+     * @var \WPObjects\PostType\PostTypeFactory
+     */
+    protected $PostTypeFactory = null;
+    
+    /**
      * @var \WP_Post
      */
     protected $Post = null;
+    
+    protected $box = null;
+    
+    /**
+     * @var \WPObjects\Model\AbstractPostModel
+     */
+    protected $PostModel = null;
     
     /**
      * @return array
@@ -33,28 +46,44 @@ abstract class MetaBox extends AbstractModel
      * @param \WP_Post $post
      * @return $this
      */
-    public function render(\WP_Post $post, $box)
+    public function handler(\WP_Post $post, $box)
     {
         $this->Post = $post;
+        $this->box = $box;
         
-        $template_path = $this->getTemplatePath();
-        if (!\file_exists($template_path)) {
-            return;
+        $this->render();
+    }
+    
+    /**
+     * @return \WPObjects\Model\AbstractPostModel
+     */
+    protected function getPostModel()
+    {
+        if (is_null($this->PostModel) && $this->getPost()) {
+            $PostType = $this->getPostType();
+            $this->PostModel = $PostType->createModel($this->getPost());
         }
         
-        $this->enqueues();
-        include($template_path);
-        
-        return $this;
+        return $this->PostModel;
+    }
+    
+    /**
+     * @return \WPObjects\PostType\PostType
+     */
+    protected function getPostType()
+    {
+        $Factory = $this->getPostTypeFactory();
+        return $Factory->get($this->getPost()->post_type);
     }
 
-    abstract protected function enqueues();
-    
-    abstract protected function getTemplatePath();
-    
     public function getPost()
     {
         return $this->Post;
+    }
+    
+    public function getBox()
+    {
+        return $this->box;
     }
     
     public function setId($int)
@@ -108,6 +137,25 @@ abstract class MetaBox extends AbstractModel
     public function getPriority()
     {
         return $this->priotity;
+    }
+    
+    /**
+     * @return \WPObjects\PostType\PostTypeFactory
+     */
+    public function getPostTypeFactory()
+    {
+        return $this->PostTypeFactory;
+    }
+    
+    /**
+     * @param \WPObjects\PostType\PostTypeFactory $PostTypeFactory
+     * @return $this
+     */
+    public function setPostTypeFactory(\WPObjects\PostType\PostTypeFactory $PostTypeFactory)
+    {
+        $this->PostTypeFactory = $PostTypeFactory;
+        
+        return $this;
     }
     
 }

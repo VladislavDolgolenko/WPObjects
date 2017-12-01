@@ -13,7 +13,8 @@ namespace WPObjects\LessCompiler;
 use WPObjects\EventManager\ListenerInterface;
 
 class Processing implements 
-    ListenerInterface
+    ListenerInterface,
+    \WPObjects\Service\NamespaceInterface
 {
     protected $namespace = 'wpobjects_';
     

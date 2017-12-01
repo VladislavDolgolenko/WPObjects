@@ -1,0 +1,16 @@
+<thead class="msp-form">
+    <tr>
+        <% _.each(DataType.get('attrs'), function(Label){ %> 
+            <th><%= Label %></th>
+        <% }) %>
+        <th class="text-right">
+            <button class="button add-new">
+                <i class="fa fa-plus-square" aria-hidden="true"></i> Add new
+            </button>
+        </th>
+    </tr>
+</thead>
+
+<tbody>
+    <!-- List of lines as models views -->
+</tbody>

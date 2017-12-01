@@ -1,0 +1,10 @@
+default:
+  tasks:
+    - build
+build:
+  tasks:
+    - 'clean:build'
+    - 'copy:build_namespace'
+
+    
+

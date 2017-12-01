@@ -1,0 +1,19 @@
+
+<li class="active">
+    <a href="#" data-model-id="">
+        all
+    </a>
+</li>
+
+<% Collection.each(function(Model, index) {  %>
+<li class="">
+    <a href="#" data-model-id="<%= Model.id %>">
+        <% if (Model.get('img_url_mini')) { %>
+            <img src="<%= Model.get('img_url_mini') %>">
+        <% } %>
+        
+        <%= Model.get('name') %>
+    </a>
+</li>
+<% }) %>
+<div class="clearfix"></div>

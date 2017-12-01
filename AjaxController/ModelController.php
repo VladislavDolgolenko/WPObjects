@@ -10,9 +10,6 @@
 
 namespace WPObjects\AjaxController;
 
-/**
- * Нужны права доступа
- */
 class ModelController extends AbstractRESTController
 {
     protected $ModelType = null;

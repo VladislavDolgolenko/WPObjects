@@ -8,18 +8,12 @@
 
 namespace WPObjects\Page;
 
-abstract class AdminPage implements 
-    \WPObjects\EventManager\ListenerInterface,
-    \WPObjects\Service\ManagerInterface
+use WPObjects\View\View;
+
+abstract class AdminPage extends View implements 
+    \WPObjects\EventManager\ListenerInterface
 {
     private static $_instances = array();
-    
-    /**
-     * Global service manager
-     * 
-     * @var \WPobjects\Service\Manager
-     */
-    protected $ServiceManager = null;
     
     protected $perent_menu_id = null;
     protected $menu_name = null;
@@ -30,6 +24,8 @@ abstract class AdminPage implements
     protected $icon_url = null;
     
     /**
+     * Multi singleton for any classes realizations
+     * 
      * @return \WPObjects\Page\AdminPage
      */
     static public function getInstance()
@@ -47,37 +43,37 @@ abstract class AdminPage implements
         \add_action('admin_menu', array($this, 'init'));
     }
     
+    public function detach()
+    {
+        \remove_action('admin_menu', array($this, 'init'));
+    }
+    
     public function init()
     {
-        if (is_null($this->perent_menu_id)) {
+        if (is_null($this->getParentPageId())) {
         
             \add_menu_page(
-                $this->title, 
-                $this->menu_name, 
-                $this->permission, 
-                $this->id, 
+                $this->getTitle(), 
+                $this->getMenuName(), 
+                $this->getPermission(), 
+                $this->getId(), 
                 array($this, 'render'),
-                $this->icon_url,
-                $this->position
+                $this->getIconUrl(),
+                $this->getMenuPosition()
             );
         
         } else {
             
             \add_submenu_page( 
-                $this->perent_menu_id,
-                $this->title, 
-                $this->menu_name, 
-                $this->permission, 
-                $this->id, 
+                $this->getParentPageId(),
+                $this->getTitle(), 
+                $this->getMenuName(), 
+                $this->getPermission(), 
+                $this->getId(), 
                 array($this, 'render')
             );
             
         }
-    }
-    
-    public function detach()
-    {
-        \remove_action('admin_menu', array($this, 'init'));
     }
     
     public function render()
@@ -87,13 +83,7 @@ abstract class AdminPage implements
             $this->POSTAction($_POST);
         }
         
-        $template_path = $this->getTemplatePath();
-        if (!\file_exists($template_path)) {
-            return;
-        }
-        
-        $this->enqueues();
-        include($template_path);
+        parent::render();
     }
     
     public function getUrl($get_params = null)
@@ -116,13 +106,14 @@ abstract class AdminPage implements
         return;
     }
     
-    abstract protected function enqueues();
-    
-    abstract protected function getTemplatePath();
-    
     public function getId()
     {
         return $this->id;
+    }
+    
+    public function setId($string)
+    {
+        $this->id = $string;
     }
     
     public function getPageId()
@@ -134,19 +125,63 @@ abstract class AdminPage implements
         return $this->id;
     }
     
-    public function setServiceManager(\WPObjects\Service\Manager $ServiceManager)
+    public function getParentPageId()
     {
-        $this->ServiceManager = $ServiceManager;
-        
-        return $this;
+        return $this->perent_menu_id;
     }
     
-    public function getServiceManager()
+    public function setParentPageId($string)
     {
-        if (is_null($this->ServiceManager)) {
-            throw new \Exception('Undefined service manager');
-        }
-        
-        return $this->ServiceManager;
+        $this->perent_menu_id = $string;
+    }
+    
+    public function setIconUrl($string)
+    {
+        $this->icon_url = $string;
+    }
+    
+    public function getIconUrl()
+    {
+        return $this->icon_url;
+    }
+    
+    public function setMenuPosition($number)
+    {
+        $this->position = $number;
+    }
+    
+    public function getMenuPosition()
+    {
+        return $this->position;
+    }
+    
+    public function setTitle($string)
+    {
+        $this->title = $string;
+    }
+    
+    public function getTitle()
+    {
+        return $this->title;
+    }
+    
+    public function setMenuName($string)
+    {
+        $this->menu_name = $string;
+    }
+    
+    public function getMenuName()
+    {
+        return $this->menu_name;
+    }
+    
+    public function setPermission($string)
+    {
+        $this->permission = $string;
+    }
+    
+    public function getPermission()
+    {
+        return $this->permission;
     }
 }

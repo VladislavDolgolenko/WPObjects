@@ -1,0 +1,47 @@
+
+<% _.each(DataType.get('attrs'), function(Label, key){ 
+        var value = Model.get(key);
+%> 
+
+    <td>
+        <% if (!value) { %>
+
+        <% } else if (value.isArray !== undefined && value.isArray()) { %>
+            <%= value.join(', ') %>
+        <% } else if (value.indexOf === undefined) { %>
+            <span><%= value %></span>
+        <% } else if (value.indexOf('.png') !== -1 || value.indexOf('.jpg') !== -1 || value.indexOf('.jpeg') !== -1) { %>
+            <img src="<%= value %>" width="32">
+        <% } else if (value.indexOf("http") === 0) { %>
+            <a href="<%= value %>">link</a>
+        <% } else { %>
+            <span><%= value %></span>
+        <% } %>
+
+    </td>
+
+<% }) %>
+
+
+<td class="msp-form">
+    <% if (!Model.get('build_in')) { %>
+    <button class="button button-sm button-danger form-action-remove" type="submit">
+        <i class="fa fa-trash-o" aria-hidden="true"></i>
+    </button>
+    <button class="button button-sm  form-action-edit">
+        <i class="fa fa-pencil" aria-hidden="true"></i>
+    </button>
+    <% } %>
+    
+    <div class="pull-right activity form-action-change-status">
+        <% if (Model.get('active') === true) { %>
+            <i class="fa fa-toggle-on text-success fa-2x" aria-hidden="true"></i>
+        <% } else { %>
+            <i class="fa fa-toggle-off fa-2x" aria-hidden="true"></i>
+        <% } %>
+    </div>
+</td>
+
+
+
+

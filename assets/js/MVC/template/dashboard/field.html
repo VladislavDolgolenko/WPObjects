@@ -1,0 +1,46 @@
+<div class="col-sm-6">
+    <label><%= Field.label %></label>
+</div>
+
+<div class="col-sm-6">
+    <% if (Field.type === 'text') { %>
+
+    <input 
+        class="form-control" 
+        type='text'
+        value="<%= Model.get(Field.id) %>" 
+        name="<%= Field.id %>" 
+        <%= Field.require === true ? 'required="true"' : '' %> 
+        <%= !Model.isNew() && Field.id == Model.idAttribute ? 'disabled' : '' %>
+    >
+
+    <% } else if (Field.type === 'select') { %>
+
+        <select class="form-control" name="<%= Field.id %>" <%= Field.require === true ? 'required="true"' : '' %>>
+            <% _.each(Field.default, function(name, key){ %> 
+            <option value="<%= key %>" <%= Model.get(Field.id) == key ? 'selected' : '' %>>
+                    <%= name %>
+                </option>
+            <% }) %>
+        </select>
+
+    <% } else if (Field.type === 'checkbox') { %>
+
+        <div class="checkbox">
+            <input type="checkbox" name="<%= Field.id %>" <%= Model.get(Field.id)  ? 'checked' : ''%> >
+        </div>
+
+    <% } else if (Field.type === 'qualifier' && Collection !== null) { %>
+
+        <select class="form-control" name="<%= Field.id %>" <%= Field.require === true ? 'required="true"' : '' %>>
+            <% Collection.each(function(OptionModel){ %> 
+            <option value="<%= OptionModel.id %>" <%= Model.get(Field.id) == OptionModel.id ? 'selected' : '' %>>
+                    <%= OptionModel.get('name') %>
+                </option>
+            <% }) %>
+        </select>
+
+    <% } %>
+</div>
+
+<div class="clearfix"></div>
