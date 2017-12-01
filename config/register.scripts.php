@@ -57,6 +57,11 @@ return array(
         $assets_url . '/js/image-picker.js',
         array('jquery', 'backbone'),
     ),
+    array(
+        'metabox_gallery',
+        $assets_url . '/js/gallery.js',
+        array('jquery', 'backbone'),
+    ),
     
 /**
  * DataBase dashboard
