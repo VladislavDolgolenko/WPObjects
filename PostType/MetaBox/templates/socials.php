@@ -10,8 +10,6 @@
 
 ?>
 
-
-
 <div class="msp-bootstrap-wrapper msp-form custom-attrs">
     
     <div class="elements">
@@ -40,7 +38,7 @@
         <?php } ?>
     </div>
     
-    <button class="button button-sm button-width button-default create-element">
+    <button class="button button-width button-default create-element">
         <i class="fa fa-plus"></i>
             <?php esc_html_e('add more socials', 'block');?>
     </button>

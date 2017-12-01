@@ -49,7 +49,7 @@ $elements = $this->getElements();
         <?php } ?>
     </div>
     
-    <button class="button button-sm button-width button-default create-element">
+    <button class="button button-width button-default create-element">
         <i class="fa fa-plus"></i>
             <?php esc_html_e('add more attributes', 'block');?>
     </button>

@@ -39,7 +39,7 @@ if (!is_array($attachments) || count($attachments) === 0) {
 <div class="msp-bootstrap-wrapper msp-form" id="msp-ui-gallery">
     
     <div class="msp-form-group">
-        <button class="button button-sm add-attachments m-b-md" title="<?php esc_html_e('add images to gallery', 'block');?>">
+        <button class="button add-attachments m-b-md" title="<?php esc_html_e('add images to gallery', 'block');?>">
             <i class="fa fa-plus"></i> <?php esc_html_e('add images to gallery', 'block');?>
         </button>
     </div>

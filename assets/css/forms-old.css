@@ -18,10 +18,7 @@
 }
 
 .msp-form p {
-    color: #808080;
-    font-size: 12px;
-    font-weight: 400;
-    line-height: 20px;
+    font-size: 14px;
 }
 
 .msp-form > p:last-child {
@@ -64,83 +61,15 @@
     Box
 */
 .msp-form .msp-box {
-    box-shadow: 0 1px 1px rgba(153, 153, 153, 0.4);
-    border-radius: 4px;
-    border: 1px solid #e5e5e5;
+    border: 1px solid #cccccc;
+    border-radius: 2px;
     padding: 14px;
-    background: #ffffff;
-    margin-bottom: 14px;
-}
-
-.msp-box.callapsed {
-    padding-bottom: 0px;
-    transition: all 400ms;
-}
-
-.msp-box.callapsed.colapse-show {
-    padding-bottom: 14px;
 }
 
 .msp-form .box-title {
     margin: -15px -15px 15px -15px; 
-    padding: 10px;
+    padding: 12px;
     border-bottom: 1px solid #e5e5e5;
-    font-size: 14px;
-    font-weight: 500;
-}
-
-.msp-box.callapsed .box-title {
-    margin-bottom: 0px;
-    cursor: pointer;
-    transition: all 400ms;
-}
-
-.msp-box.callapsed.colapse-show .box-title {
-    margin-bottom: 15px;
-}
-
-.msp-box .box-body {
-    transition: max-height 600ms;
-}
-
-.msp-box.callapsed .box-body {
-    max-height: 0;
-    overflow: hidden;
-}
-
-.msp-box.callapsed.colapse-show .box-body {
-    max-height: 1500px;
-    overflow: visible;
-}
-
-.msp-box .box-title i {
-    float: right;
-    color: #343434;
-    font-size: 14px;
-    cursor: pointer;
-    margin-top: 1px;
-    margin-top: 3px;
-    margin-right: 3px;
-}
-
-.msp-box.callapsed .box-title i.collapse_hide {
-    display: inline-block;
-}
-
-.msp-box.callapsed .box-title i.collapse_show {
-    display: none;
-}
-
-.msp-box.callapsed.colapse-show .box-title i.collapse_hide {
-    display: none;
-}
-
-.msp-box.callapsed.colapse-show .box-title i.collapse_show {
-    display: inline-block;
-}
-
-.msp-box .box-width-body {
-    margin: 0 -15px 0 -15px; 
 }
 
 /*
@@ -232,10 +161,6 @@
 
 .msp-form-group.horizont.invert-with .msp-input-group {
     width: 35%;
-}
-
-.msp-form-group.horizont.group-checkbox .msp-input-group {
-    width: 25%;
 }
 
 .msp-form-group.horizont.balance-with .msp-input-group {
@@ -359,9 +284,8 @@
 
 .msp-form .button {
     font-size: 14px;
-    line-height: 1;
     height: inherit;
-    padding: 10px 18px 10px 18px;
+    padding: 6px 18px 5px 18px;
     background: #0085ba;
     border-color: #0073aa #006799 #006799;
     box-shadow: 0 1px 0 #006799;
@@ -385,7 +309,6 @@
 .msp-form .button-width {
     width: 100%;
     display: block;
-    text-align: center;
 } 
 
 .msp-form .button:hover,
@@ -456,6 +379,139 @@
 .msp-form .button .dashicons {
     margin-top: 4px;
     margin-left: -9px;
+}
+
+/*
+    Mathes
+*/
+
+.current-match-status {
+    border-bottom: 2px solid #f3f3f3;
+    padding-bottom: 15px;
+    margin-bottom: 10px;
+}
+
+.current-match-status .status-lable {
+    font-size: 14px;
+    line-height: 30px;
+    float: left;
+    width: 50%;
+}
+
+.current-match-status .status-name {
+    text-align: center;
+    color: inherit;
+    background: #f3f3f3;
+    padding: 5px;
+    border-radius: 12px;
+    font-size: 14px;
+    float: left;
+    width: 50%;
+}
+
+.current-match-status .status-name.status3,
+.current-match-status .status-name.status4 {
+    background: #f4a537; 
+    color: #fff;
+}
+
+.current-match-status .status-name.status5 {
+    background: #cf071f; 
+    color: #fff;
+}
+
+.current-match-status .status-name.status1,
+.current-match-status .status-name.status0 {
+    background: #3acd89; 
+    color: #fff;
+}
+
+.msp-matchmaking .teams-continue {
+    padding-top: 28px;
+}
+
+
+/*
+    Match teams
+*/
+
+.msp-match-teams .team-title {
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+.msp-match-teams .team-title img.team-logo {
+    float: left;
+    width: 60px;
+    height: 50px;
+    object-fit: cover;
+    margin-right: 15px;
+}
+
+.msp-match-teams .col-md-12 {
+    padding: 0;
+}
+
+.msp-match-teams .msp-box.teams-stats {
+    padding-bottom: 4px;
+}
+
+.msp-match-teams .msp-box {
+    margin-bottom: 15px;
+}
+
+/*
+    Match players
+*/
+
+.msp-match-players .box-title {
+    margin: -15px -15px 15px -15px; 
+    padding: 0px;
+    line-height: 35px;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.msp-match-players .box-title img {
+    float: left;
+    height: 35px;
+    width: 60px;
+    object-fit: cover;
+    margin-right: 15px;
+}
+
+.msp-match-players .player-title {
+    margin-bottom: 15px;
+    font-size: 16px;
+}
+
+.msp-match-players .player-title img {
+    float: left;
+    width: 75px;
+    height: 75px;
+    margin-right: 15px;
+    border: 1px solid #cccccc;
+    border-radius: 2px;
+}
+
+.msp-match-players .msp-box {
+    border: 1px solid #e5e5e5;
+}
+
+.msp-match-players .msp-box.player {
+    border: 1px solid #cccccc;
+    padding-bottom: 4px;
+}
+
+.msp-match-players .msp-box.player.non-active {
+    background: #f5f5f5;
+}
+
+.msp-match-players .col-md-12 {
+    padding: 0;
+}
+
+.msp-match-players .msp-box {
+    margin-bottom: 15px;
 }
 
 /*
