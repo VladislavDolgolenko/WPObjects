@@ -173,9 +173,9 @@ abstract class AbstractPostModel extends AbstractModelFactory implements
             return $this;
         }
         
-        if (strripos('_', $orderby) == 0 && strripos('date', $orderby) !== false) {
+        if (strpos($orderby, '_') === 0 && strpos($orderby, 'date') !== false) {
             $this->query['orderby'] = $orderby;
-        } else if (strripos('_', $orderby) == 0) {
+        } else if (strpos($orderby, '_') == 0) {
             $this->query['meta_key'] = $orderby;
             $this->query['orderby'] = 'meta_value_num';
         } else {
