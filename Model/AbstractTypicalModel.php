@@ -71,6 +71,10 @@ abstract class AbstractTypicalModel extends AbstractModel implements
         if (in_array($RelativeModelType->getId(), $qualifiers)) {
             
             $relative_ids = $this->getQualifierId($RelativeModelType->getId());
+            if (!$relative_ids) {
+                return $single ? null : array();
+            }
+            
             $params = array_merge(array(
                 $RelativeModelType->getFactory()->getIdAttrName() => $relative_ids
             ), $filters);
