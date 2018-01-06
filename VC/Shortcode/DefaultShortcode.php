@@ -2,9 +2,9 @@
 
 /**
  * @encoding     UTF-8
- * @copyright    Copyright (C) 2017 Torbara (http://torbara.com). All rights reserved.
+ * @copyright    Copyright (C) 2018 Torbara (http://torbara.com). All rights reserved.
  * @license      Envato Standard License http://themeforest.net/licenses/standard?ref=torbara
- * @author       Vladislav Dolgolenko (vladislavdolgolenko.com)
+ * @author       Vladislav Dolgolenko <vladislavdolgolenko.com>
  * @support      support@torbara.com
  */
 
@@ -14,26 +14,47 @@ if (!class_exists('WPBakeryShortCode')) {
     return;
 }
 
-class DefaultShortcode extends \WPBakeryShortCode
+class DefaultShortcode extends \WPBakeryShortCode implements
+    \WPObjects\VC\AddonInterface
 {
+    /**
+     * @var \WPObjects\VC\CustomAddonModel
+     */
     protected $Addon = null;
     
     public function __construct( $settings )
     {
-        $this->Addon = $settings['CustomAddonModel'];
-        parent::__construct( $settings );
+        parent::__construct($settings);
+        
+        $this->setAddon($settings['AddonModel']);
     }
     
     public function enqueueDefaultScripts()
     {
-        $this->Addon->enqueues();
-        return parent::enqueueDefaultScripts();
+        parent::enqueueDefaultScripts();
+        
+        $this->getAddon()->enqueues();
     }
     
     public function beforeShortcode($atts, $content)
     {
         parent::beforeShortcode($atts, $content);
-        $this->Addon->beforeShortcode();
+        
+        $this->getAddon()->beforeContent();
     }
     
+    public function setAddon(\WPObjects\VC\CustomAddonModel $Addon)
+    {
+        $this->Addon = $Addon;
+        
+        return $this;
+    }
+    
+    /**
+     * @retrun \WPObjects\VC\CustomAddonModel
+     */
+    public function getAddon()
+    {
+        return $this->Addon;
+    }
 }

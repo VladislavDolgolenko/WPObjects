@@ -10,22 +10,42 @@
 
 namespace WPObjects\Data;
 
-use WPObjects\Model\AbstractModel;
-
-class Storage extends AbstractModel
+class Storage extends AbstractStorage
 {
-    public function getId()
-    {
-        return $this->id;
-    }
+    protected $id = null;
+    protected $include = null;
     
-    public function getName()
+    /**
+     * Return storage data
+     * 
+     * @return array
+     */
+    public function getData()
     {
-        return $this->id;
+        if (!is_null($this->data)) {
+            return $this->data;
+        }
+        
+        $file_path = $this->getFilePath();
+        if ($file_path && file_exists($file_path) ) {
+            $this->data = (include $file_path);
+            \WPObjects\Log\Loger::getInstance()->write("Storage: " . $Storage->getFilePath() );
+        } else {
+            \WPObjects\Log\Loger::getInstance()->write("ERROR Storage file not exists: " . $Storage->getFilePath() );
+        }
+        
+        return $this->data;
     }
     
     public function getFilePath()
     {
         return $this->include;
+    }
+    
+    public function setFilePath($string)
+    {
+        $this->include = $string;
+        
+        return $this;
     }
 }

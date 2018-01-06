@@ -74,7 +74,7 @@ class Data implements
  * Data getting 
  */
         
-    public function getDatas(\WPObjects\Data\Storage $Storage)
+    public function getDatas(\WPObjects\Data\AbstractStorage $Storage)
     {
         if (isset($this->datas[$Storage->getId()])) {
             return $this->datas[$Storage->getId()];
@@ -85,17 +85,11 @@ class Data implements
         return $datas;
     }
     
-        protected function extractDatas(\WPObjects\Data\Storage $Storage)
+        protected function extractDatas(\WPObjects\Data\StorageDataInterface $Storage)
         {
-            if ($Storage->getFilePath() && file_exists($Storage->getFilePath())) {
-                $build_in = (include $Storage->getFilePath());
-                \WPObjects\Log\Loger::getInstance()->write("Storage: " . $Storage->getFilePath() );
-            } else {
-                \WPObjects\Log\Loger::getInstance()->write("ERROR Storage file not exists: " . $Storage->getFilePath() );
-                $build_in = array();
-            }
+            $storage_data = $Storage->getData();
             
-            $build_in = $this->filterBuildInData($build_in, $Storage);
+            $build_in = $this->filterBuildInData($storage_data, $Storage);
             $custom = array_reverse($this->readStorageData($Storage));
             
             $result = array_merge($custom, $build_in);
@@ -104,7 +98,7 @@ class Data implements
             return $filtered_result;
         }
         
-        protected function filterBuildInData($datas, \WPObjects\Data\Storage $Storage)
+        protected function filterBuildInData($datas, \WPObjects\Data\AbstractStorage $Storage)
         {
             foreach ($datas as $key => $data) {
                 $datas[$key]['build_in'] = true;
@@ -113,7 +107,7 @@ class Data implements
             return $datas;
         }
         
-        protected function filterResultData($datas, \WPObjects\Data\Storage $Storage)
+        protected function filterResultData($datas, \WPObjects\Data\AbstractStorage $Storage)
         {
             if (!count($datas)) {
                 return $datas;
@@ -135,7 +129,7 @@ class Data implements
  * Data active status 
  */
         
-    public function isActiveData(\WPObjects\Data\Storage $Storage, $data_id)
+    public function isActiveData(\WPObjects\Data\AbstractStorage $Storage, $data_id)
     {
         $activity = $this->getDataDisables($Storage->getId());
 
@@ -261,13 +255,13 @@ class Data implements
         return false;
     }
     
-    protected function writeStorageData(\WPObjects\Data\Storage $Storage, $data)
+    protected function writeStorageData(\WPObjects\Data\AbstractStorage $Storage, $data)
     {
         $option_key = $this->getDataTypeWpOptionKey($Storage->getId());
         update_option($option_key, $data);
     }
     
-    protected function readStorageData(\WPObjects\Data\Storage $Storage)
+    protected function readStorageData(\WPObjects\Data\AbstractStorage $Storage)
     {
         $option_key = $this->getDataTypeWpOptionKey($Storage->getId());
         return get_option($option_key, array());

@@ -2,17 +2,20 @@
 
 /**
  * @encoding     UTF-8
- * @copyright    Copyright (C) 2017 Torbara (http://torbara.com). All rights reserved.
+ * @copyright    Copyright (C) 2018 Torbara (http://torbara.com). All rights reserved.
  * @license      Envato Standard License http://themeforest.net/licenses/standard?ref=torbara
- * @author       Vladislav Dolgolenko (vladislavdolgolenko.com)
+ * @author       Vladislav Dolgolenko <vladislavdolgolenko.com>
  * @support      support@torbara.com
  */
 
-class CustomAddonModel extends WPObjects\Model\AbstractModel implements 
-    WPObjects\EventManager\ListenerInterface,
-    WPObjects\View\ViewInterface,
-    WPObjects\Service\NamespaceInterface,
-    WPObjects\Model\ModelTypeFactoryInterface
+namespace WPObjects\VC;
+
+class CustomAddonModel extends \WPObjects\Model\AbstractModel implements 
+    \WPObjects\EventManager\ListenerInterface,
+    \WPObjects\View\ViewInterface,
+    \WPObjects\Service\NamespaceInterface,
+    \WPObjects\Model\ModelTypeFactoryInterface,
+    \WPObjects\VC\Shortcode\ShortcodeInterface
 {
     protected $base = null;
     protected $name = null;
@@ -23,6 +26,9 @@ class CustomAddonModel extends WPObjects\Model\AbstractModel implements
     protected $html_template = array();
     protected $php_class_name = '\WPObjects\VC\Shortcode';
     protected $query_model_type = null;
+    protected $less_params = null;
+    
+    protected $init_settings = array();
     
     /**
      * @var \WPBakeryShortCode
@@ -60,7 +66,7 @@ class CustomAddonModel extends WPObjects\Model\AbstractModel implements
     public function getVCShortcodeConfig()
     {
         $config = array(
-            'CustomAddonModel' => $this,
+            'AddonModel' => $this,
             'base' => $this->getId(),
             'name' => $this->getName(),
             'php_class_name' => $this->php_class_name,
@@ -104,7 +110,7 @@ class CustomAddonModel extends WPObjects\Model\AbstractModel implements
         echo $Shortcode->loadTemplate();
     }
     
-    public function beforeShortcode()
+    public function beforeContent()
     {
         if ( \is_customize_preview() ) {
             echo '<div class="'. $this->getName() . ' ' . $this->getNamespace() . '-vc-shorcode-wp-customize" style="position: relative;"></div>';
@@ -133,7 +139,7 @@ class CustomAddonModel extends WPObjects\Model\AbstractModel implements
     public function attachStyle($name)
     {
         if (!in_array($name, $this->styles)) {
-            $this->styles[] = $name;
+            $this->enqueue_styles[] = $name;
         }
         
         return $this;
@@ -142,10 +148,25 @@ class CustomAddonModel extends WPObjects\Model\AbstractModel implements
     public function attachScript($name)
     {
         if (!in_array($name, $this->scripts)) {
-            $this->scripts[] = $name;
+            $this->enqueue_scripts[] = $name;
         }
         
         return $this;
+    }
+    
+    public function getEnqueueScriptName()
+    {
+        return current( $this->getEnqueueScripts() );
+    }
+    
+    public function getEnqueueStyles()
+    {
+        return $this->enqueue_styles;
+    }
+    
+    public function getEnqueueScripts()
+    {
+        return $this->enqueue_scripts;
     }
     
     public function getId()
@@ -176,6 +197,41 @@ class CustomAddonModel extends WPObjects\Model\AbstractModel implements
         $this->name = $string;
         
         return $this;
+    }
+    
+    /**
+     * Return settings panel param cofig by name
+     * 
+     * @param string $param_name
+     * @return mixed
+     */
+    public function getConfigParam($param_name)
+    {
+        foreach ($this->params as $param) {
+            if ($param['param_name'] === $param_name) {
+                return $param;
+            }
+        }
+
+        return array();
+    }
+    
+    /**
+     * Custom setting from shortcode panel editing
+     * 
+     * @return array
+     */
+    public function getShortcodeSettings()
+    {
+        if (!function_exists('vc_map_get_attributes')) {
+            return $this->init_settings;
+        }
+        
+        if (is_null($this->init_settings)) {
+            $this->init_settings = \vc_map_get_attributes($this->getShortcode()->getShortcode(), $this->getShortcode()->getAtts());
+        }
+        
+        return $this->init_settings;
     }
     
     public function setTemplatePath($string)
