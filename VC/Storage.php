@@ -21,15 +21,17 @@
  * 
  */
 class Storage extends WPObjects\Data\AbstractStorage implements
-    WPObjects\Service\NamespaceInterface,
-    WPObjects\Service\VersionInterface
+    WPObjects\AssetsManager\AssetsManagerInterface
 {
-    protected $namespace = '';
-    protected $assets_version = '';
     protected $base_folder_path = null;
     protected $template_file_name = 'template.php';
     protected $config_file_name = 'config.php';
     protected $less_params_file_name = 'less.php';
+    
+    /**
+     * @var \WPObjects\AssetsManager\AssetsManager
+     */
+    protected $AssetsManager = null;
     
     public function getData()
     {
@@ -86,16 +88,18 @@ class Storage extends WPObjects\Data\AbstractStorage implements
         foreach ($files as $file) {
             
             if (preg_match('/.css|.less/', $file)) {
-                $asset_name = $this->getNamespace() . $name . '-' . current(explode('.', $file));
-                \wp_register_style($asset_name, '', $styles_deps, $this->getVersion());
-                $addon['enqueue_styles'][] = $asset_name;
+                $asset_name = $name . '-' . current(explode('.', $file));
+                $dir_url = \plugin_dir_url( $shortcode_dir . DIRECTORY_SEPARATOR . $file ) ;
+                $this->getAssetsManager()->registerStyle($asset_name, $dir_url . DIRECTORY_SEPARATOR . $file, $styles_deps);
+                $addon['enqueue_styles'][] = $this->getAssetsManager()->prepareAssetName($asset_name);
                 continue;
             } 
             
             if (preg_match('/.js/', $file)) {
-                $asset_name = $this->getNamespace() . $name . current(explode('.', $file));
-                \wp_register_style($asset_name, '', $scripts_deps, $this->getVersion());
-                $addon['enqueue_scripts'][] = $asset_name;
+                $asset_name = $name . current(explode('.', $file));
+                $dir_url = \plugin_dir_url( $shortcode_dir . DIRECTORY_SEPARATOR . $file ) ;
+                $this->getAssetsManager()->registerScript($asset_name, $dir_url . DIRECTORY_SEPARATOR . $file, $scripts_deps);
+                $addon['enqueue_scripts'][] = $this->getAssetsManager()->prepareAssetName($asset_name);
                 continue;
             } 
             
@@ -105,13 +109,26 @@ class Storage extends WPObjects\Data\AbstractStorage implements
             }
             
             if ($file === $this->less_params_file_name) {
-                $addon['less_params'] = include ($shortcode_dir . DIRECTORY_SEPARATOR . $file);
+                $less_params = include ($shortcode_dir . DIRECTORY_SEPARATOR . $file);
+                $addon['CustomizerSettings'] = $this->initLessParams($less_params);                
                 continue;
             }
             
         }
         
         return $addon;
+    }
+    
+    protected function initLessParams($params)
+    {
+        $result = array();
+        foreach ($params as $param) {
+            $ParamModel = new WPObjects\LessCompiler\ParamModel($param);
+            $ParamModel->setNamespace($this->getAssetsManager()->getNamespace());
+            $result[] = $ParamModel;
+        }
+        
+        return $result;
     }
     
     protected function getList()
@@ -143,28 +160,18 @@ class Storage extends WPObjects\Data\AbstractStorage implements
         return $this->base_folder_path;
     }
     
-    public function setNamespace($string)
+    public function setAssetsManager(\WPObjects\AssetsManager\AssetsManager $AM)
     {
-        $this->namespace = $string;
+        $this->AssetsManager = $AM;
         
         return $this;
     }
     
-    public function getNamespace()
+    /**
+     * @return \WPObjects\AssetsManager\AssetsManager 
+     */
+    public function getAssetsManager()
     {
-        return $this->namespace;
+        return $this->AssetsManager;
     }
-    
-    public function setVersion($string)
-    {
-        $this->assets_version = $string;
-        
-        return $this;
-    }
-    
-    public function getVersion()
-    {
-        return $this->assets_version;
-    }
-    
 }

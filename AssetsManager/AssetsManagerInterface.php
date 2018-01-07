@@ -14,5 +14,8 @@ interface AssetsManagerInterface
 {
     public function setAssetsManager(\WPObjects\AssetsManager\AssetsManager $AM);
     
+    /**
+     * @return \WPObjects\AssetsManager\AssetsManager 
+     */
     public function getAssetsManager();
 }

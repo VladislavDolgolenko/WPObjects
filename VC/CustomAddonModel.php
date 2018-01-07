@@ -15,7 +15,8 @@ class CustomAddonModel extends \WPObjects\Model\AbstractModel implements
     \WPObjects\View\ViewInterface,
     \WPObjects\Service\NamespaceInterface,
     \WPObjects\Model\ModelTypeFactoryInterface,
-    \WPObjects\VC\Shortcode\ShortcodeInterface
+    \WPObjects\LessCompiler\LessParamsInterface,
+    \WPObjects\LessCompiler\WPlessInterface
 {
     protected $base = null;
     protected $name = null;
@@ -26,19 +27,21 @@ class CustomAddonModel extends \WPObjects\Model\AbstractModel implements
     protected $html_template = array();
     protected $php_class_name = '\WPObjects\VC\Shortcode';
     protected $query_model_type = null;
-    protected $less_params = null;
-    
-    protected $init_settings = array();
     
     /**
-     * @var \WPBakeryShortCode
+     * @var \WPObjects\LessCompiler\ParamModel
      */
-    protected $Shortcode = null;
+    protected $CustomizerSettings = array();
     
     /**
      * @var \WPObjects\Model\ModelTypeFactory
      */
     protected $ModelTypeFactory = null;
+    
+    /**
+     * @var \WPObjects\LessCompiler\WPless
+     */
+    protected $WPless = null;
     
     public function attach()
     {
@@ -46,6 +49,10 @@ class CustomAddonModel extends \WPObjects\Model\AbstractModel implements
             \add_action('plugins_loaded', array($this, 'registerHandler'), 30, 0);
         } else {
             $this->registerHandler();
+        }
+        
+        if ($this->getWPLess()) {
+            \add_filter( $this->getWPLess()->getCompileFilterName(), array($this, 'getLessParams'));
         }
     }
     
@@ -102,12 +109,21 @@ class CustomAddonModel extends \WPObjects\Model\AbstractModel implements
     
     public function render()
     {
-        $Shortcode = $this->getShortcode();
-        if (!$Shortcode) {
-            return;
+        //
+    }
+    
+    public function getLessParams($vars, $handle)
+    {
+        if ( in_array($handle, $this->getEnqueueStyles()) ) {
+            return $vars;
         }
         
-        echo $Shortcode->loadTemplate();
+        $Params = $this->getCustomizerSettings();
+        foreach ($Params as $Param) {
+            $vars[$Param->getId()] = $Param->getCurrentValue();
+        }
+        
+        return $vars;
     }
     
     public function beforeContent()
@@ -115,25 +131,6 @@ class CustomAddonModel extends \WPObjects\Model\AbstractModel implements
         if ( \is_customize_preview() ) {
             echo '<div class="'. $this->getName() . ' ' . $this->getNamespace() . '-vc-shorcode-wp-customize" style="position: relative;"></div>';
         }
-    }
-    
-    /**
-     * Callback inject, when visual composer init shortcode 
-     * in WPObjects\VC\Shortcode\DefaultShortcode::__construct()
-     * 
-     * @param \WPBakeryShortCode $Shortcode
-     * @return $this
-     */
-    public function setShortcode(\WPBakeryShortCode $Shortcode)
-    {
-        $this->Shortcode = $Shortcode;
-        
-        return $this;
-    }
-    
-    public function getShortcode()
-    {
-        return $this->Shortcode;
     }
     
     public function attachStyle($name)
@@ -221,17 +218,13 @@ class CustomAddonModel extends \WPObjects\Model\AbstractModel implements
      * 
      * @return array
      */
-    public function getShortcodeSettings()
+    public function getShortcodeSettings($Shortcode)
     {
         if (!function_exists('vc_map_get_attributes')) {
-            return $this->init_settings;
+            return array();
         }
         
-        if (is_null($this->init_settings)) {
-            $this->init_settings = \vc_map_get_attributes($this->getShortcode()->getShortcode(), $this->getShortcode()->getAtts());
-        }
-        
-        return $this->init_settings;
+        return \vc_map_get_attributes($Shortcode->getShortcode(), $Shortcode->getAtts());
     }
     
     public function setTemplatePath($string)
@@ -254,6 +247,14 @@ class CustomAddonModel extends \WPObjects\Model\AbstractModel implements
     }
     
     /**
+     * @return \WPObjects\LessCompiler\ParamModel
+     */
+    public function getCustomizerSettings()
+    {
+        return $this->CustomizerSettings;
+    }
+    
+    /**
      * @return \WPObjects\Model\ModelTypeFactory
      */
     public function getModelTypeFactory()
@@ -271,5 +272,20 @@ class CustomAddonModel extends \WPObjects\Model\AbstractModel implements
     public function getNamespace()
     {
         return $this->namespace;
+    }
+    
+    /**
+     * @return \WPObjects\LessCompiler\WPless
+     */
+    public function getWPLess()
+    {
+        return $this->WPless;
+    }
+    
+    public function setWPLess(\WPObjects\LessCompiler\WPless $WPless)
+    {
+        $this->WPless = $WPless;
+        
+        return $this;
     }
 }

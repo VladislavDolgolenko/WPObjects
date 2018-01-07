@@ -10,11 +10,49 @@
 
 namespace WPObjects\LessCompiler;
 
-class ParamModel extends \ArrayObject
+class ParamModel extends \ArrayObject implements
+    \WPObjects\Service\NamespaceInterface,
+    \WPObjects\Model\ModelInterface
 {
+    protected $namespace = '';
+    
+    public function getId()
+    {
+        return $this->id;
+    }
+    
+    public function getName()
+    {
+        return $this->id;
+    }
+    
+    public function exchange($data)
+    {
+        $this->exchangeArray($data);
+        
+        return $this;
+    }
+    
     public function getCurrentValue()
     {
-        $setting_name = 'mdl__color_' . $this->id;
+        $setting_name = $this->getSettingName();
         return \get_theme_mod($setting_name, $this->default);
+    }
+    
+    public function getSettingName()
+    {
+        return $this->getNamespace() . $this->id;
+    }
+    
+    public function setNamespace($string)
+    {
+        $this->namespace = $string;
+        
+        return $this;
+    }
+    
+    public function getNamespace()
+    {
+        return $this->namespace;
     }
 }

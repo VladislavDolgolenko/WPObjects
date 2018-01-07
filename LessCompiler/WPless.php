@@ -117,6 +117,11 @@ class WPless {
                 // editor stylesheet URLs are concatenated and run through this filter
                 add_filter( 'mce_css', array( $this, 'parse_editor_stylesheets' ), 1000 );
         }
+        
+        public function getCompileFilterName()
+        {
+            return $this->namespace  . 'less_vars';
+        }
 
         /**
          * Lessify the stylesheet and return the href of the compiled file

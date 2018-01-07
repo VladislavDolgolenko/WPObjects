@@ -14,12 +14,17 @@ use WPObjects\EventManager\ListenerInterface;
 
 class Processing implements 
     ListenerInterface,
-    \WPObjects\Service\NamespaceInterface
+    \WPObjects\Service\NamespaceInterface,
+    LessParamsInterface,
+    WPlessInterface
 {
     protected $namespace = 'wpobjects_';
     
     protected $Factory;
     
+    /**
+     * @var \WPObjects\LessCompiler\WPless
+     */
     protected $WPless = null;
     
     public function attach()
@@ -27,7 +32,7 @@ class Processing implements
         \add_action( 'init', array( $this, 'initCompeleHandler' ) );
         \add_action('wp_enqueue_scripts', array($this, 'enqueueColorsVariables'));
         \add_action('wp_enqueue_scripts', array($this, 'chackDebag'));
-        \add_action( $this->getNamespace() . 'less_vars', array($this, 'getLessParams'));
+        \add_action( $this->getWPLess()->getCompileFilterName(), array($this, 'getLessParams'));
         \add_action( $this->getNamespace() . 'wp_less_cache_path', array($this, 'getCssCachePath'));
         \add_action('customize_register', array($this, 'registerCustomizeDefaultColors'), 100);
     }
@@ -107,7 +112,7 @@ class Processing implements
         return $basedir;
     }
     
-    public function getLessParams($vars)
+    public function getLessParams($vars, $handle)
     {
         $less_params = $this->getParamsFactory()->query()->getResultAsLessParams();
         return array_merge($vars, $less_params);
@@ -124,6 +129,21 @@ class Processing implements
     public function getParamsFactory()
     {
         return $this->Factory;
+    }
+    
+    /**
+     * @return \WPObjects\LessCompiler\WPless
+     */
+    public function getWPLess()
+    {
+        return $this->WPless;
+    }
+    
+    public function setWPLess(\WPObjects\LessCompiler\WPless $WPless)
+    {
+        $this->WPless = $WPless;
+        
+        return $this;
     }
     
     public function setNamespace($namespace)
