@@ -19,5 +19,5 @@ interface StorageDataInterface
      */
     public function getData();
     
-    public function setData();
+    public function setData($data);
 }

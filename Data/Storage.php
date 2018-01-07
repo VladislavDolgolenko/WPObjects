@@ -12,7 +12,6 @@ namespace WPObjects\Data;
 
 class Storage extends AbstractStorage
 {
-    protected $id = null;
     protected $include = null;
     
     /**
@@ -22,16 +21,16 @@ class Storage extends AbstractStorage
      */
     public function getData()
     {
-        if (!is_null($this->data)) {
+        if ($this->data) {
             return $this->data;
         }
         
         $file_path = $this->getFilePath();
         if ($file_path && file_exists($file_path) ) {
             $this->data = (include $file_path);
-            \WPObjects\Log\Loger::getInstance()->write("Storage: " . $Storage->getFilePath() );
+            //\WPObjects\Log\Loger::getInstance()->write("Storage: " . $this->getFilePath() );
         } else {
-            \WPObjects\Log\Loger::getInstance()->write("ERROR Storage file not exists: " . $Storage->getFilePath() );
+            //\WPObjects\Log\Loger::getInstance()->write("ERROR Storage file not exists: " . $Storage->getFilePath() );
         }
         
         return $this->data;
