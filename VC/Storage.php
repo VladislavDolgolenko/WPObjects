@@ -8,6 +8,8 @@
  * @support      support@torbara.com
  */
 
+namespace WPObjects\VC;
+
 /**
  * Load addons from directory structure:
  * 
@@ -20,8 +22,8 @@
  *          ./config.php
  * 
  */
-class Storage extends WPObjects\Data\AbstractStorage implements
-    WPObjects\AssetsManager\AssetsManagerInterface
+class Storage extends \WPObjects\Data\AbstractStorage implements
+    \WPObjects\AssetsManager\AssetsManagerInterface
 {
     protected $base_folder_path = null;
     protected $template_file_name = 'template.php';
@@ -35,7 +37,7 @@ class Storage extends WPObjects\Data\AbstractStorage implements
     
     public function getData()
     {
-        if (!is_null($this->data)) {
+        if ($this->data) {
             return $this->data;
         }
         
@@ -123,7 +125,7 @@ class Storage extends WPObjects\Data\AbstractStorage implements
     {
         $result = array();
         foreach ($params as $param) {
-            $ParamModel = new WPObjects\LessCompiler\ParamModel($param);
+            $ParamModel = new \WPObjects\LessCompiler\ParamModel($param);
             $ParamModel->setNamespace($this->getAssetsManager()->getNamespace());
             $result[] = $ParamModel;
         }

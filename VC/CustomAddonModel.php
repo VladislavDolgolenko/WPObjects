@@ -25,7 +25,7 @@ class CustomAddonModel extends \WPObjects\Model\AbstractModel implements
     protected $params = array();
     protected $category = null;
     protected $html_template = array();
-    protected $php_class_name = '\WPObjects\VC\Shortcode';
+    protected $php_class_name = '\WPObjects\VC\Shortcode\DefaultShortcode';
     protected $query_model_type = null;
     
     /**
@@ -110,6 +110,15 @@ class CustomAddonModel extends \WPObjects\Model\AbstractModel implements
     public function render()
     {
         //
+    }
+    
+    public function toJSON()
+    {
+        $data = parent::toJSON();
+        $data['base'] = $this->getId();
+        $data['name'] = $this->getName();
+        
+        return $data;
     }
     
     public function getLessParams($vars, $handle)

@@ -10,7 +10,7 @@
 
 namespace WPObjects\VC;
 
-class AddonInterface
+interface AddonInterface
 {
     /**
      * @param \WPObjects\VC\CustomAddonModel $Addon

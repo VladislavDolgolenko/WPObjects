@@ -115,7 +115,7 @@ class Data implements
             
             foreach ($datas as $index => $data) {
                 $key = $this->getDataIdentetyKey($data);
-                if ($this->isActiveData($Storage, $data[$key]) === true) {
+                if (isset($data[$key]) && $this->isActiveData($Storage, $data[$key]) === true) {
                     $datas[$index]['active'] = true;
                 } else {
                     $datas[$index]['active'] = false;
@@ -300,6 +300,8 @@ class Data implements
             return 'slug';
         } else if (isset($data['key'])) {
             return 'key';
+        } else if (isset($data['base'])) {
+            return 'base';
         }
 
         return false;

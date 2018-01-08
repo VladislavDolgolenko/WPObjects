@@ -23,7 +23,7 @@ class ParamModel extends \ArrayObject implements
     
     public function getName()
     {
-        return $this->id;
+        return $this->label ? $this->label : $this->id;
     }
     
     public function exchange($data)
