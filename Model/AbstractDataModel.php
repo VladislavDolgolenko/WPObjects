@@ -10,8 +10,14 @@
 
 namespace WPObjects\Model;
 
-abstract class AbstractDataModel extends AbstractTypicalModel
+abstract class AbstractDataModel extends AbstractTypicalModel implements
+    \WPObjects\Data\DataAccessInterface
 {
+    /**
+     * @var \WPObjects\Data\Data
+     */
+    protected $DataAccess = null;
+
     public function getId()
     {
         $attr = $this->getModelType()->getIdAttrName();
@@ -90,8 +96,18 @@ abstract class AbstractDataModel extends AbstractTypicalModel
         return $this;
     }
     
+    public function setDataAccess(\WPObjects\Data\Data $Data)
+    {
+        $this->DataAccess = $Data;
+        
+        return $this;
+    }
+    
     /**
      * @return \WPObjects\Data\Data
      */
-    abstract public function getDataAccess();
+    public function getDataAccess()
+    {
+        return $this->DataAccess;
+    }
 }

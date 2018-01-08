@@ -8,9 +8,17 @@
  * @support      support@torbara.com
  */
 
-namespace WPObjects\LessCompiler;
+namespace WPObjects\GoogleFonts;
 
-interface LessParamsInterface
+class Model extends \WPObjects\Model\AbstractDataModel
 {
-    public function getLessParams($vars, $handle = null);
+    public function getId()
+    {
+        return $this->get('family');
+    }
+    
+    public function getName()
+    {
+        return $this->get('family');
+    }
 }

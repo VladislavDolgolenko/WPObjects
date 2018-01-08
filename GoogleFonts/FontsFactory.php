@@ -8,9 +8,14 @@
  * @support      support@torbara.com
  */
 
-namespace WPObjects\LessCompiler;
+namespace WPObjects\GoogleFonts;
 
-interface LessParamsInterface
+class FontsFactory extends \WPObjects\Factory\AbstractDataModel
 {
-    public function getLessParams($vars, $handle = null);
+    public function getByCategory($category)
+    {
+        return $this->query(array(
+            'category' => $category
+        ))->getResult();
+    }
 }

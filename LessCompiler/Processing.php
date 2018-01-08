@@ -29,22 +29,24 @@ class Processing implements
     
     public function attach()
     {
-        \add_action( 'init', array( $this, 'initCompeleHandler' ) );
+        if (!$this->getWPLess()) {
+            return;
+        }
+        
         \add_action('wp_enqueue_scripts', array($this, 'enqueueColorsVariables'));
         \add_action('wp_enqueue_scripts', array($this, 'chackDebag'));
-        \add_action( $this->getWPLess()->getCompileFilterName(), array($this, 'getLessParams'));
-        \add_action( $this->getNamespace() . 'wp_less_cache_path', array($this, 'getCssCachePath'));
+        \add_filter( $this->getWPLess()->getCompileFilterName(), array($this, 'getLessParams'));
+        \add_filter( $this->getNamespace() . 'wp_less_cache_path', array($this, 'getCssCachePath'));
         \add_action('customize_register', array($this, 'registerCustomizeDefaultColors'), 100);
     }
     
     public function detach()
     {
-        ;
-    }
-    
-    public function initCompeleHandler()
-    {
-        $this->WPless = new WPless($this->getNamespace());
+        \remove_action('wp_enqueue_scripts', array($this, 'enqueueColorsVariables'));
+        \remove_action('wp_enqueue_scripts', array($this, 'chackDebag'));
+        \remove_filter( $this->getWPLess()->getCompileFilterName(), array($this, 'getLessParams'));
+        \remove_filter( $this->getNamespace() . 'wp_less_cache_path', array($this, 'getCssCachePath'));
+        \remove_action('customize_register', array($this, 'registerCustomizeDefaultColors'), 100);
     }
     
     public function enqueueColorsVariables()
@@ -112,7 +114,7 @@ class Processing implements
         return $basedir;
     }
     
-    public function getLessParams($vars, $handle)
+    public function getLessParams($vars, $handle = null)
     {
         $less_params = $this->getParamsFactory()->query()->getResultAsLessParams();
         return array_merge($vars, $less_params);

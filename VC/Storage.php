@@ -92,7 +92,7 @@ class Storage extends \WPObjects\Data\AbstractStorage implements
             if (preg_match('/.css|.less/', $file)) {
                 $asset_name = $name . '-' . current(explode('.', $file));
                 $dir_url = \plugin_dir_url( $shortcode_dir . DIRECTORY_SEPARATOR . $file ) ;
-                $this->getAssetsManager()->registerStyle($asset_name, $dir_url . DIRECTORY_SEPARATOR . $file, $styles_deps);
+                $this->getAssetsManager()->registerStyle($asset_name, $dir_url . $file, $styles_deps);
                 $addon['enqueue_styles'][] = $this->getAssetsManager()->prepareAssetName($asset_name);
                 continue;
             } 
@@ -100,7 +100,7 @@ class Storage extends \WPObjects\Data\AbstractStorage implements
             if (preg_match('/.js/', $file)) {
                 $asset_name = $name . current(explode('.', $file));
                 $dir_url = \plugin_dir_url( $shortcode_dir . DIRECTORY_SEPARATOR . $file ) ;
-                $this->getAssetsManager()->registerScript($asset_name, $dir_url . DIRECTORY_SEPARATOR . $file, $scripts_deps);
+                $this->getAssetsManager()->registerScript($asset_name, $dir_url . $file, $scripts_deps);
                 $addon['enqueue_scripts'][] = $this->getAssetsManager()->prepareAssetName($asset_name);
                 continue;
             } 
@@ -124,9 +124,13 @@ class Storage extends \WPObjects\Data\AbstractStorage implements
     protected function initLessParams($params)
     {
         $result = array();
-        foreach ($params as $param) {
+        foreach ($params as $key => $param) {
+            if (is_string($key)) {
+                $param['id'] = $key;
+            }
             $ParamModel = new \WPObjects\LessCompiler\ParamModel($param);
             $ParamModel->setNamespace($this->getAssetsManager()->getNamespace());
+            $this->getServiceManager()->inject($ParamModel);
             $result[] = $ParamModel;
         }
         

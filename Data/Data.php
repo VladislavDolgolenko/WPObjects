@@ -302,6 +302,8 @@ class Data implements
             return 'key';
         } else if (isset($data['base'])) {
             return 'base';
+        } else if (isset($data['family'])) {
+            return 'family';
         }
 
         return false;

@@ -57,6 +57,12 @@ return array(
         array('bootstrap-wrapper', 'font-awesome', 'selectize', 'helpers'),
     ),
     
+    array(
+        'wp-customizer',
+        $assets_url . '/css/wp-customizer.css',
+        array(),
+    ),
+    
 /**
  * DataBase dashboard
  */

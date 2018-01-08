@@ -132,7 +132,7 @@ class WPless {
          */
         public function parse_stylesheet( $src, $handle ) {
 
-                if (!preg_match('/^'. $this->namespace . '.*/', $handle)) {
+                if (!preg_match('/^'. $this->namespace . '[-_].*/', $handle)) {
                     return $src;
                 }
                 

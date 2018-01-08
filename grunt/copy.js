@@ -31,6 +31,7 @@ module.exports = function (grunt) {
                 './Data/**/*',
                 './EventManager/**/*',
                 './Factory/**/*',
+                './GoogleFonts/**/*',
                 './FileSystem/**/*',
                 './LessCompiler/**/*',
                 './Loader/**/*',

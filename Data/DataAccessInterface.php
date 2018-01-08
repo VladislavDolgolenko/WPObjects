@@ -8,9 +8,14 @@
  * @support      support@torbara.com
  */
 
-namespace WPObjects\LessCompiler;
+namespace WPObjects\Data;
 
-interface LessParamsInterface
+interface DataAccessInterface
 {
-    public function getLessParams($vars, $handle = null);
+    public function setDataAccess(\WPObjects\Data\Data $Data);
+    
+    /**
+     * @return \WPObjects\Data\Data
+     */
+    public function getDataAccess();
 }

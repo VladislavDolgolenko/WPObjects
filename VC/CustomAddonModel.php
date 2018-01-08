@@ -16,7 +16,8 @@ class CustomAddonModel extends \WPObjects\Model\AbstractModel implements
     \WPObjects\Service\NamespaceInterface,
     \WPObjects\Model\ModelTypeFactoryInterface,
     \WPObjects\LessCompiler\LessParamsInterface,
-    \WPObjects\LessCompiler\WPlessInterface
+    \WPObjects\LessCompiler\WPlessInterface,
+    \WPObjects\AssetsManager\AssetsManagerInterface
 {
     protected $base = null;
     protected $name = null;
@@ -37,6 +38,11 @@ class CustomAddonModel extends \WPObjects\Model\AbstractModel implements
      * @var \WPObjects\Model\ModelTypeFactory
      */
     protected $ModelTypeFactory = null;
+    
+    /**
+     * @var \WPObjects\AssetsManager\AssetsManager
+     */
+    protected $AssetsManager = null;
     
     /**
      * @var \WPObjects\LessCompiler\WPless
@@ -121,7 +127,7 @@ class CustomAddonModel extends \WPObjects\Model\AbstractModel implements
         return $data;
     }
     
-    public function getLessParams($vars, $handle)
+    public function getLessParams($vars, $handle = null)
     {
         if ( in_array($handle, $this->getEnqueueStyles()) ) {
             return $vars;
@@ -138,8 +144,16 @@ class CustomAddonModel extends \WPObjects\Model\AbstractModel implements
     public function beforeContent()
     {
         if ( \is_customize_preview() ) {
-            echo '<div class="'. $this->getName() . ' ' . $this->getNamespace() . '-vc-shorcode-wp-customize" style="position: relative;"></div>';
+            if ($this->getAssetsManager()) {
+                $this->getAssetsManager()->enqueueStyle('wp-customizer');
+            }
+            echo '<div class="'. $this->getWPCustomizerPartialClass() . ' partial-no-margins" style="position: relative;"></div>';
         }
+    }
+    
+    public function getWPCustomizerPartialClass()
+    {
+        return $this->getNamespace() . '-' . $this->getId() . '-vc-shorcode-wp-customize';
     }
     
     public function attachStyle($name)
@@ -296,5 +310,20 @@ class CustomAddonModel extends \WPObjects\Model\AbstractModel implements
         $this->WPless = $WPless;
         
         return $this;
+    }
+    
+    public function setAssetsManager(\WPObjects\AssetsManager\AssetsManager $AM)
+    {
+        $this->AssetsManager = $AM;
+        
+        return $this;
+    }
+    
+    /**
+     * @return \WPObjects\AssetsManager\AssetsManager 
+     */
+    public function getAssetsManager()
+    {
+        return $this->AssetsManager;
     }
 }

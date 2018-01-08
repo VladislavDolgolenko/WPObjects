@@ -8,9 +8,14 @@
  * @support      support@torbara.com
  */
 
-namespace WPObjects\LessCompiler;
+namespace WPObjects\GoogleFonts;
 
-interface LessParamsInterface
+interface FontsFactoryInterface
 {
-    public function getLessParams($vars, $handle = null);
+    public function setFontsFactory(\WPObjects\GoogleFonts\FontsFactory $FontsFactory);
+    
+    /**
+     * @return \WPObjects\GoogleFonts\FontsFactory
+     */
+    public function getFontsFactory();
 }

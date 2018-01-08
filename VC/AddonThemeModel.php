@@ -8,9 +8,17 @@
  * @support      support@torbara.com
  */
 
-namespace WPObjects\LessCompiler;
+namespace WPObjects\VC;
 
-interface LessParamsInterface
+class AddonThemeModel extends \WPObjects\Model\AbstractModel
 {
-    public function getLessParams($vars, $handle = null);
+    public function getId()
+    {
+        return $this->id;
+    }
+    
+    public function getName()
+    {
+        return $this->name;
+    }
 }

@@ -21,6 +21,11 @@ class AddonsWPCustomizer implements
      */
     protected $AddonsFactory = null;
     
+    /**
+     * @var \WPObjects\VC\CustomAddonModel
+     */
+    protected $Addons = array();
+    
     public function attach()
     {
         \add_action('customize_register', array($this, 'addPanel'));
@@ -40,11 +45,7 @@ class AddonsWPCustomizer implements
             'priority' => 30,
         ));
 
-        !!?@3f3
-        $google_fonts = \TEKTONTHM\getGoogleFontsListForSelect();
-        
         $Addons = $this->getAddons();
-
         foreach ($Addons as $Addon) {
 
             $sections_name = $this->getNamespace() . $Addon->getId();
@@ -59,85 +60,15 @@ class AddonsWPCustomizer implements
 
             foreach ($settings as $key => $Setting) {
                 $setting_name = $Setting->getSettingName();
-                $default = $Setting->get('default');
-                $label = $Setting->getName();
-
-                $wp_customize->add_setting($setting_name, array(
-                    'transport' => 'refresh',
-                    'default' => $default ? $default : '',
-                    'sanitize_callback' => 'esc_attr'
-                ));
                 
                 if ($key === 0) {
                     $wp_customize->selective_refresh->add_partial( $setting_name, array(
-                        'selector' => '.' . $Setting->getId(),
+                        'selector' => '.' . $Addon->getWPCustomizerPartialClass(),
                         'container_inclusive' => false,
                     ));
                 }
 
-                if ($params['type'] === 'text') {
-
-                    $wp_customize->add_control($setting_name, array(
-                        'label' => $label,
-                        'section' => $sections_name,
-                        'settings' => $setting_name,
-                        'type' => 'text'
-                    ));
-                    
-                } else if ($params['type'] === 'font') {
-
-                    $wp_customize->add_control($setting_name, array(
-                        'label' => $label,
-                        'description' => esc_html__('Recommended font', 'tektonthm') . ': ' . $params['default'],
-                        'section' => $sections_name,
-                        'settings' => $setting_name,
-                        'type' => 'select',
-                        'choices' => $google_fonts
-                    ));
-                    
-                } else if ($params['type'] === 'select') {
-
-                    $wp_customize->add_control($setting_name, array(
-                        'label' => $label,
-                        'section' => $sections_name,
-                        'description' => isset($params['description']) ? $params['description'] : null,
-                        'settings' => $setting_name,
-                        'type' => 'select',
-                        'choices' => $params['choices']
-                    ));
-                    
-                } else if ($params['type'] === 'checkbox') {
-
-                    $wp_customize->add_control($setting_name, array(
-                        'label' => $label,
-                        'section' => $sections_name,
-                        'description' => isset($params['description']) ? $params['description'] : null,
-                        'settings' => $setting_name,
-                        'type' => 'checkbox',
-                    ));
-                    
-                } else if ($params['type'] === 'image') {
-
-                    $wp_customize->add_control(new \WP_Customize_Image_Control($wp_customize, $setting_name, array(
-                        'setting' => $setting_name,
-                        'label' => $label,
-                        'description' => isset($params['description']) ? $params['description'] : null,
-                        'section' => $sections_name
-                    )));
-                    
-                } else {
-                    
-                    $wp_customize->add_control( new \WP_Customize_Color_Control(
-                        $wp_customize, 
-                        $setting_name, 
-                        array(
-                            'label' => $label,
-                            'section' => $sections_name,
-                            'settings' => $setting_name,
-                        )
-                    ));
-                    
-                }
+                $Setting->createControleToWpCustomizer($wp_customize, $sections_name);
             }
         }
     }
@@ -147,7 +78,18 @@ class AddonsWPCustomizer implements
      */
     public function getAddons()
     {
-        $this->getAddonsFactory()->query()->getResult();
+        if (!$this->Addons && $this->getAddonsFactory()) {
+            $this->Addons = $this->getAddonsFactory()->query()->getResult();
+        }
+        
+        return $this->Addons;
+    }
+    
+    public function setAddons($Addons)
+    {
+        $this->Addons = $Addons;
+        
+        return $this;
     }
     
     public function setAddonsFactory(\WPObjects\Factory\FactoryInterface $Factory)

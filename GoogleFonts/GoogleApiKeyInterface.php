@@ -8,9 +8,16 @@
  * @support      support@torbara.com
  */
 
-namespace WPObjects\LessCompiler;
+namespace WPObjects\GoogleFonts;
 
-interface LessParamsInterface
+interface GoogleApiKeyInterface
 {
-    public function getLessParams($vars, $handle = null);
+    /**
+     * Set google api key
+     * 
+     * @param string $string
+     */
+    public function setGoogleApiKey($string);
+    
+    public function getGoogleApiKey();
 }
