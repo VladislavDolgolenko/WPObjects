@@ -18,7 +18,7 @@ interface AddonInterface
     public function setAddon(\WPObjects\VC\CustomAddonModel $Addon);
     
     /**
-     * @retrun \WPObjects\VC\CustomAddonModel
+     * @return \WPObjects\VC\CustomAddonModel
      */
     public function getAddon();
     

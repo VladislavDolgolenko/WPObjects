@@ -31,12 +31,12 @@ class ShorcodeParams
      * this params using in shortcode template for 
      * building query for typical model via factory.
      * 
-     * @param \MSP\WPObjects\Model\AbstractModelType $ModelType
+     * @param \WPObjects\Model\AbstractModelType $ModelType
      * @return array with VC shorcode valid params
      */
-    function genFiltersForModelType(\MSP\WPObjects\Model\AbstractModelType $ModelType)
+    function genFiltersForModelType(\WPObjects\Model\AbstractModelType $ModelType)
     {
-        /* @var $ContextModelType \MSP\WPObjects\Model\AbstractModelType */
+        /* @var $ContextModelType \WPObjects\Model\AbstractModelType */
         $params_group = $this->getParamsGroup($ModelType->getName());
         $result = array();
         
@@ -86,7 +86,7 @@ class ShorcodeParams
         );
     }
     
-    function genPageContextParam(\MSP\WPObjects\Model\AbstractModelType $ModelType, $default = false)
+    function genPageContextParam(\WPObjects\Model\AbstractModelType $ModelType, $default = false)
     {
         $result = array();
         $heading = sprintf(__('Quared %s by current page context?', 'msp' ), $ModelType->getName());
@@ -108,7 +108,7 @@ class ShorcodeParams
         return $result;
     }
     
-    function genOrderingParams(\MSP\WPObjects\Model\AbstractModelType $ModelType, $special_ordering = array())
+    function genOrderingParams(\WPObjects\Model\AbstractModelType $ModelType, $special_ordering = array())
     {
         $result = array();
         $mata_datas = $ModelType->get('register_metas');
