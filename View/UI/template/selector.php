@@ -17,7 +17,7 @@
     <?php if ($this->lable): ?>    
     <label for="<?php echo esc_attr($this->name); ?>">
         <?php echo $this->lable; ?> 
-        <?php if (isset($this->add_new_link)) : ?>
+        <?php if (isset($this->add_new_link) && $this->add_new_link) : ?>
             <a href="<?php echo $this->add_new_link; ?>" target="_blank" class="add-new">
                 <span>add new</span>
                 <i class="dashicons dashicons-plus"></i>
