@@ -143,6 +143,16 @@ abstract class AbstractPostModel extends AbstractTypicalModel
         return \get_the_post_thumbnail_url($this->getId(), $size);
     }
     
+    public function getUpdateDate()
+    {
+        return \get_the_modified_date('', $this->getId());
+    }
+    
+    public function getContent()
+    {
+        return apply_filters('the_content', $this->getPost()->post_content);
+    }
+    
     public function getMetas()
     {
         return $this->metas;
@@ -160,7 +170,7 @@ abstract class AbstractPostModel extends AbstractTypicalModel
     
     public function setMeta($key, $value)
     {
-        if (is_array($value) && count($value) === 1 && !is_array(current($value))) {
+        if (is_array($value) && count($value) === 1 && !is_array(current($value)) && is_int(key($value))) {
             $value = current($value);
         }
         
