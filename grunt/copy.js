@@ -42,10 +42,13 @@ module.exports = function (grunt) {
                 './PostType/**/*',
                 './Service/**/*',
                 './View/**/*',
+                './WPModel/**/*',
+                './WPFactory/**/*',
                 './UI/**/*',
                 './VC/**/*',
                 './config/**/*',
                 './assets/**/*',
+                './data/**/*',
                 './license.txt'
             ], 
             dest: dest,

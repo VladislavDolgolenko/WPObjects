@@ -45,7 +45,7 @@ abstract class AbstractData extends AbstractModelFactory implements
         
     }
     
-    public function setStorage(\WPObjects\Data\Storage $Storage)
+    public function setStorage(\WPObjects\Data\AbstractStorage $Storage)
     {
         $this->Storage = $Storage;
     }

@@ -39,7 +39,7 @@ class DataType extends AbstractModelType implements
         return $this->Storage;
     }
     
-    public function setStorage(Storage $Storage)
+    public function setStorage(\WPObjects\Data\AbstractStorage $Storage)
     {
         $this->Storage = $Storage;
     }

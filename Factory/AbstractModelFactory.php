@@ -119,6 +119,18 @@ abstract class AbstractModelFactory extends EventManager implements
     }
     
     /**
+     * Return models from last query result
+     * 
+     * @return \WPObjects\Model\AbstractModel
+     */
+    public function getOneResult()
+    {
+        $Result = $this->getResult();
+        
+        return current($Result) ? current($Result) : null;
+    }
+    
+    /**
      * Return last query result
      * 
      * @return array

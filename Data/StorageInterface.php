@@ -17,5 +17,5 @@ interface StorageInterface
      */
     public function getStorage();
     
-    public function setStorage(\WPObjects\Data\Storage $Storage);
+    public function setStorage(\WPObjects\Data\AbstractStorage $Storage);
 }

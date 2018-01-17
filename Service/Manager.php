@@ -84,7 +84,7 @@ class Manager
     public function set($name, $value)
     {
         $this->initialized[$name] = $value;
-        //\WPObjects\Log\Loger::getInstance()->write("Service: $name instance of ". get_class($value));
+        \WPObjects\Log\Loger::getInstance()->write("Service: $name instance of ". get_class($value));
         $this->inject($value);
         
         return $this;
@@ -131,6 +131,11 @@ class Manager
         $this->config = array_merge($this->config, $config);
         
         return $this;
+    }
+    
+    public function getConfig()
+    {
+        return $this->config;
     }
     
     public function isStoredService($name)

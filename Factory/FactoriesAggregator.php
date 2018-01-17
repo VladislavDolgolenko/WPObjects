@@ -54,6 +54,13 @@ class FactoriesAggregator implements
         return array_filter($result);
     }
     
+    public function getOneResult()
+    {
+        $Result = $this->getResult();
+        
+        return current($Result) ? current($Result) : null;
+    }
+    
     public function getResult()
     {
         $result = array();
