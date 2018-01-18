@@ -38,7 +38,7 @@ class WordPressContext implements
         $this->Factory = $Factory;
         $this->filters = $Factory->getFilters();
         
-        if (!isset($this->filters['page_context'])) {
+        if (!isset($this->filters['page_context']) || !$this->filters['page_context']) {
             return;
         }
         
