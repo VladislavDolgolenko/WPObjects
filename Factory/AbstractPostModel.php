@@ -252,6 +252,11 @@ abstract class AbstractPostModel extends AbstractModelFactory implements
         return $this;
     }
     
+    public function getQuery()
+    {
+        return $this->query;
+    }
+    
     public function initModel($post)
     {
         return $this->getModelType()->initModel($post);

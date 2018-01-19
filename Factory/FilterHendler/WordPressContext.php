@@ -48,7 +48,6 @@ class WordPressContext implements
             return;
         }
         
-        
         $ContextModel = $ModelType->initModel($post);
         if ($ContextModel->getModelType()->getId() === $this->getFactory()->getModelType()->getId()) {
             $this->filters[$this->getFactory()->getIdAttrName()] = $ContextModel->getId();

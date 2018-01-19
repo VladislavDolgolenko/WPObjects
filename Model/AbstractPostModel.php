@@ -153,6 +153,11 @@ abstract class AbstractPostModel extends AbstractTypicalModel
         return apply_filters('the_content', $this->getPost()->post_content);
     }
     
+    public function getExcerpt()
+    {
+        return \apply_filters( 'the_excerpt', \get_the_excerpt($this->getId()) );
+    }
+    
     public function getMetas()
     {
         return $this->metas;

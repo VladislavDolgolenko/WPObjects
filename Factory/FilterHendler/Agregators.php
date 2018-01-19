@@ -36,19 +36,19 @@ class Agregators implements
                 continue;
             }
             
-            $Factory = $AgregatorType->getFactory();
-            if (!$Factory instanceof \WPObjects\Factory\AbstractModelFactory) {
+            $AgregatorFactory = $AgregatorType->getFactory();
+            if (!$AgregatorFactory instanceof \WPObjects\Factory\AbstractModelFactory) {
                 throw new \Exception('Undefined factory of agregator type');
             }
             
             $filter_ids = array();
-            $AgregatorsObjects = $Factory->get($value, array(), false);
+            $AgregatorsObjects = $AgregatorFactory->get($value, array(), false);
             foreach ($AgregatorsObjects as $AgregatorObject) {
                 $ids = $AgregatorObject->getQualifierId($ModelType->getId());
                 if (!is_array($ids)) {
                     $ids = array($ids);
                 }
-                $filter_ids[] = $ids;
+                $filter_ids = array_merge($filter_ids, $ids);
             }
             
             // Это пизда post__in
