@@ -13,12 +13,11 @@ namespace WPObjects\Session;
 class Storage implements 
     \WPObjects\Service\ManagerInterface,
     \WPObjects\Service\NamespaceInterface,
-    \WPObjects\EventManager\ListenerInterface
+    \WPObjects\EventManager\ListenerInterface,
+    \WPObjects\Session\CookiesInterface
 {
     protected $namespace = '';
     
-    protected $time_life = 3600 * 12 * 30;
-
     protected $data = array();
     
     /**
@@ -28,31 +27,63 @@ class Storage implements
      */
     protected $ServiceManager = null;
     
-    public function __construct()
-    {
-        
-    }
+    /**
+     * @var \WPObjects\Session\Cookies
+     */
+    protected $Cookies = null;
     
     public function attach()
     {
-        \add_action('sanitize_comment_cookies', array($this, 'initCookies'));
-        \add_action('send_headers', array($this, 'update'));
+        if (\did_action('init')) {
+            $this->initSession();
+            $this->initStorage();
+        } else {
+            \add_action('init', array($this, 'initSession'), 10);
+            \add_action('init', array($this, 'initStorage'), 11);
+        }
     }
     
     public function detach()
     {
-        \remove_action('send_headers', array($this, 'update'));
+        \remove_action('init', array($this, 'initSession'), 10);
+        \remove_action('init', array($this, 'initStorage'), 11);
     }
     
-    public function initCookies()
+    public function initStorage()
     {
-        if (isset($_COOKIE[$this->getNamespace()])) {
-            $current_data = $_COOKIE[$this->getNamespace()];
-            if (is_string($current_data)) {
-                $data = json_decode($current_data);
-                $this->setData($data);
-            }
+        $storage_data = $this->getStoragesData();
+        if (isset($storage_data[$this->getSessionId()])) {
+            $this->data = $storage_data[$this->getSessionId()];
         }
+        
+        return $this;
+    }
+    
+    public function initSession()
+    {
+        $session_id = $this->getCookies()->get('session_id', null);
+        if (!$session_id) {
+            $session_id = $this->regenerateSessionId();
+            $this->getCookies()->set('session_id', $session_id);
+        }
+        
+        return $this;
+    }
+    
+    protected function regenerateSessionId()
+    {
+        $session_id = session_create_id();
+        $storages_data = $this->getStoragesData();
+        if (isset($storages_data[$session_id])) {
+            return $this->regenerateSessionId();
+        }
+        
+        return $session_id;
+    }
+    
+    public function getSessionId()
+    {
+        return $this->getCookies()->get('session_id', null);
     }
     
     public function set($key, $value)
@@ -70,24 +101,47 @@ class Storage implements
     public function update()
     {
         $data = $this->getData();
-        if (!is_array($data)) {
-            $data = array();
-        }
+        $storages_data = $this->getStoragesData();
         
-        $clear_data = array_filter($data);
-        $insert_data = json_encode($clear_data);
-        
-        \setcookie($this->getNamespace(), $insert_data, $this->getTimeLine() + time(), '/');
+        $storages_data[$this->getSessionId()] = $data;
+        $this->setStoragesData($storages_data);
         
         return $this;
     }
     
-    public function getData()
+    protected function getStoragesData()
     {
-        return $this->data;
+        $storages_data = \get_option($this->getStorageKey(), array());
+        if (!is_array($storages_data)) {
+            $storages_data = array();
+        }
+        
+        return $storages_data;
     }
     
-    public function setData($array)
+    protected function setStoragesData($data)
+    {
+        \update_option($this->getStorageKey(), $data);
+        
+        return $this;
+    }
+    
+    protected function getStorageKey()
+    {
+        return $this->getNamespace() . '_session_storage';
+    } 
+    
+    protected function getData()
+    {
+        $data = $this->data;
+        if (!is_array($data)) {
+            $data = array();
+        }
+        
+        return $data;
+    }
+    
+    protected function setData($array)
     {
         $this->data = $array;
         
@@ -104,18 +158,6 @@ class Storage implements
     public function getNamespace()
     {
         return $this->namespace;
-    }
-    
-    public function setTimeLive($int)
-    {
-        $this->time_life = $int;
-        
-        return $this;
-    }
-    
-    public function getTimeLine()
-    {
-        return $this->time_life;
     }
     
     public function setServiceManager(\WPObjects\Service\Manager $ServiceManager)
@@ -136,5 +178,24 @@ class Storage implements
         }
         
         return $this->ServiceManager;
+    }
+    
+    public function setCookies(\WPObjects\Session\Cookies $Cookies)
+    {
+        $this->Cookies = $Cookies;
+        
+        return $this;
+    }
+    
+    /**
+     * @return \WPObjects\Session\Cookies
+     */
+    public function getCookies()
+    {
+        if (is_null($this->Cookies)) {
+            throw new \Exception('Undefined \WPObjects\Session\Cookies object');
+        }
+        
+        return $this->Cookies;
     }
 }

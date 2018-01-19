@@ -28,12 +28,12 @@ abstract class PostView implements
     
     public function attach()
     {
-        \add_action('wp_loaded', array($this, '_handler'));
+        \add_action('wp', array($this, '_handler'));
     }
     
     public function detach()
     {
-        \remove_action('wp_loaded', array($this, '_handler'));
+        \remove_action('wp', array($this, '_handler'));
     }
     
     public function _handler()
