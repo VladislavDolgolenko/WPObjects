@@ -33,6 +33,21 @@ return array(
         true
     ),
     
+    array(
+        'jquery.placepicker',
+        $assets_url . '/js/library/jquery.placepicker.min.js',
+        array('jquery', 'bootstrap', 'googleapis'),
+        null,
+        true
+    ),
+    
+    array(
+        'googleapis',
+        'http://maps.googleapis.com/maps/api/js?sensor=true&libraries=places&key=AIzaSyDlacGPR94gjsCaIUqBPLHRLLG9h2AoO6A',
+        array(),
+        ''
+    ),
+    
 /**
  * UI
  */
@@ -61,6 +76,11 @@ return array(
         'metabox_gallery',
         $assets_url . '/js/gallery.js',
         array('jquery', 'backbone'),
+    ),
+    array(
+        'location-picker',
+        $assets_url . '/js/location-picker.js',
+        array('jquery.placepicker'),
     ),
     
 /**

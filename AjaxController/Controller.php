@@ -10,9 +10,18 @@
 
 namespace WPObjects\AjaxController;
 
-abstract class Controller implements \WPObjects\EventManager\ListenerInterface
+abstract class Controller implements 
+    \WPObjects\EventManager\ListenerInterface,
+    \WPObjects\Service\ManagerInterface
 {
     protected $id = null;
+    
+    /**
+     * Global service manager
+     * 
+     * @var \WPobjects\Service\Manager
+     */
+    protected $ServiceManager = null;
     
     public function attach()
     {
@@ -20,12 +29,14 @@ abstract class Controller implements \WPObjects\EventManager\ListenerInterface
             return false;
         }
         
-        return \add_action( 'wp_ajax_' . $this->getId(), array($this, 'render') );
+        \add_action( 'wp_ajax_' . $this->getId(), array($this, 'render') );
+        \add_action( 'wp_ajax_nopriv_' . $this->getId(), array($this, 'render') );
     }
     
     public function detach()
     {
-        return \remove_action( 'wp_ajax_' . $this->getId(), array($this, 'render') );
+        \remove_action( 'wp_ajax_' . $this->getId(), array($this, 'render') );
+        \remove_action( 'wp_ajax_nopriv_' . $this->getId(), array($this, 'render') );
     }
     
     public function render()
@@ -44,5 +55,25 @@ abstract class Controller implements \WPObjects\EventManager\ListenerInterface
     public function getId()
     {
         return $this->id;
+    }
+    
+    public function setServiceManager(\WPObjects\Service\Manager $ServiceManager)
+    {
+        $this->ServiceManager = $ServiceManager;
+        
+        return $this;
+    }
+    
+    /**
+     * @return \WPObjects\Service\Manager
+     * @throws \Exception
+     */
+    public function getServiceManager()
+    {
+        if (is_null($this->ServiceManager)) {
+            throw new \Exception('Undefined service manager');
+        }
+        
+        return $this->ServiceManager;
     }
 }

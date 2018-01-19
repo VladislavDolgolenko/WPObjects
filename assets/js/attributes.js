@@ -52,7 +52,7 @@
         },
 
         createAttr: function () {
-            var template = this.$('#souce-attr').html();
+            var template = this.$('.souce-attr').html();
             var ViewAttr = new ViewElement();
             this.$('.elements').append(ViewAttr.render(template).el);
             return false;

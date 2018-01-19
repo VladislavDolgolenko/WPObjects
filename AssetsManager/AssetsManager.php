@@ -152,7 +152,8 @@ class AssetsManager implements
     {
         return array_merge(array(
             'nonce' => \wp_create_nonce('wp_rest'),
-            'rest_url' => \get_rest_url() . $this->getNamespace()
+            'rest_url' => \get_rest_url() . $this->getNamespace(),
+            'ajax_url' => \admin_url('admin-ajax.php'),
         ), $this->getJSTemplatesContents());
     }
     

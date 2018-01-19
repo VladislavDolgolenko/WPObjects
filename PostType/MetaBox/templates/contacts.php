@@ -15,7 +15,7 @@
     <div class="elements">
         <?php foreach ($this->getElements() as $element) { ?>
             <article class="ui-state-default attr">
-                <input type="hidden" name="social_counter[]" value="1">
+                <input type="hidden" name="contact_counter[]" value="1">
 
                 <i class="fa fa-arrows cursor-move"></i>
                 <i class="fa fa-times delete-feature"></i>
@@ -24,12 +24,20 @@
                     <div class="col-lg-4">
                         <?php $this->getSocialsSelector($element['icon_class']); ?>
                     </div>
-                    <div class="col-lg-8">
+                    <div class="col-lg-4">
                         <div class="msp-input-group">
-                        <input type="url" 
+                        <input type="text" 
+                               value="<?php echo esc_attr($element['name']); ?>" 
+                               placeholder="<?php echo esc_attr('Phone');?>" 
+                               name="<?php echo esc_attr('contact_name');?>[]">
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="msp-input-group">
+                        <input type="text" 
                                value="<?php echo esc_attr($element['link']); ?>" 
-                               placeholder="<?php echo esc_attr('https://www.facebook.com');?>" 
-                               name="<?php echo esc_attr('social_link');?>[]">
+                               placeholder="<?php echo esc_attr('+3 77 777 77 77');?>" 
+                               name="<?php echo esc_attr('contact_link');?>[]">
                         </div>
                     </div>
                     <div class="clearfix"></div>
@@ -47,7 +55,7 @@
     
     <script type="template/text" class="souce-attr">
     
-        <input type="hidden" name="social_counter[]" value="1">
+        <input type="hidden" name="contact_counter[]" value="1">
 
         <i class="fa fa-arrows cursor-move"></i>
         <i class="fa fa-times delete-feature"></i>
@@ -56,12 +64,20 @@
             <div class="col-lg-4">
                 <?php $this->getSocialsSelector(); ?>
             </div>
-            <div class="col-lg-8">
+            <div class="col-lg-4">
                 <div class="msp-input-group">
-                <input type="url" 
+                <input type="text" 
+                       value="<?php echo esc_attr($element['name']); ?>" 
+                       placeholder="<?php echo esc_attr('Phone');?>" 
+                       name="<?php echo esc_attr('contact_name');?>[]">
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="msp-input-group">
+                <input type="text" 
                        value="" 
                        placeholder="<?php echo esc_attr('https://www.facebook.com');?>" 
-                       name="social_link[]">
+                       name="contact_link[]">
                 </div>
             </div>
             <div class="clearfix"></div>

@@ -56,7 +56,7 @@ $elements = $this->getElements();
     
     <div class="clearfix"></div>
     
-    <script type="template/text" id="souce-attr">
+    <script type="template/text" class="souce-attr">
     
         <input type="hidden" name="attrs_counter[]" value="1">
 
