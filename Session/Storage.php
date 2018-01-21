@@ -109,7 +109,7 @@ class Storage implements
         return $this;
     }
     
-    protected function getStoragesData()
+    public function getStoragesData()
     {
         $storages_data = \get_option($this->getStorageKey(), array());
         if (!is_array($storages_data)) {
@@ -119,7 +119,7 @@ class Storage implements
         return $storages_data;
     }
     
-    protected function setStoragesData($data)
+    public function setStoragesData($data)
     {
         \update_option($this->getStorageKey(), $data);
         
@@ -131,7 +131,12 @@ class Storage implements
         return $this->getNamespace() . '_session_storage';
     } 
     
-    protected function getData()
+    /**
+     * Return current session data
+     * 
+     * @return array
+     */
+    public function getData()
     {
         $data = $this->data;
         if (!is_array($data)) {
