@@ -19,9 +19,9 @@ class StorageRESTController extends \WPObjects\AjaxController\AbstractRESTContro
     
     public function getList($params = null)
     {
-        /*if (!\current_user_can('manage_options')) {
+        if (!\current_user_can('manage_options')) {
             return $this->error401();
-        }*/
+        }
         
         $StorageData = $this->getSessionStorage()->getStoragesData();
         return json_encode($StorageData);
@@ -35,6 +35,8 @@ class StorageRESTController extends \WPObjects\AjaxController\AbstractRESTContro
         }
         
         $data = $this->getSessionStorage()->getData();
+        $data['id'] = $id;
+        
         return json_encode($data);
     }
     
@@ -55,7 +57,12 @@ class StorageRESTController extends \WPObjects\AjaxController\AbstractRESTContro
             return $this->error401();
         }
         
-        //...
+        if (isset($data['property_compare_ids'])) {
+            $this->getSessionStorage()->set('property_compare_ids', $data['property_compare_ids']);
+            $this->getSessionStorage()->update();
+        }
+        
+        return $this->get($id);
     }
     
     public function prermissionControle(\WP_REST_Request $request)
