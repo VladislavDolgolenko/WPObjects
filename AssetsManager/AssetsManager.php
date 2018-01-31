@@ -99,7 +99,8 @@ class AssetsManager implements
         
         $version = $v ? $v : $this->getVersion();
         
-        $this->$var[] = array(
+        $assets_array = &$this->$var;
+        $assets_array[] = array(
             $this->prepareAssetName($name),
             $path,
             $this->prepareAssetsDeps($deps),
