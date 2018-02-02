@@ -76,6 +76,7 @@ class WordPressContext implements
         
         if (!is_callable($callable_methods)) {
             $this->filters[$attr] = $ContextModel->getId();
+            $this->filters[$attr  . '_not_ordered'] = true;
         } else {
             $result = call_user_func($callable_methods, $ContextModel);
             $this->filters[$this->getFactory()->getIdAttrName()] = $result;

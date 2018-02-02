@@ -139,7 +139,10 @@ abstract class AbstractPostModel extends AbstractModelFactory implements
         
         if (isset($this->filters['id']) && $this->filters['id']) {
             $this->query['post__in'] = $this->prepareStringToArray($this->filters['id']);
-            $this->query['orderby'] = 'post__in';
+            
+            if (!isset($this->filters['id_not_ordered']) || !$this->filters['id_not_ordered']) {
+                $this->query['orderby'] = 'post__in';
+            }
         }
         
         if (isset($this->filters['_thumbnail_id']) && $this->filters['_thumbnail_id']) {
