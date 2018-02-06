@@ -72,7 +72,7 @@ class Storage implements
     
     protected function regenerateSessionId()
     {
-        $session_id = session_create_id();
+        $session_id = uniqid($this->getNamespace(), true);
         $storages_data = $this->getStoragesData();
         if (isset($storages_data[$session_id])) {
             return $this->regenerateSessionId();
