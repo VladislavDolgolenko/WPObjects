@@ -81,7 +81,7 @@ class Cookies implements
                 continue;
             }
             
-            \setcookie($key, $value);
+            \setcookie($key, $value, time() + DAY_IN_SECONDS, COOKIEPATH, COOKIE_DOMAIN);
         }
         
         return $this;
