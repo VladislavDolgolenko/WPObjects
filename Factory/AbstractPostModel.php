@@ -137,6 +137,10 @@ abstract class AbstractPostModel extends AbstractModelFactory implements
             $this->query['post_status'] = $this->filters['post_status'];
         }
         
+        if (isset($this->filters['s']) && $this->filters['s']) {
+            $this->query['s'] = trim($this->filters['s']);
+        }
+        
         if (isset($this->filters['id']) && $this->filters['id']) {
             $this->query['post__in'] = $this->prepareStringToArray($this->filters['id']);
             
