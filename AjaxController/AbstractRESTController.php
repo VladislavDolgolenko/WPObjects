@@ -28,14 +28,18 @@ abstract Class AbstractRESTController implements
      */
     protected $Request = null;
     
+    protected $X_Total_Count = null;
+    
     public function attach()
     {
         \add_action( 'rest_api_init', array($this, '_register'));
+        //\add_action( 'rest_api_init', array($this, 'setupHeaders'), 20 );
     }
     
     public function detach()
     {
         \remove_action( 'rest_api_init', array($this, '_register'));
+        //\remove_action( 'rest_api_init', array($this, 'setupHeaders'), 20 );
     }
     
     public function _register()
@@ -76,6 +80,11 @@ abstract Class AbstractRESTController implements
         ));
     }
     
+    public function setupHeaders()
+    {
+        header("X-Total-Count: $this->X_Total_Count");
+    }
+    
     public function prermissionControle(\WP_REST_Request $request)
     {
         $this->setRequest($request);
@@ -96,19 +105,25 @@ abstract Class AbstractRESTController implements
         
         $body_data = json_decode($this->getRequest()->get_body(), true);
         
+        $result = null;
         if (!$id && $method === "GET") {
-            return $this->getList($this->getRequest()->get_query_params());
+            $result = $this->getList($this->getRequest()->get_query_params());
         } else if ($id && $method === "GET") {
-            return $this->get($id, $this->getRequest()->get_query_params());
+            $result = $this->get($id, $this->getRequest()->get_query_params());
         } else if ($id && $method === "DELETE") {
-            return $this->delete($id);
+            $result = $this->delete($id);
         } else if ($method === "POST" ) {
-            return $this->create($body_data);
+            $result = $this->create($body_data);
         } else if ($id && $method === "PUT") {
-            return $this->update($id, $body_data);
+            $result = $this->update($id, $body_data);
         }
         
-        return $this->error404();
+        if (is_array($result) || $result) {
+            $this->setupHeaders();
+            return $result;
+        } else {
+            return $this->error404();
+        }
     }
     
     /**

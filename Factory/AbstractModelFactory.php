@@ -58,6 +58,15 @@ abstract class AbstractModelFactory extends EventManager implements
     protected $cache = array();
     
     /**
+     * Total objects count from last query,
+     * actual with pagination
+     * sending in REST response as HTTP header X-Total-Count
+     * 
+     * @var int
+     */
+    protected $total_count = null;
+    
+    /**
      * Initialize model type
      * 
      * @param array|\WP_Post $post once result query data for initialize model
@@ -192,6 +201,18 @@ abstract class AbstractModelFactory extends EventManager implements
         }
         
         return $this;
+    }
+    
+    public function setTotalCount($int)
+    {
+        $this->total_count = (int)$int;
+        
+        return $this;
+    }
+    
+    public function getTotalCount()
+    {
+        return $this->total_count;
     }
     
     /**

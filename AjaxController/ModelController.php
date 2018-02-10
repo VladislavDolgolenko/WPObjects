@@ -31,13 +31,25 @@ class ModelController extends AbstractRESTController
     public function getList($params = array())
     {
         $Factory = $this->getFactory();
-        $Factory->query($params);
+        $Factory->query($params, true);
         $ResultModels = $Factory->getResult();
+        $this->X_Total_Count = $Factory->getTotalCount();
         
         $result = array();
-        foreach ($ResultModels as $Model) {
-            $result[] = $Model->toJSON();
+        
+        if ($ResultModels instanceof \WP_Query) {
+            
+            while ($ResultModels->have_posts()) {
+                $Model = $ResultModels->next_post();
+                $result[] = $Model->toJSON();
+            }
+            
+        } else {
+            foreach ($ResultModels as $Model) {
+                $result[] = $Model->toJSON();
+            }
         }
+        
         
         return $result;
     }

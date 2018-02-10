@@ -231,11 +231,14 @@ abstract class AbstractPostModel extends AbstractModelFactory implements
     {
         if ($this->result_as_object) {
             $result = new \WP_Query($this->query);
+            $this->setTotalCount($result->found_posts);
         } else {
             $result = \get_posts($this->query);
         }
         
         $this->initResults($result);
+        
+        
         return $this;
     }
     
