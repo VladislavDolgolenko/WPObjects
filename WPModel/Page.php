@@ -8,16 +8,9 @@
  * @support      support@torbara.com
  */
 
-return array(
+namespace WPObjects\WPModel;
+
+class Page extends \WPObjects\Model\AbstractPostModel
+{
     
-    '\WPObjects\WPFactory\Attachment' => array(
-        'ModelTypeAttachment' => 'setModelType'
-    ),
-    '\WPObjects\WPFactory\Post' => array(
-        'ModelTypePost' => 'setModelType'
-    ),
-    '\WPObjects\WPFactory\Page' => array(
-        'ModelTypePage' => 'setModelType'
-    ),
-    
-);
+}
