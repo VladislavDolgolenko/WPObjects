@@ -26,14 +26,6 @@ return array(
     ),
     
     array(
-        'bootstrap-wrapper',
-        $assets_url . '/css/library/bootstrap-wrapper.css',
-        array(),
-        null,
-        true
-    ),
-    
-    array(
         'selectize',
         $assets_url . '/css/library/selectize.css',
         array(),
@@ -44,6 +36,11 @@ return array(
 /**
  * UI
  */
+    array(
+        'bootstrap-wrapper',
+        $assets_url . '/css/library/bootstrap-wrapper.css',
+        array(),
+    ),
     
     array(
         'helpers',
