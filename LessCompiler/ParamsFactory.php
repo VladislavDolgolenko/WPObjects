@@ -63,7 +63,7 @@ class ParamsFactory extends AbstractData
         
         $result = array();
         foreach ($Params as $Param) {
-            $result[$Param->id] = $Param->getCurrentValue();
+            $result[$Param->getId()] = $Param->getCurrentValue();
         }
         
         return $result;
@@ -77,7 +77,8 @@ class ParamsFactory extends AbstractData
         foreach ($Params as $Param) {
             $object = $Param->getArrayCopy();
             $object['default'] = $Param->getCurrentValue();
-            $result[$Param->id] = $object;
+            $object['label'] = $Param->get('label');
+            $result[$Param->getId()] = $object;
         }
         
         return $result;
