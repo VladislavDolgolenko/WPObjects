@@ -17,9 +17,9 @@ return array(
         $AM = new \WPObjects\AssetsManager\AssetsManager();
         
         $AM->setNamespace($sm->get('namespace'))
-           ->registerStyles( $sm->get('wpobjects_dir_path') . '/config/register.styles.php')
-           ->addJSTemplates( $sm->get('wpobjects_dir_path') . '/config/register.templates.php')
-           ->registerScripts( $sm->get('wpobjects_dir_path') . '/config/register.scripts.php');
+           ->registerStyles( include $sm->get('wpobjects_dir_path') . '/config/register.styles.php')
+           ->addJSTemplates( include $sm->get('wpobjects_dir_path') . '/config/register.templates.php')
+           ->registerScripts( include $sm->get('wpobjects_dir_path') . '/config/register.scripts.php');
         
         return $AM;
     },

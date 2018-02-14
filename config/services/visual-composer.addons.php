@@ -15,9 +15,9 @@ return array(
         return $Factory->get('vc_addons');
     },
             
-    'AddonFactory' => '\AREA\Factory\Addon',
+    'AddonFactory' => '\WPObjects\VC\AddonFactory',
             
-    'AddonsStorage' => function($ms) {
+    'AddonsStorage' => function($sm) {
         $Storage = new \WPObjects\VC\Storage(array(
             'id' => 'vc_addons'
         ));

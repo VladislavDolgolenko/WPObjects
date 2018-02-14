@@ -8,7 +8,9 @@
  * @support      support@torbara.com
  */
 
-$classes = include 'di/classes.php';
-$interfaces = include 'di/interfaces.php';
+namespace WPObjects\VC;
 
-return array_merge($classes, $interfaces);
+class AddonFactory extends AbstractDataFactory
+{
+    
+}

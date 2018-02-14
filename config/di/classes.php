@@ -10,23 +10,22 @@
 
 return array(
     
-    '\WPObjects\Model\AbstractModelType' => array(
-        'ModelTypeFactory' => 'setModelTypeFactory',
-        'TypicalModelRestController' => 'setController'
+    '\WPObjects\Data\DataTypeFactory' => array(
+        'DataTypeStorage' => 'setStorage'
     ),
     '\WPObjects\Factory\AbstractData' => array(
         'DataAccess' => 'setData'
+    ),
+    '\WPObjects\Model\AbstractModelType' => array(
+        'ModelTypeFactory' => 'setModelTypeFactory',
+        'TypicalModelRestController' => 'setController'
     ),
     '\WPObjects\Model\ModelTypeFactory' => array(
         'PostTypeFactory' => 'addFactory',
         'DataTypeFactory' => 'addFactory',
     ),
-    
     '\WPObjects\PostType\PostTypeFactory' => array(
         'PostTypeStorage' => 'setStorage'
-    ),
-    '\WPObjects\Data\DataTypeFactory' => array(
-        'DataTypeStorage' => 'setStorage'
     ),
     '\WPObjects\LessCompiler\Processing' => array(
         'LessCompileParamsFactory' => 'setParamsFactory'
