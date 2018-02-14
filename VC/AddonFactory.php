@@ -10,7 +10,7 @@
 
 namespace WPObjects\VC;
 
-class AddonFactory extends AbstractDataFactory
+class AddonFactory extends \WPObjects\Factory\AbstractDataModel
 {
     
 }

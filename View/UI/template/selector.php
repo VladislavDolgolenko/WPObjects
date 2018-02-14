@@ -32,6 +32,10 @@
             class="matabox-selectors <?php echo $this->has_images ? 'with-images' : ''; ?>"
             <?php echo $this->multibple ? 'multiple' : ''; ?>
             >
+            
+            <?php if (!$multibple): ?>
+                <option value=""><?php echo esc_html_e('N/A', 'msp'); ?></option>
+            <?php endif; ?>
         <?php foreach ($this->options as $option) { ?>
             <option 
                 value="<?php echo esc_attr( $option['id'] ); ?>" 

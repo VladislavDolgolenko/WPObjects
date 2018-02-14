@@ -114,6 +114,8 @@ abstract class AdminPage extends View implements
     public function setId($string)
     {
         $this->id = $string;
+        
+        return $this;
     }
     
     public function getPageId()
@@ -133,11 +135,15 @@ abstract class AdminPage extends View implements
     public function setParentPageId($string)
     {
         $this->perent_menu_id = $string;
+        
+        return $this;
     }
     
     public function setIconUrl($string)
     {
         $this->icon_url = $string;
+        
+        return $this;
     }
     
     public function getIconUrl()
@@ -148,6 +154,8 @@ abstract class AdminPage extends View implements
     public function setMenuPosition($number)
     {
         $this->position = $number;
+        
+        return $this;
     }
     
     public function getMenuPosition()
@@ -158,6 +166,8 @@ abstract class AdminPage extends View implements
     public function setTitle($string)
     {
         $this->title = $string;
+        
+        return $this;
     }
     
     public function getTitle()
@@ -168,6 +178,8 @@ abstract class AdminPage extends View implements
     public function setMenuName($string)
     {
         $this->menu_name = $string;
+        
+        return $this;
     }
     
     public function getMenuName()
@@ -178,6 +190,8 @@ abstract class AdminPage extends View implements
     public function setPermission($string)
     {
         $this->permission = $string;
+        
+        return $this;
     }
     
     public function getPermission()

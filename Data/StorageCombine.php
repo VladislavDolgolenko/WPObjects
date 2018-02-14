@@ -32,7 +32,6 @@ class StorageCombine extends AbstractStorage
             
             $file_data = include $file_path;
             $this->data = array_merge($this->data, $file_data);
-            //$this->data = $this->data + $file_data;
         }
         
         return $this->data;
