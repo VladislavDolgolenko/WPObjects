@@ -8,14 +8,14 @@
  * @support      support@torbara.com
  */
 
-$system = include 'services/system.php';
-$model_factoris = include 'services/model.factories.php';
-$model_types = include 'services/model.types.php';
-$assets = include 'services/assets.php';
-$metaboxes = include 'services/metaboxes.php';
-$controllers = include 'services/controllers.php';
-$visual_composer_addons = include 'services/visual-composer.addons.php';
-$admin_pages = include 'services/admin.pages.php';
+$system = include dirname(__FILE__) . '/services/system.php';
+$model_factoris = include dirname(__FILE__) . '/services/model.factories.php';
+$model_types = include dirname(__FILE__) . '/services/model.types.php';
+$assets = include dirname(__FILE__) . '/services/assets.php';
+$metaboxes = include dirname(__FILE__) . '/services/metaboxes.php';
+$controllers = include dirname(__FILE__) . '/services/controllers.php';
+$visual_composer_addons = include dirname(__FILE__) . '/services/visual-composer.addons.php';
+$admin_pages = include dirname(__FILE__) . '/services/admin.pages.php';
 
 return array_merge(
     $admin_pages,

@@ -14,7 +14,7 @@ class Loger
 {
     protected $file_path = null;
     
-    protected $active = true;
+    protected $active = false;
     
     private static $_instance = null;
     
@@ -33,7 +33,7 @@ class Loger
     
     public function __construct()
     {
-        //return;
+        return;
         $this->file_path = ABSPATH . '/wp-content/log.txt';
         $this->active = true;
         $this->clean();
@@ -41,7 +41,7 @@ class Loger
     
     public function write($line_message)
     {
-        //return;
+        return;
         if (!$this->active) {
             return;
         }

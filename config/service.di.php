@@ -8,7 +8,7 @@
  * @support      support@torbara.com
  */
 
-$classes = include 'di/classes.php';
-$interfaces = include 'di/interfaces.php';
+$classes = include dirname(__FILE__) . '/di/classes.php';
+$interfaces = include dirname(__FILE__) . '/di/interfaces.php';
 
 return array_merge($classes, $interfaces);

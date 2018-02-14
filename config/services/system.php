@@ -30,7 +30,7 @@ return array(
      */
     'DI' => function ($sm) {
         $DI = new \WPObjects\Service\DI();
-        $DI->addConfig( $sm->get('wpobjects_dir_path') . '/config/service.di.php');
+        $DI->addConfig( include $sm->get('wpobjects_dir_path') . '/config/service.di.php');
         return $DI;
     },
             

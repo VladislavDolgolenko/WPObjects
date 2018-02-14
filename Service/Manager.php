@@ -84,7 +84,6 @@ class Manager
     public function set($name, $value)
     {
         $this->initialized[$name] = $value;
-        \WPObjects\Log\Loger::getInstance()->write("Service: $name instance of ". get_class($value));
         $this->inject($value);
         
         return $this;
