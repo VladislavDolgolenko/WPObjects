@@ -8,24 +8,22 @@
  * @support      support@torbara.com
  */
 
-namespace AREA;
+$system = include 'services/system.php';
+$model_factoris = include 'services/model.factories.php';
+$model_types = include 'services/model.types.php';
+$assets = include 'services/assets.php';
+$metaboxes = include 'services/metaboxes.php';
+$controllers = include 'services/controllers.php';
+$visual_composer_addons = include 'services/visual-composer.addons.php';
+$admin_pages = include 'services/admin.pages.php';
 
-return array(
-    
-    'AttachmentsFactory' => '\WPObjects\WPFactory\Attachment',
-    'PostsFactory' => '\WPObjects\WPFactory\Post',
-    'PageFactory' => '\WPObjects\WPFactory\Page',
-        
-    'ModelTypeAttachment' => function ($sm) {
-        return $sm->get('ModelTypeFactory')->get('attachment');
-    },
-    'ModelTypePost' => function ($sm) {
-        return $sm->get('ModelTypeFactory')->get('post');
-    },
-    'ModelTypePage' => function ($sm) {
-        return $sm->get('ModelTypeFactory')->get('page');
-    },
-            
-    'ModelTypeFactory' => '\WPObjects\Model\ModelTypeFactory',
-
+return array_merge(
+    $admin_pages,
+    $visual_composer_addons,
+    $controllers, 
+    $metaboxes, 
+    $assets, 
+    $model_types, 
+    $model_factoris, 
+    $system
 );

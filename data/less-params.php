@@ -8,7 +8,6 @@
  * @support      support@torbara.com
  */
 
-$classes = include 'di/classes.php' ;
-$interfaces = include 'di/interfaces.php' ;
-
-return array_merge($classes, $interfaces);
+return array(
+    
+);
