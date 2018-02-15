@@ -25,6 +25,8 @@ return array(
         'attrs' => array(
             'base' => esc_html__('System id', 'wpobjects'),
             'name' => esc_html__('Name', 'wpobjects'),
+            'category' => esc_html__('Category', 'wpobjects'),
+            'query_model_type_name' => esc_html__('Data type', 'wpobjects'),
         ),
     ),
     

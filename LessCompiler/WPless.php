@@ -14,9 +14,7 @@ namespace WPObjects\LessCompiler;
 
 ! defined( 'ABSPATH' ) AND exit;
 
-if (!function_exists("WP_Filesystem")) {
-    require_once(ABSPATH . 'wp-admin/includes/file.php');
-}
+require_once(ABSPATH . 'wp-admin/includes/file.php');
 
 /**
  * Enables the use of LESS in WordPress
@@ -140,7 +138,7 @@ class WPless {
                 if ( ! preg_match( '/\.less(\.php)?$/', preg_replace( '/\?.*$/', '', $src ) ) ) {
                         return $src;
                 }
-
+                
                 // get file path from $src
                 if ( ! strstr( $src, '?' ) ) {
                         $src .= '?';
@@ -297,8 +295,8 @@ class WPless {
                 if ( ! apply_filters( $this->namespace . 'less_save_css', $css_path, $file_contents ) ) {
                         return;
                 }
-
-                if (!WP_Filesystem()) {
+                
+                if (!PW_Filesystem(false, false, true)) {
                     return array();
                 }
 

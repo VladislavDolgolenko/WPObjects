@@ -27,20 +27,20 @@ return array(
         return $Storage;
     },
             
+    /**
+     * Customization and settings
+     */
     'AddonsCustomizer' => function ($sm) {
         $Customizer = new \WPObjects\VC\AddonsWPCustomizer();
         $Customizer->setAddonsFactory($sm->get('AddonFactory'));
         
         return $Customizer;
     },
-    
     'ModelTypeGoogleFont' => function ($sm) {
         $Factory = $sm->get('ModelTypeFactory');
         return $Factory->get('google_font');
     },
-            
     'FontsFactory' => '\WPObjects\GoogleFonts\FontsFactory',
-            
     'GoogleFontsStorage' => function(){
         return new \WPObjects\GoogleFonts\Storage(array(
             'id' => 'google_fonts'

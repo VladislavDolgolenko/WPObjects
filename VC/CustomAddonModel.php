@@ -123,6 +123,13 @@ class CustomAddonModel extends \WPObjects\Model\AbstractModel implements
         $data = parent::toJSON();
         $data['base'] = $this->getId();
         $data['name'] = $this->getName();
+        $data['category'] = $this->get('category');
+        $data['query_model_type_name'] = '';
+        
+        $ModelType = $this->getModelTypeFactory()->get($this->query_model_type);
+        if ($ModelType) {
+            $data['query_model_type_name'] = $ModelType->getName();
+        }
         
         return $data;
     }

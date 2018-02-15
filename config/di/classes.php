@@ -46,7 +46,7 @@ return array(
     '\WPObjects\WPFactory\Attachment' => array(
         'ModelTypeAttachment' => 'setModelType'
     ),
-    '\AREA\Factory\Addon' => array(
+    '\WPObjects\VC\AddonFactory' => array(
         'ModelTypeAddon' => 'setModelType'
     ),
     '\WPObjects\GoogleFonts\FontsFactory' => array(
