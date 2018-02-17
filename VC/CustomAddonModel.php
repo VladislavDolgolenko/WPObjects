@@ -84,6 +84,7 @@ class CustomAddonModel extends \WPObjects\Model\AbstractModel implements
             'name' => $this->getName(),
             'php_class_name' => $this->php_class_name,
             'category' => $this->category,
+            'icon' => $this->get('icon'),
             'html_template' => $this->html_template,
             'params' => $this->params,
         );

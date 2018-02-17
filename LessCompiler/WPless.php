@@ -296,7 +296,7 @@ class WPless {
                         return;
                 }
                 
-                if (!PW_Filesystem(false, false, true)) {
+                if (!WP_Filesystem(false, false, true)) {
                     return array();
                 }
 

@@ -14,6 +14,7 @@ return array(
         $Factory = $sm->get('ModelTypeFactory');
         return $Factory->get('vc_addons');
     },
+    'ShorcodeParams' => '\WPObjects\VC\ShorcodeParams',
             
     'AddonFactory' => '\WPObjects\VC\AddonFactory',
             
