@@ -45,9 +45,9 @@ class Storage extends \WPObjects\Data\AbstractStorage implements
         
         $result = array();
         foreach ($list as $name) {
-            $addon = $this->readAddonDir($name);
-            if (is_array($addon) && isset($addon['base'])) {
-                $result[] = $addon;
+            $template = $this->readAddonDir($name);
+            if (is_array($template) && isset($template['name'])) {
+                $result[] = $template;
             }
         }
         
@@ -97,13 +97,13 @@ class Storage extends \WPObjects\Data\AbstractStorage implements
             } 
             
             if ($file === $this->content_file_name) {
-                $addon['content'] = file_get_contents( $shortcode_dir . DIRECTORY_SEPARATOR . $file );
+                $template['content'] = file_get_contents( $shortcode_dir . DIRECTORY_SEPARATOR . $file );
                 continue;
             }
             
         }
         
-        return $addon;
+        return $template;
     }
     
     protected function getList()

@@ -52,4 +52,7 @@ return array(
     '\WPObjects\GoogleFonts\FontsFactory' => array(
         'ModelTypeGoogleFont' => 'setModelType'
     ),
+    '\WPObjects\VC\Template\Factory' => array(
+        'ModelTypeVCTemplate' => 'setModelType'
+    ),
 );

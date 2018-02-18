@@ -31,6 +31,15 @@ class Model extends \WPObjects\Model\AbstractModel implements
      */
     protected $AssetsManager = null;
     
+    public function toJSON()
+    {
+        $data = parent::toJSON();
+        $data['id'] = $this->getId();
+        $data['name'] = $this->getName();
+        
+        return $data;
+    }
+    
     public function attach()
     {
         \add_action('vc_load_default_templates_action', array($this, 'addTemplate'));

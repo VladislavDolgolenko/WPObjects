@@ -10,7 +10,7 @@
 
 namespace WPObjects\VC\Shortcode;
 
-VcShortcodeAutoloader::getInstance()->includeClass( 'WPBakeryShortCode_VC_Tta_Section' );
+\VcShortcodeAutoloader::getInstance()->includeClass( 'WPBakeryShortCode_VC_Tta_Section' );
 if (!class_exists('WPBakeryShortCode_VC_Tta_Section')) {
     return;
 }
