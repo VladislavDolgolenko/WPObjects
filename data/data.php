@@ -31,6 +31,22 @@ return array(
     ),
     
     array(
+        'id' => 'vc_templates',
+        'id_attr_name' => 'id',
+        'name' => esc_html__('VC Templates', 'wpobjects'),
+        'model_class_name' => '\WPObjects\VC\Template\Model',
+        'factory_service_name' => 'VCTemplateFactory',
+        'Storage' => $sm->get('VCTemplateStorage'),
+        'form_fields' => array(
+            
+        ),
+        'attrs' => array(
+            'id' => esc_html__('System id', 'wpobjects'),
+            'name' => esc_html__('Name', 'wpobjects')
+        ),
+    ),
+    
+    array(
         'id' => 'google_font',
         'id_attr_name' => 'family',
         'name' => esc_html__('Google fonts', 'wpobjects'),

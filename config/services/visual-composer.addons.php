@@ -29,6 +29,23 @@ return array(
     },
             
     /**
+     * Templates
+     */
+    'ModelTypeVCTemplate' => function ($sm) {
+        $Factory = $sm->get('ModelTypeFactory');
+        return $Factory->get('vc_templates');
+    },
+    'VCTemplateFactory' => '\WPObjects\VC\Template\Factory',
+    'VCTemplateStorage' => function($sm) {
+        $Storage = new \WPObjects\VC\Template\Storage(array(
+            'id' => 'vc_templates'
+        ));
+        $Storage->setBaseFolderPath( $sm->get('vc_templates_dir_path') );
+        
+        return $Storage;
+    },
+            
+    /**
      * Customization and settings
      */
     'AddonsCustomizer' => function ($sm) {

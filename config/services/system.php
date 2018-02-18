@@ -23,6 +23,7 @@ return array(
     },
     'plugin_dir_path' => '',
     'vc_addons_dir_path' => '',
+    'vc_templates_dir_path' => '',
     
     /**
      * Dependence Injection Service
