@@ -18,7 +18,9 @@ class ParamsFactory extends AbstractData
     
     public function initModel($post)
     {
-        return new ParamModel($post, \ArrayObject::ARRAY_AS_PROPS);
+        $ParamModel =  new ParamModel($post, \ArrayObject::ARRAY_AS_PROPS);
+        $this->getServiceManager()->inject($ParamModel);
+        return $ParamModel;
     }
     
     public function getByGroup($group)

@@ -73,7 +73,8 @@ class ParamModel extends \WPObjects\Model\AbstractModel implements
     public function getChoices()
     {
         if ($this->getType() === 'font' && $this->getFontsFactory() ) {
-            return $this->getFontsFactory()->query()->getForSelect();
+            $result = $this->getFontsFactory()->query()->getForSelect();
+            return $result;
         }
         
         return array();
@@ -108,7 +109,7 @@ class ParamModel extends \WPObjects\Model\AbstractModel implements
 
             $wp_customize->add_control($setting_name, array(
                 'label' => $label,
-                'description' => esc_html__('Recommended font', 'tektonthm') . ': ' . $this->getDefault(),
+                'description' => esc_html__('Recommended font', 'wpobjects') . ': ' . $this->getDefault(),
                 'section' => $sections_name,
                 'settings' => $setting_name,
                 'type' => 'select',
