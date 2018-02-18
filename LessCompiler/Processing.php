@@ -74,38 +74,21 @@ class Processing implements
         ) ); 
 
         $groups = $this->getParamsFactory()->query()->getResultGroupped();
-
-        foreach ($groups as $group_name => $colors) {
-
+        foreach ($groups as $group_name => $params) {
+            
             $sections_name = 'mdl__section_color' . $group_name;
-
             $wp_customize->add_section( $sections_name , array(
                 'title'      => $group_name,
                 'priority'   => 30,
                 'description' => esc_html__('The color scheme of the site changes on all pages.', 'team'),
                 'panel' => 'mdl__color'
             ) ); 
-
-            foreach ($colors as $key => $params) {
-
-                $setting_name = 'mdl__color_' . $key;
-
-                $wp_customize->add_setting($setting_name, array(
-                    'transport' => 'refresh',
-                    'default' => $params['default'],
-                    'sanitize_callback' => 'esc_attr'
-                ));
-
-                $wp_customize->add_control(
-                    new \WP_Customize_Color_Control(
-                    $wp_customize, $setting_name, array(
-                        'label' => $params['label'],
-                        'section' => $sections_name,
-                        'settings' => $setting_name,
-                    ))
-                );
+            
+            /* @var $param \WPObjects\LessCompiler\ParamModel */
+            foreach ($params as $param) {
+                $param->createControleToWpCustomizer($wp_customize, $sections_name);
             }
-
+            
         }
     }
     

@@ -123,7 +123,7 @@ class ParamModel extends \WPObjects\Model\AbstractModel implements
                 'description' => $this->get('description'),
                 'settings' => $setting_name,
                 'type' => 'select',
-                'choices' => $params['choices']
+                'choices' => $this->get('choices')
             ));
 
         } else if ($this->getType() === 'checkbox') {
