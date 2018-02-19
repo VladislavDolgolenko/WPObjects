@@ -4,7 +4,7 @@
  * @encoding     UTF-8
  * @copyright    Copyright (C) 2017 Torbara (http://torbara.com). All rights reserved.
  * @license      Envato Standard License http://themeforest.net/licenses/standard?ref=torbara
- * @author       Vladislav Dolgolenko (vladislavdolgolenko.com)
+ * @author       Vladislav Dolgolenko <vladislavdolgolenko.com>
  * @support      support@torbara.com
  */
 
@@ -37,7 +37,7 @@ class Processing implements
         \add_action('wp_enqueue_scripts', array($this, 'chackDebag'));
         \add_filter( $this->getWPLess()->getCompileFilterName(), array($this, 'getLessParams'));
         \add_filter( $this->getNamespace() . 'wp_less_cache_path', array($this, 'getCssCachePath'));
-        \add_action('customize_register', array($this, 'registerCustomizeDefaultColors'), 100);
+        \add_action('customize_register', array($this, 'registerCustomizePanel'), 100);
     }
     
     public function detach()
@@ -65,14 +65,12 @@ class Processing implements
     public function registerCustomizePanel($wp_customize)
     {
         $panel_name = $this->getNamespace() . '__color';
-        if ($wp_customize->get_panel($panel_name)) {
-            return;
+        if (!$wp_customize->get_panel($panel_name)) {
+            $wp_customize->add_panel($panel_name , array(
+                'title' => $this->getNamespace() . ' ' . esc_html__( 'customizing', 'team' ),
+                'priority' => 30,
+            )); 
         }
-        
-        $wp_customize->add_panel($panel_name , array(
-            'title' => $this->getNamespace() . ' ' . esc_html__( 'customizing', 'team' ),
-            'priority' => 30,
-        )); 
 
         $groups = $this->getParamsFactory()->query()->getResultGroupped();
         foreach ($groups as $group_name => $params) {

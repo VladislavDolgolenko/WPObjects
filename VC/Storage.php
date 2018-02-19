@@ -30,6 +30,8 @@ class Storage extends \WPObjects\Data\AbstractStorage implements
     protected $config_file_name = 'config.php';
     protected $less_params_file_name = 'less.php';
     
+    protected $param_model_class_name = '\WPObjects\LessCompiler\ParamModel';
+    
     /**
      * @var \WPObjects\AssetsManager\AssetsManager
      */
@@ -112,7 +114,7 @@ class Storage extends \WPObjects\Data\AbstractStorage implements
             
             if ($file === $this->less_params_file_name) {
                 $less_params = include ($shortcode_dir . DIRECTORY_SEPARATOR . $file);
-                $addon['CustomizerSettings'] = $this->initLessParams($less_params);                
+                $addon['CustomizerSettings'] = $this->initLessParams($less_params, $name);                
                 continue;
             }
             
@@ -121,20 +123,33 @@ class Storage extends \WPObjects\Data\AbstractStorage implements
         return $addon;
     }
     
-    protected function initLessParams($params)
+    protected function initLessParams($params, $addon_name)
     {
         $result = array();
         foreach ($params as $key => $param) {
             if (is_string($key)) {
                 $param['id'] = $key;
             }
-            $ParamModel = new \WPObjects\LessCompiler\ParamModel($param);
+            $param_model_class_name = $this->getParamModelClassName();
+            $ParamModel = new $param_model_class_name($param);
             $ParamModel->setNamespace($this->getAssetsManager()->getNamespace());
             $this->getServiceManager()->inject($ParamModel);
             $result[] = $ParamModel;
         }
         
         return $result;
+    }
+    
+    public function getParamModelClassName()
+    {
+        return $this->param_model_class_name;
+    }
+    
+    public function setParamModelClassName($string)
+    {
+        $this->param_model_class_name = $string;
+        
+        return $this;
     }
     
     protected function getList()

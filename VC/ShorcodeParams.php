@@ -15,8 +15,11 @@ namespace WPObjects\VC;
  */
 class ShorcodeParams
 {
-    function genAllParams($ModelType, $before = array(), $after = array())
+    function genAllParams(\WPObjects\Model\AbstractModelType $ModelType, $before = array(), $after = array())
     {
+        $model_type_filters = $ModelType->getFactory()->getSpecialQueryParamsForVCAddons();
+        $before = array_merge($before, $model_type_filters);
+        
         return array_merge(
             $this->genPageContextParam($ModelType),
             $this->genOrderingParams($ModelType),
@@ -130,7 +133,8 @@ class ShorcodeParams
             $values[$orderby_name] = $meta_data;
         }
         
-        $values = array_merge($values, $special_ordering);
+        $model_type_sorting = $ModelType->getFactory()->getSpecialSortingTypesForVCAddons();
+        $values = array_merge($values, $special_ordering, $model_type_sorting);
         
         $result[] = array(
             'type' => "dropdown",
