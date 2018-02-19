@@ -104,6 +104,10 @@ class CustomAddonModel extends \WPObjects\Model\AbstractModel implements
     public function enqueues()
     {
         $scripts = apply_filters($this->getNamespace() . '-addon-js-' . $this->getName(), $this->enqueue_scripts);
+        if (current($scripts)) {
+            \wp_localize_script(current($scripts), $this->getId(), $this->getCustomazerSettingsParams());
+        }
+        
         foreach ($scripts as $script) {
             \wp_enqueue_script($script);
         }
@@ -147,6 +151,18 @@ class CustomAddonModel extends \WPObjects\Model\AbstractModel implements
         }
         
         return $vars;
+    }
+    
+    public function getCustomazerSettingsParams()
+    {
+        $Params = $this->getCustomizerSettings();
+        
+        $result = array();
+        foreach ($Params as $Param) {
+            $result[$Param->getId()] = $Param->getCurrentValue();
+        }
+        
+        return $result;
     }
     
     public function beforeContent()

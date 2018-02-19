@@ -46,13 +46,13 @@ class Processing implements
         \remove_action('wp_enqueue_scripts', array($this, 'chackDebag'));
         \remove_filter( $this->getWPLess()->getCompileFilterName(), array($this, 'getLessParams'));
         \remove_filter( $this->getNamespace() . 'wp_less_cache_path', array($this, 'getCssCachePath'));
-        \remove_action('customize_register', array($this, 'registerCustomizeDefaultColors'), 100);
+        \remove_action('customize_register', array($this, 'registerCustomizePanel'), 100);
     }
     
     public function enqueueColorsVariables()
     {
         $less_params = $this->getParamsFactory()->query()->getResultAsLessParams();
-        \wp_localize_script( 'jquery', 'mdl_color_scheme', $less_params);
+        \wp_localize_script( 'jquery', $this->getNamespace() . '_color_scheme', $less_params);
     }
     
     public function chackDebag()
@@ -62,27 +62,27 @@ class Processing implements
         }
     }
     
-    public function registerCustomizeDefaultColors($wp_customize)
+    public function registerCustomizePanel($wp_customize)
     {
-        if ($wp_customize->get_panel('mdl__color')) {
+        $panel_name = $this->getNamespace() . '__color';
+        if ($wp_customize->get_panel($panel_name)) {
             return;
         }
         
-        $wp_customize->add_panel( 'mdl__color' , array(
-            'title'      => esc_html__( 'Color scheme', 'team' ),
-            'priority'   => 30,
-        ) ); 
+        $wp_customize->add_panel($panel_name , array(
+            'title' => $this->getNamespace() . ' ' . esc_html__( 'customizing', 'team' ),
+            'priority' => 30,
+        )); 
 
         $groups = $this->getParamsFactory()->query()->getResultGroupped();
         foreach ($groups as $group_name => $params) {
             
-            $sections_name = 'mdl__section_color' . $group_name;
-            $wp_customize->add_section( $sections_name , array(
-                'title'      => $group_name,
-                'priority'   => 30,
-                'description' => esc_html__('The color scheme of the site changes on all pages.', 'team'),
-                'panel' => 'mdl__color'
-            ) ); 
+            $sections_name = $this->getNamespace() . '__section_color' . $group_name;
+            $wp_customize->add_section($sections_name, array(
+                'title' => $group_name,
+                'priority' => 30,
+                'panel' => $panel_name
+            )); 
             
             /* @var $param \WPObjects\LessCompiler\ParamModel */
             foreach ($params as $param) {
