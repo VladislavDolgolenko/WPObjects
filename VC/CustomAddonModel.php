@@ -182,7 +182,7 @@ class CustomAddonModel extends \WPObjects\Model\AbstractModel implements
     
     public function attachStyle($name)
     {
-        if (!in_array($name, $this->styles)) {
+        if (!in_array($name, $this->enqueue_styles)) {
             $this->enqueue_styles[] = $name;
         }
         
@@ -191,7 +191,7 @@ class CustomAddonModel extends \WPObjects\Model\AbstractModel implements
     
     public function attachScript($name)
     {
-        if (!in_array($name, $this->scripts)) {
+        if (!in_array($name, $this->enqueue_scripts)) {
             $this->enqueue_scripts[] = $name;
         }
         
