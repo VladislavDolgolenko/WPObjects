@@ -154,4 +154,10 @@ return array(
         array('view-dashboard'),
     ),
     
+    array(
+        'vc-addons-customizer-presets-constrole',
+        $assets_url . '/js/vc-addons-customizer-presets-constrole.js',
+        array('backbone', 'jquery'),
+    ),
+    
 );

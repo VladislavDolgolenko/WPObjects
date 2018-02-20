@@ -1,5 +1,3 @@
-<?php
-
 /**
  * @encoding     UTF-8
  * @copyright    Copyright (C) 2018 Torbara (http://torbara.com). All rights reserved.
@@ -8,17 +6,15 @@
  * @support      support@torbara.com
  */
 
-namespace WPObjects\VC;
-
-class AddonThemeModel extends \WPObjects\Model\AbstractModel
-{
-    public function getId()
-    {
-        return $this->id;
-    }
+(function($, Backbone, api){
     
-    public function getName()
-    {
-        return $this->name;
-    }
-}
+    api.bind('ready', function () {
+    
+        $('.js-vc-addons-customizer-presets-constrole').each(function(){
+            var $el = $(this);
+            console.log($el);
+        });
+    
+    });
+    
+})(jQuery, Backbone, wp.customize);

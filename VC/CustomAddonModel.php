@@ -49,6 +49,11 @@ class CustomAddonModel extends \WPObjects\Model\AbstractModel implements
      */
     protected $WPless = null;
     
+    /**
+     * @var \WPObjects\VC\AddonPreset\Model
+     */
+    protected $Presets = null;
+    
     public function attach()
     {
         if (\did_action('plugins_loaded') > 0) {
@@ -130,10 +135,16 @@ class CustomAddonModel extends \WPObjects\Model\AbstractModel implements
         $data['name'] = $this->getName();
         $data['category'] = $this->get('category');
         $data['query_model_type_name'] = '';
+        $data['presets'] = array();
         
         $ModelType = $this->getModelTypeFactory()->get($this->query_model_type);
         if ($ModelType) {
             $data['query_model_type_name'] = $ModelType->getName();
+        }
+        
+        $Presets = $this->getPresets();
+        foreach ($Presets as $Preset) {
+            $data['presets'][] = $Preset->toJSON();
         }
         
         return $data;
@@ -349,5 +360,27 @@ class CustomAddonModel extends \WPObjects\Model\AbstractModel implements
     public function getAssetsManager()
     {
         return $this->AssetsManager;
+    }
+    
+    /**
+     * @return \WPObjects\VC\AddonPreset\Model
+     */
+    public function getPresets()
+    {
+        return $this->Presets;
+    }
+    
+    public function setPresets($Presets)
+    {
+        $this->Presets = $Presets;
+        
+        return $this;
+    }
+    
+    public function addPreset(\WPObjects\VC\AddonPreset\Model $Preset)
+    {
+        $this->Presets[] = $Preset;
+        
+        return $this;
     }
 }

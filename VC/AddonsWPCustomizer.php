@@ -51,12 +51,32 @@ class AddonsWPCustomizer implements
             $sections_name = $this->getNamespace() . $Addon->getId();
             $group_lable = $Addon->getName();
             $settings = $Addon->getCustomizerSettings();
+            if (!current($settings)) {
+                continue;
+            }
 
             $wp_customize->add_section($sections_name, array(
                 'title' => $group_lable,
                 'priority' => 30,
                 'panel' => $panel_name
             ));
+            
+            /**
+             * Add presets constrol
+             */
+            $presets_setting_name = $this->getNamespace() . $Addon->getId() . '_preset_constrole';
+            $wp_customize->add_setting($presets_setting_name, array(
+                'transport' => 'refresh',
+                'default' => '',
+                'sanitize_callback' => 'esc_attr'
+            ));
+            $PresetsControle = new \WPObjects\VC\AddonPreset\CustomizerControle($wp_customize, $presets_setting_name, array(
+                'label' => esc_html__('lol', 'team'),
+                'settings' => $presets_setting_name,
+                'section'  => $sections_name,
+            ), $Addon);
+            $Addon->getServiceManager()->inject($PresetsControle);
+            $wp_customize->add_control($PresetsControle);
 
             foreach ($settings as $key => $Setting) {
                 $setting_name = $Setting->getSettingName();
