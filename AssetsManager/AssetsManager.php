@@ -86,12 +86,12 @@ class AssetsManager implements
     protected function registerAssets($var, $config)
     {
         foreach ($config as $style) {
-            list($name, $path, $deps, $v, $global) = array_pad($style, 5, null);
-            $this->registerAsset($var, $name, $path, $deps, $v, $global);
+            list($name, $path, $deps, $v, $global, $last_boolean) = array_pad($style, 6, null);
+            $this->registerAsset($var, $name, $path, $deps, $v, $global, $last_boolean);
         }
     }
     
-    protected function registerAsset($var, $name, $path, $deps = array(), $v = null, $global = false)
+    protected function registerAsset($var, $name, $path, $deps = array(), $v = null, $global = false, $last_boolean = null)
     {
         if ($global) {
             $this->addGlobalScript($name);
@@ -104,7 +104,8 @@ class AssetsManager implements
             $this->prepareAssetName($name),
             $path,
             $this->prepareAssetsDeps($deps),
-            $version
+            $version,
+            $last_boolean
         );
         
         $this->registerWPAssets();
@@ -118,13 +119,13 @@ class AssetsManager implements
         }
         
         while ($script = array_pop($this->wp_register_scripts) ) {
-            list($name, $path, $deps, $v) = array_pad($script, 4, null);
-            \wp_register_script($name, $path, $deps, $v);
+            list($name, $path, $deps, $v, $in_footer) = array_pad($script, 5, null);
+            \wp_register_script($name, $path, $deps, $v, $in_footer);
         }
         
         while ($script = array_pop($this->wp_register_styles) ) {
-            list($name, $path, $deps, $v) = array_pad($script, 4, null);
-            \wp_register_style($name, $path, $deps, $v);
+            list($name, $path, $deps, $v, $media) = array_pad($script, 5, null);
+            \wp_register_style($name, $path, $deps, $v, $media);
         }
         
         return $this;

@@ -50,9 +50,9 @@ class CustomAddonModel extends \WPObjects\Model\AbstractModel implements
     protected $WPless = null;
     
     /**
-     * @var \WPObjects\VC\AddonPreset\Model
+     * @var \WPObjects\Customizer\Preset\Model
      */
-    protected $Presets = null;
+    protected $Presets = array();
     
     public function attach()
     {
@@ -377,7 +377,7 @@ class CustomAddonModel extends \WPObjects\Model\AbstractModel implements
         return $this;
     }
     
-    public function addPreset(\WPObjects\VC\AddonPreset\Model $Preset)
+    public function addPreset(\WPObjects\Customizer\Preset\Model $Preset)
     {
         $this->Presets[] = $Preset;
         

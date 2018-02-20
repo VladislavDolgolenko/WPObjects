@@ -19,6 +19,7 @@ class ParamModel extends \WPObjects\Model\AbstractModel implements
     protected $default = '';
     protected $type = '';
     protected $namespace = '';
+    protected $setting_name = null;
     
     /**
      * @var \WPObjects\Factory\FactoryInterface
@@ -60,7 +61,18 @@ class ParamModel extends \WPObjects\Model\AbstractModel implements
     
     public function getSettingName()
     {
+        if ($this->setting_name) {
+            return $this->setting_name;
+        }
+        
         return $this->getNamespace() . $this->getId();
+    }
+    
+    public function setSettingName($string)
+    {
+        $this->setting_name = $string;
+        
+        return $this;
     }
     
     public function setNamespace($string)

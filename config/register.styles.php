@@ -60,6 +60,12 @@ return array(
         array(),
     ),
     
+    array(
+        'vc-addons-customizer-presets-constrole',
+        $assets_url . '/css/vc-addons-customizer-presets-constrole.css',
+        array('bootstrap-wrapper'),
+    ),
+    
 /**
  * DataBase dashboard
  */

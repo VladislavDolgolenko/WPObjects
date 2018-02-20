@@ -1,0 +1,30 @@
+/**
+ * @encoding     UTF-8
+ * @copyright    Copyright (C) 2018 Torbara (http://torbara.com). All rights reserved.
+ * @license      Envato Standard License http://themeforest.net/licenses/standard?ref=torbara
+ * @author       Vladislav Dolgolenko <vladislavdolgolenko.com>
+ * @support      support@torbara.com
+ */
+
+.msp-presets-controle {
+    
+}
+
+.msp-presets-controle .preset-button {
+    position: relative;
+    border-radius: 0;
+}
+
+.msp-presets-controle .preset-button .lines-wrapper {
+    position: absolute;
+    bottom: -3px;
+    height: 3px;
+    width: 100%;
+    left: 0px;
+}
+
+.msp-presets-controle .preset-button .color-line {
+    float: left;
+    height: 5px;
+}
+

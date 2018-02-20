@@ -32,6 +32,7 @@ module.exports = function (grunt) {
                 './EventManager/**/*',
                 './Factory/**/*',
                 './GoogleFonts/**/*',
+                './Customizer/**/*',
                 './FileSystem/**/*',
                 './LessCompiler/**/*',
                 './Loader/**/*',

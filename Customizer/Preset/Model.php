@@ -8,13 +8,14 @@
  * @support      support@torbara.com
  */
 
-namespace WPObjects\VC\AddonPreset;
+namespace WPObjects\Customizer\Preset;
 
 class Model extends \WPObjects\Model\AbstractModel
 {
     protected $id = null;
     protected $name = null;
     protected $params = array();
+    protected $settings_pregix = '';
     
     public function getId()
     {
@@ -29,6 +30,28 @@ class Model extends \WPObjects\Model\AbstractModel
     public function getParams()
     {
         return $this->params;
+    }
+    
+    public function getParamsForCustomizer()
+    {
+        $result = array();
+        foreach ($this->params as $key => $value) {
+            $result[$this->getSettingsPregix() . $key] = $value;
+        }
+        
+        return $result;
+    }
+    
+    public function getSettingsPregix()
+    {
+        return $this->settings_pregix;
+    }
+    
+    public function setSettingsPregix($settings_pregix)
+    {
+        $this->settings_pregix = $settings_pregix;
+        
+        return $this->settings_pregix;
     }
     
     public function toJSON()
