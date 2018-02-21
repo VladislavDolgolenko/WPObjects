@@ -17,6 +17,14 @@ class Model extends \WPObjects\Model\AbstractModel
     protected $params = array();
     protected $settings_pregix = '';
     
+    public function setupPreset()
+    {
+        $theme_mode_params = $this->getParamsForCustomizer();
+        foreach ($theme_mode_params as $key => $value) {
+            \set_theme_mod($key, $value);
+        }
+    }
+    
     public function getId()
     {
         return $this->id;

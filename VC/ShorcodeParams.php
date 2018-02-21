@@ -89,7 +89,7 @@ class ShorcodeParams
         );
     }
     
-    function genPageContextParam(\WPObjects\Model\AbstractModelType $ModelType, $default = false)
+    function genPageContextParam(\WPObjects\Model\AbstractModelType $ModelType, $default = true)
     {
         $result = array();
         $heading = sprintf(__('Quared %s by current page context?', 'msp' ), $ModelType->getName());
