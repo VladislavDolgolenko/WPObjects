@@ -63,7 +63,7 @@ class CustomAddonModel extends \WPObjects\Model\AbstractModel implements
         }
         
         if ($this->getWPLess()) {
-            \add_filter( $this->getWPLess()->getCompileFilterName(), array($this, 'getLessParams'));
+            \add_filter( $this->getWPLess()->getCompileFilterName(), array($this, 'getLessParams'), 100, 2);
         }
     }
     
@@ -152,7 +152,7 @@ class CustomAddonModel extends \WPObjects\Model\AbstractModel implements
     
     public function getLessParams($vars, $handle = null)
     {
-        if ( in_array($handle, $this->getEnqueueStyles()) ) {
+        if ( !in_array($handle, $this->getEnqueueStyles()) ) {
             return $vars;
         }
         
@@ -160,6 +160,12 @@ class CustomAddonModel extends \WPObjects\Model\AbstractModel implements
         foreach ($Params as $Param) {
             $vars[$Param->getId()] = $Param->getCurrentValue();
         }
+        
+        /*
+        if ($this->getId() === 'team_latest_matches') {
+            var_dump($this->getId());
+            var_dump($vars);
+        }*/
         
         return $vars;
     }
