@@ -35,7 +35,8 @@
             
             var result = [];
             _.each(params, function (value){
-                if (value.indexOf('#') !== -1 || value.indexOf('rgb') !== -1) {
+                if (result.indexOf(value) === -1 && value.indexOf('#') !== -1 || 
+                    result.indexOf(value) === -1 && value.indexOf('rgb') !== -1) {
                     result.push(value);
                 }
             });

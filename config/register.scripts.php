@@ -155,8 +155,8 @@ return array(
     ),
     
     array(
-        'vc-addons-customizer-presets-constrole',
-        $assets_url . '/js/vc-addons-customizer-presets-constrole.js',
+        'customizer-presets-constrole-handler',
+        $assets_url . '/js/customizer-presets-constrole-handler.js',
         array('backbone', 'jquery'),
         null,
         true,

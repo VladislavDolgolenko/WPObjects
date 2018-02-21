@@ -61,8 +61,8 @@ return array(
     ),
     
     array(
-        'vc-addons-customizer-presets-constrole',
-        $assets_url . '/css/vc-addons-customizer-presets-constrole.css',
+        'customizer-constroles',
+        $assets_url . '/css/customizer-constroles.css',
         array('bootstrap-wrapper'),
     ),
     

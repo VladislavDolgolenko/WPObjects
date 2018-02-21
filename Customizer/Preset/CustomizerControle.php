@@ -41,8 +41,8 @@ class CustomizerControle extends \WP_Customize_Control implements
             throw new \Exception('Undefined AssetsManager');
         }
         
-        $this->getAssetsManager()->enqueueStyle('vc-addons-customizer-presets-constrole');
-        $this->getAssetsManager()->enqueueScript('vc-addons-customizer-presets-constrole');
+        $this->getAssetsManager()->enqueueStyle('customizer-constroles');
+        $this->getAssetsManager()->enqueueScript('customizer-presets-constrole-handler');
     }
 
     public function to_json()
