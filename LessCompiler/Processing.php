@@ -16,7 +16,8 @@ class Processing implements
     ListenerInterface,
     \WPObjects\Service\NamespaceInterface,
     LessParamsInterface,
-    WPlessInterface
+    WPlessInterface,
+    \WPObjects\Customizer\Preset\PresetsInterface
 {
     protected $namespace = 'wpobjects_';
     
@@ -26,6 +27,11 @@ class Processing implements
      * @var \WPObjects\LessCompiler\WPless
      */
     protected $WPless = null;
+    
+    /**
+     * @var \WPObjects\Customizer\Preset\Model
+     */
+    protected $Presets = array();
     
     public function attach()
     {
@@ -81,6 +87,29 @@ class Processing implements
                 'priority' => 30,
                 'panel' => $panel_name
             )); 
+            
+            /**
+             * Add presets constrol if exists
+             */
+            $Presets = $this->getPresets();
+            if (current($Presets)) {
+                $presets_setting_name = $this->getNamespace() . $group_name . '_preset_constrole';
+                
+                $wp_customize->add_setting($presets_setting_name, array(
+                    'transport' => 'refresh',
+                    'default' => '',
+                    'sanitize_callback' => 'esc_attr'
+                ));
+                
+                $PresetsControle = new \WPObjects\Customizer\Preset\CustomizerControle($wp_customize, $presets_setting_name, array(
+                    'label' => esc_html__('Style presets', 'team'),
+                    'settings' => $presets_setting_name,
+                    'section'  => $sections_name,
+                ), $Presets);
+                
+                $this->getParamsFactory()->getServiceManager()->inject($PresetsControle);
+                $wp_customize->add_control($PresetsControle);
+            }
             
             /* @var $param \WPObjects\LessCompiler\ParamModel */
             foreach ($params as $param) {
@@ -143,5 +172,20 @@ class Processing implements
     public function getNamespace()
     {
         return $this->namespace;
+    }
+    
+    /**
+     * @return \WPObjects\Customizer\Preset\Model
+     */
+    public function getPresets()
+    {
+        return $this->Presets;
+    }
+    
+    public function setPresets($Presets)
+    {
+        $this->Presets = $Presets;
+        
+        return $this;
     }
 }

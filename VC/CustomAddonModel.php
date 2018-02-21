@@ -17,7 +17,8 @@ class CustomAddonModel extends \WPObjects\Model\AbstractModel implements
     \WPObjects\Model\ModelTypeFactoryInterface,
     \WPObjects\LessCompiler\LessParamsInterface,
     \WPObjects\LessCompiler\WPlessInterface,
-    \WPObjects\AssetsManager\AssetsManagerInterface
+    \WPObjects\AssetsManager\AssetsManagerInterface,
+    \WPObjects\Customizer\Preset\PresetsInterface
 {
     protected $base = null;
     protected $name = null;

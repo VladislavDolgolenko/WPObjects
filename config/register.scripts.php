@@ -159,7 +159,7 @@ return array(
         $assets_url . '/js/vc-addons-customizer-presets-constrole.js',
         array('backbone', 'jquery'),
         null,
-        false,
+        true,
         true
     ),
     
