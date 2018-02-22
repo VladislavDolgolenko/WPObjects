@@ -72,15 +72,8 @@ class WordPressContext implements
     protected function setUpContextToFilters(\WPObjects\Model\AbstractTypicalModel $ContextModel)
     {
         $attr = $this->getModelType()->getQualifierAttrName($ContextModel->getModelType()->getId());
-        $callable_methods = $this->getModelType()->getContextMethodReading($ContextModel->getModelType()->getId());
-        
-        if (!is_callable($callable_methods)) {
-            $this->filters[$attr] = $ContextModel->getId();
-            $this->filters[$attr  . '_not_ordered'] = true;
-        } else {
-            $result = call_user_func($callable_methods, $ContextModel);
-            $this->filters[$this->getFactory()->getIdAttrName()] = $result;
-        }
+        $this->filters[$attr] = $ContextModel->getId();
+        $this->filters[$attr  . '_not_ordered'] = true;
     }
     
     /**

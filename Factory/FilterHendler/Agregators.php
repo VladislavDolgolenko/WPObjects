@@ -31,6 +31,10 @@ class Agregators implements
         
         // Filter name as model type id
         foreach ($filters as $model_type_id => $value) {
+            if (!$value) {
+                continue;
+            }
+            
             $AgregatorType = $ModelType->getAgregator($model_type_id);
             if (!$AgregatorType) {
                 continue;
@@ -44,14 +48,19 @@ class Agregators implements
             $filter_ids = array();
             $AgregatorsObjects = $AgregatorFactory->get($value, array(), false);
             foreach ($AgregatorsObjects as $AgregatorObject) {
-                $ids = $AgregatorObject->getQualifierId($ModelType->getId());
+                $callable_methods = $ModelType->getContextMethodReading($AgregatorType->getId());
+                if (!is_callable($callable_methods)) {
+                    $ids = $AgregatorObject->getQualifierId($ModelType->getId());
+                } else {
+                    $ids = call_user_func($callable_methods, $AgregatorObject);
+                }
+                
                 if (!is_array($ids)) {
                     $ids = array($ids);
                 }
                 $filter_ids = array_merge($filter_ids, $ids);
             }
             
-            // Это пизда post__in
             $filters[$Factory->getIdAttrName()] = array_filter($filter_ids);
         }
         
