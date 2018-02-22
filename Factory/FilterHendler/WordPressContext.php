@@ -73,7 +73,7 @@ class WordPressContext implements
     {
         $attr = $this->getModelType()->getQualifierAttrName($ContextModel->getModelType()->getId());
         $this->filters[$attr] = $ContextModel->getId();
-        $this->filters[$attr  . '_not_ordered'] = true;
+        $this->filters['id_not_ordered'] = true;
     }
     
     /**

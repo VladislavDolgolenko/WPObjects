@@ -15,7 +15,7 @@ class AssetsManager implements
     \WPObjects\Service\VersionInterface
 {
     protected $namespace = '';
-    protected $global_assets = array('jquery', 'backbone');
+    protected $global_assets = array('jquery', 'backbone', 'underscore', 'jquery-ui');
     protected $assets_version = '';
     protected $js_templates = array();
     protected $wp_register_scripts = array();
