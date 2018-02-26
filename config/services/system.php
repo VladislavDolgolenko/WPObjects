@@ -19,7 +19,7 @@ return array(
     'google_api_key' => '',
     
     'wpobjects_dir_path' => function () {
-        return dirname( __DIR__, 2);
+        return dirname( dirname( __DIR__ ) );
     },
     'plugin_dir_path' => '',
     'vc_addons_dir_path' => '',
