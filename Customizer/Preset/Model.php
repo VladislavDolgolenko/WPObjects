@@ -64,7 +64,7 @@ class Model extends \WPObjects\Model\AbstractModel
     
     public function toJSON()
     {
-        $data = $this->toJSON();
+        $data = parent::toJSON();
         $data['id'] = $this->getId();
         $data['name'] = $this->getName();
         $data['params'] = $this->getParams();
