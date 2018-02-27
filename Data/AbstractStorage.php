@@ -17,6 +17,8 @@ abstract class AbstractStorage extends AbstractModel implements
 {
     protected $id = null;
     
+    protected $is_close = false;
+    
     /**
      * Cached storage data 
      * 
@@ -34,12 +36,45 @@ abstract class AbstractStorage extends AbstractModel implements
         return ucfirst( str_replace(array('-', '_'), ' ', $this->id) );
     }
     
+    public function close()
+    {
+        $this->is_close = true;
+        $this->data = array();
+        
+        return $this;
+    }
+    
+    public function isOpen()
+    {
+        return $this->is_close ? false : true;
+    }
+    
+    public function open()
+    {
+        $this->is_close = false;
+        
+        return $this;
+    }
+    
     /**
      * Return storage data
      * 
      * @return array
      */
-    abstract public function getData();
+    public function getData()
+    {
+        if ($this->data) {
+            return $this->data;
+        }
+        
+        if ($this->isOpen()) {
+            $this->data = $this->readStorage();
+        }
+        
+        return $this->data;
+    }
+    
+    abstract public function readStorage();
     
     public function setData($data)
     {

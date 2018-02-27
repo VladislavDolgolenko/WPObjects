@@ -19,21 +19,15 @@ class Storage extends AbstractStorage
      * 
      * @return array
      */
-    public function getData()
+    public function readStorage()
     {
-        if ($this->data) {
-            return $this->data;
-        }
-        
+        $data = array();
         $file_path = $this->getFilePath();
         if ($file_path && file_exists($file_path) ) {
-            $this->data = (include $file_path);
-            //\WPObjects\Log\Loger::getInstance()->write("Storage: " . $this->getFilePath() );
-        } else {
-            //\WPObjects\Log\Loger::getInstance()->write("ERROR Storage file not exists: " . $Storage->getFilePath() );
-        }
+            $data = (include $file_path);
+        } 
         
-        return $this->data;
+        return $data;
     }
     
     public function getFilePath()

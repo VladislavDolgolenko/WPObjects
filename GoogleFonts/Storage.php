@@ -15,18 +15,7 @@ class Storage extends \WPObjects\Data\AbstractStorage implements
 {
     protected $google_api_key = '';
     
-    public function getData()
-    {
-        if ($this->data) {
-            return $this->data;
-        }
-        
-        $this->data = $this->getResponse();
-        
-        return $this->data;
-    }
-    
-    function getResponse()
+    public function readStorage()
     {
         if (!$this->getGoogleApiKey()) {
             return array();

@@ -22,24 +22,13 @@ class Storage extends \WPObjects\Data\AbstractStorage implements
      */
     protected $AssetsManager = null;
     
-    public function getData()
-    {
-        if ($this->data) {
-            return $this->data;
-        }
-        
-        $this->data = $this->readFolder();
-        
-        return $this->data;
-    }
-    
     /**
      * Register styles and scripts
      * 
      * @param type $addons_folder_path
      * @return type
      */
-    public function readFolder()
+    public function readStorage()
     {
         $list = $this->getList();
         

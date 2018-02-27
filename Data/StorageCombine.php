@@ -19,22 +19,19 @@ class StorageCombine extends AbstractStorage
      * 
      * @return array
      */
-    public function getData()
+    public function readStorage()
     {
-        if ($this->data) {
-            return $this->data;
-        }
-        
+        $data = array();
         foreach ($this->getPatches() as $file_path) {
             if ( !file_exists($file_path) ) {
                 continue;
             }
             
             $file_data = include $file_path;
-            $this->data = array_merge($this->data, $file_data);
+            $data = array_merge($data, $file_data);
         }
         
-        return $this->data;
+        return $data;
     }
     
     public function addFilePath($file_path)
