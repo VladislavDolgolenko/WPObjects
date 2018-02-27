@@ -14,6 +14,12 @@ class ParamModel extends \WPObjects\Model\AbstractModel implements
     \WPObjects\Service\NamespaceInterface,
     \WPObjects\GoogleFonts\FontsFactoryInterface
 {
+    const TYPE_TEXT = 'text';
+    const TYPE_IMAGE = 'image';
+    const TYPE_FONT = 'font';
+    const TYPE_CHECKBOX = 'checkbox';
+    const TYPE_SELECT = 'select';
+    
     protected $id = '';
     protected $label = '';
     protected $default = '';
@@ -56,7 +62,12 @@ class ParamModel extends \WPObjects\Model\AbstractModel implements
     public function getCurrentValue()
     {
         $setting_name = $this->getSettingName();
-        return \get_theme_mod($setting_name, $this->default);
+        $value = \get_theme_mod($setting_name, $this->default);
+        if ($this->getType() === self::TYPE_IMAGE) {
+            return "'$value'";
+        }
+        
+        return $value;
     }
     
     public function getSettingName()
@@ -84,7 +95,7 @@ class ParamModel extends \WPObjects\Model\AbstractModel implements
     
     public function getChoices()
     {
-        if ($this->getType() === 'font' && $this->getFontsFactory() ) {
+        if ($this->getType() === self::TYPE_FONT && $this->getFontsFactory() ) {
             $result = $this->getFontsFactory()->query()->getForSelect();
             return $result;
         }
@@ -108,7 +119,7 @@ class ParamModel extends \WPObjects\Model\AbstractModel implements
             'sanitize_callback' => 'esc_attr'
         ));
         
-        if ($this->getType() === 'text') {
+        if ($this->getType() === self::TYPE_TEXT) {
 
             $wp_customize->add_control($setting_name, array(
                 'label' => $label,
@@ -117,7 +128,7 @@ class ParamModel extends \WPObjects\Model\AbstractModel implements
                 'type' => 'text'
             ));
 
-        } else if ($this->getType() === 'font') {
+        } else if ($this->getType() === self::TYPE_FONT) {
 
             $wp_customize->add_control($setting_name, array(
                 'label' => $label,
@@ -128,7 +139,7 @@ class ParamModel extends \WPObjects\Model\AbstractModel implements
                 'choices' => $this->getChoices()
             ));
 
-        } else if ($this->getType() === 'select') {
+        } else if ($this->getType() === self::TYPE_SELECT) {
 
             $wp_customize->add_control($setting_name, array(
                 'label' => $label,
@@ -139,7 +150,7 @@ class ParamModel extends \WPObjects\Model\AbstractModel implements
                 'choices' => $this->get('choices')
             ));
 
-        } else if ($this->getType() === 'checkbox') {
+        } else if ($this->getType() === self::TYPE_CHECKBOX) {
 
             $wp_customize->add_control($setting_name, array(
                 'label' => $label,
@@ -149,7 +160,7 @@ class ParamModel extends \WPObjects\Model\AbstractModel implements
                 'type' => 'checkbox',
             ));
 
-        } else if ($this->getType() === 'image') {
+        } else if ($this->getType() === self::TYPE_IMAGE) {
 
             $wp_customize->add_control(new \WP_Customize_Image_Control($wp_customize, $setting_name, array(
                 'setting' => $setting_name,
