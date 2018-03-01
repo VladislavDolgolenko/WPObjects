@@ -19,6 +19,7 @@ class ParamModel extends \WPObjects\Model\AbstractModel implements
     const TYPE_FONT = 'font';
     const TYPE_CHECKBOX = 'checkbox';
     const TYPE_SELECT = 'select';
+    const TYPE_COLOR = 'color';
     
     protected $id = '';
     protected $label = '';
@@ -64,7 +65,7 @@ class ParamModel extends \WPObjects\Model\AbstractModel implements
         $setting_name = $this->getSettingName();
         $value = \get_theme_mod($setting_name, $this->default);
         if ($this->getType() === self::TYPE_IMAGE) {
-            return "'$value'";
+            return "'" . $value . "'";
         }
         
         return $value;

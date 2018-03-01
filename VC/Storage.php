@@ -129,7 +129,7 @@ class Storage extends \WPObjects\Data\AbstractStorage implements
             $Preset = new \WPObjects\Customizer\Preset\Model($data);
             $this->getServiceManager()->inject($Preset);
             
-            $Preset->setSettingsPregix($Preset->getNamespace() . $addon_name);
+            $Preset->setSettingsPregix($Preset->getNamespace() . $addon_name . '_');
             $results[] = $Preset;
         }
         
@@ -148,7 +148,7 @@ class Storage extends \WPObjects\Data\AbstractStorage implements
             $ParamModel = new $param_model_class_name($param);
             $this->getServiceManager()->inject($ParamModel);
             
-            $ParamModel->setSettingName($ParamModel->getNamespace() . $addon_name);
+            $ParamModel->setSettingName($ParamModel->getNamespace() . $addon_name . '_' . $param['id']);
             $result[] = $ParamModel;
         }
         
