@@ -45,6 +45,19 @@ abstract class AbstractMetaBox extends MetaBox
     {
         return $this->getServiceManager()->inject(new \WPObjects\View\UI\QualifierSelector());
     }
+    
+    public function renderSelector()
+    {
+        
+    }
+    
+    /**
+     * @return \WPObjects\View\UI\Selector
+     */
+    public function initSelector()
+    {
+        return $this->getServiceManager()->inject(new \WPObjects\View\UI\Selector());
+    }
 
     public function renderAttrInput($attr_name, $lable, $vestical = true, $type = 'text')
     {
