@@ -19,4 +19,50 @@ abstract class AbstractMetaBox extends MetaBox
         $AM = $this->getAssetsManager();
         $AM->enqueueStyle('form');
     }
+    
+    public function processing(\WPObjects\Model\AbstractPostModel $Post, $data)
+    {
+        return $data;
+    }
+    
+    public function renderQualifierSelector($model_type_id, $multiple = false, $vertical = true, $qualifier = '', $array_result = false)
+    {
+        $Selector = $this->initQualifierSelector();
+        $Selector->setModelTypeId($model_type_id)
+                 ->setVertical($vertical)
+                 ->setQualifier($qualifier)
+                 ->setArrayResult($array_result)
+                 ->setMultiple($multiple)
+                 ->setModel($this->getPostModel());
+        
+        $Selector->render();
+    }
+    
+    /**
+     * @return \WPObjects\View\UI\QualifierSelector
+     */
+    public function initQualifierSelector()
+    {
+        return $this->getServiceManager()->inject(new \WPObjects\View\UI\QualifierSelector());
+    }
+
+    public function renderAttrInput($attr_name, $lable, $vestical = true, $type = 'text')
+    {
+        $Input = $this->initInput();
+        $Input->setName($attr_name);
+        $Input->setValue( $this->getPostModel()->getMeta($attr_name));
+        $Input->setVertical($vestical);
+        $Input->setLable($lable);
+        $Input->setType($type);
+        
+        $Input->render();
+    }
+    
+    /**
+     * @return \WPObjects\View\UI\Input
+     */
+    public function initInput()
+    {
+        return $this->getServiceManager()->inject(new \WPObjects\View\UI\Input());
+    }
 }
