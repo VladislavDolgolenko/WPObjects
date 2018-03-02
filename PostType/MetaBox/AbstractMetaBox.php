@@ -46,9 +46,38 @@ abstract class AbstractMetaBox extends MetaBox
         return $this->getServiceManager()->inject(new \WPObjects\View\UI\QualifierSelector());
     }
     
-    public function renderSelector()
+    public function renderSelector($attr_name, $label, $options, $vertical = true, $multiple = false)
     {
+        $Selector = $this->initSelector();
         
+        $Selector->setName($attr_name)
+                 ->setSelected( $this->getPostModel()->getMeta($attr_name) )
+                 ->setVertical($vertical)
+                 ->setLable($label)
+                 ->setMultiple($multiple)
+                 ->setOptions($options);
+        
+        $Selector->render();
+    }
+    
+    public function renderCheckbox($attr_name, $lable, $vestical = true)
+    {
+        $Checkbox = $this->initCheckbox();
+        
+        $Checkbox->setName($attr_name)
+                 ->setValue( $this->getPostModel()->getMeta($attr_name))
+                 ->setVertical($vestical)
+                 ->setLable($lable);
+        
+        $Checkbox->render();
+    }
+    
+    /**
+     * @return \WPObjects\View\UI\Checkbox
+     */
+    public function initCheckbox()
+    {
+        return $this->getServiceManager()->inject(new \WPObjects\View\UI\Checkbox());
     }
     
     /**

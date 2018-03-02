@@ -10,7 +10,11 @@
 
 return array(
     
-    'DatabasePage' => '\WPObjects\Data\Dashboard\Page',
-    'SettingPage' => 'WPObjects\Settings\Page\SettingPage',
+    array(
+        'id' => 'google_api_key',
+        'name' => 'Google api key',
+        'default' => '',
+        'type' => WPObjects\Settings\Model::TYPE_TEXT
+    ),
     
 );

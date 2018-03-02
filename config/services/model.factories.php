@@ -21,4 +21,7 @@ return array(
     'PostTypeManager' => function ($sm) {
         return new \WPObjects\PostType\Manager($sm->get('PostTypeFactory'));
     },
+            
+    'SettingsFactory' => '\WPObjects\Settings\Factory',
+    
 );

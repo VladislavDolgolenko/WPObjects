@@ -72,5 +72,12 @@ return array(
             'include' => $sm->get('wpobjects_dir_path') . '/data/data.php'
         ));
     },
+            
+    'SettingsStorage' => function ($sm) {
+        return new WPObjects\Data\Storage(array(
+            'id' => 'settings',
+            'include' => $sm->get('wpobjects_dir_path') . '/data/settings.php'
+        ));
+    },
     
 );

@@ -8,6 +8,8 @@
  * @support      support@torbara.com
  */
 
+/* @var $this \WPObjects\View\UI\Checkbox */
+
 if (!isset($empty_value)) {
     $empty_value = " ";
 }
@@ -15,10 +17,10 @@ if (!isset($empty_value)) {
 
 <div class="msp-form-group horizont invert-with">
 
-    <label for="<?php echo esc_attr($meta_attr_name); ?>"><?php echo esc_html($lable); ?></label>
+    <label for="<?php echo esc_attr($this->name); ?>"><?php echo esc_html($this->lable); ?></label>
     <div class="msp-input-group">
-        <input type="hidden" name="<?php echo esc_attr($meta_attr_name); ?>" value="<?php echo $empty_value; ?>" />
-        <input type="checkbox" name="<?php echo esc_attr($meta_attr_name); ?>" id="<?php echo esc_attr($meta_attr_name); ?>" value="1" <?php checked($value); ?> />
+        <input type="hidden" name="<?php echo esc_attr($this->name); ?>" value="<?php echo $empty_value; ?>" />
+        <input type="checkbox" name="<?php echo esc_attr($this->name); ?>" id="<?php echo esc_attr($this->name); ?>" value="1" <?php checked($this->value); ?> />
         <div class="clearfix"></div>
     </div>
     

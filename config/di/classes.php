@@ -33,6 +33,9 @@ return array(
     '\WPObjects\LessCompiler\ParamsFactory' => array(
         'LessParamsStorage' => 'setStorage'
     ),
+    '\WPObjects\Settings\Factory' => array(
+        'SettingsStorage' => 'setStorage'
+    ),
     
     /**
      * Factories Typical Models

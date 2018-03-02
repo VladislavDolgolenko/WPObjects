@@ -8,9 +8,15 @@
  * @support      support@torbara.com
  */
 
-return array(
-    
-    'DatabasePage' => '\WPObjects\Data\Dashboard\Page',
-    'SettingPage' => 'WPObjects\Settings\Page\SettingPage',
-    
-);
+namespace WPObjects\Settings;
+
+use WPObjects\Settings\Model;
+
+class Factory extends \WPObjects\Factory\AbstractData
+{
+    public function initModel($data)
+    {
+        $SettingModel = new Model($data);
+        return $this->getServiceManager()->inject($SettingModel);
+    }
+}
