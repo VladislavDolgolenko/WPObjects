@@ -92,8 +92,13 @@ class ShorcodeParams
     function genPageContextParam(\WPObjects\Model\AbstractModelType $ModelType, $default = true)
     {
         $result = array();
-        $heading = sprintf(__('Quared %s by current page context?', 'msp' ), $ModelType->getName());
-        $description = sprintf(__('This magic option, it make %s query filter сonsidering current page context.', 'msp'), $ModelType->getName());
+        
+        $heading = sprintf(__('Filter %s by current page context? Learn this option and use it!!!', 'msp' ), $ModelType->getName());
+        $description_text = __('If current page object has relative with %1$s, results %1$s can filtered by current page object.'
+                . ' Use this option for %1$s on next pages: %2$s'
+                . ' Example: Players can be filter by Team and Team can be filter by Player.', 'msp');
+        
+        $description = sprintf($description_text, $ModelType->getName(), $ModelType->getContextPostTypesAsString());
         $params_group = $this->getParamsGroup($ModelType->getName());
         
         $result[] = array(

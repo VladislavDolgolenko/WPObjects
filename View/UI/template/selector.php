@@ -33,7 +33,7 @@
             <?php echo $this->multibple ? 'multiple' : ''; ?>
             >
             
-            <?php if (!$multibple): ?>
+            <?php if (!$this->multibple): ?>
                 <option value=""><?php echo esc_html_e('N/A', 'msp'); ?></option>
             <?php endif; ?>
         <?php foreach ($this->options as $option) { ?>

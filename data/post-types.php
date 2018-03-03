@@ -35,7 +35,6 @@ return array(
         'model_class_name' => '\WPObjects\WPModel\Page',
         'qualifiers' => array(),
         'register_metas' => array(),
-        'MetaBoxes' => array(),
         'factory_service_name' => 'PageFactory',
         'config' => array ()
     ),

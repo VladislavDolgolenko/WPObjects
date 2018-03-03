@@ -184,6 +184,38 @@ abstract class AbstractModelType extends AbstractModel implements
     }
     
     /**
+     * Return all post-types identities which can be context for current model type
+     * 
+     * @return \WPObjects\PostType\PostType
+     */
+    public function getContextPostTypes()
+    {
+        $model_types_ids = $this->getContextModelTypes();
+        
+        $result = array();
+        foreach ($model_types_ids as $id) {
+            $ModelType = $this->getModelTypeFactory()->get($id);
+            if ($ModelType instanceof \WPObjects\PostType\PostType) {
+                $result[] = $ModelType;
+            }
+        }
+        
+        return $result;
+    }
+    
+    public function getContextPostTypesAsString()
+    {
+        $PostTypes = $this->getContextPostTypes();
+        $string = '';
+        foreach ($PostTypes as $key => $PostType) {
+            $string .= '<b>' . $PostType->getName() . '</b>';
+            $string .= $key !== count($PostTypes) - 1 ? ', ' : '.';
+        }
+        
+        return $string;
+    }
+    
+    /**
      * Return all own attributes names that are qualifiers for other model types. For 
      * realization association.
      * @return array
