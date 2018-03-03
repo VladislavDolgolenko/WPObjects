@@ -27,6 +27,27 @@ class SettingPage extends \WPObjects\Page\AdminPage
     {
         $AM = $this->getAssetsManager();
         $AM->enqueueStyle('database');
+        $AM->enqueueScript('bootstrap');
+    }
+    
+    public function POSTAction($data)
+    {
+        if (!isset($data['setting_namespace']) || 
+            $data['setting_namespace'] !== $this->getAssetsManager()->getNamespace()) {
+            return;
+        }
+        
+        $Settings = $this->getSettings();
+        foreach ($Settings as $Settings) {
+            $id = $Settings->getId();
+            if (!isset($data[$id]) || 
+                $data[$id] == $Settings->getCurrentValue()) {
+                continue;
+            }
+            
+            $new_value = $data[$id];
+            $Settings->setCurrentValue($new_value);
+        }
     }
     
     /**
@@ -37,4 +58,6 @@ class SettingPage extends \WPObjects\Page\AdminPage
         $Factory = $this->getServiceManager()->get('SettingsFactory');
         return $Factory->query()->getResult();
     }
+    
+    
 }

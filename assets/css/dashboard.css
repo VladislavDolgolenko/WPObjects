@@ -323,3 +323,13 @@
     -o-transition: opacity .15s linear;
     transition: opacity .15s linear;
 }
+
+.msp-dashboard p.wpobjects-copirytes {
+    font-size: 14px;
+    color: #555d66;
+    font-size: 13px;
+    margin: 0;
+    line-height: 20px;
+    padding: 5px 0;
+}
+

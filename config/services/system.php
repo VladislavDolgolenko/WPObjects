@@ -16,10 +16,17 @@ return array(
      */
     'namespace' => 'WPObjects',
     'build' => '1.0.0',
-    'google_api_key' => '',
+    'wpobjects_build' => '1.1.1',
+    'google_api_key' => function($sm){
+        return $sm->get('SettingsFactory')->getValue('google_api_key');
+    },
     
     'wpobjects_dir_path' => function () {
         return dirname( dirname( __DIR__ ) );
+    },
+    'wpobjects_dir_url' => function ($sm) {
+        $path = $sm->get('wpobjects_dir_path');
+        return plugin_dir_url($path . '/custom');
     },
     'plugin_dir_path' => '',
     'vc_addons_dir_path' => '',

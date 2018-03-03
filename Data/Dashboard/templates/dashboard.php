@@ -10,6 +10,8 @@
 
 /* @var $this \WPObjects\Data\Dashboard\Page */
 
+$wpobjects_url = $this->getServiceManager()->get('wpobjects_dir_url');
+
 ?>
 
 <div class="msp-bootstrap-wrapper msp-dashboard">
@@ -18,7 +20,7 @@
         <div class="row dashboard-header">
             <div class="col-lg-8">
                 <div class="logo">
-                    <img src="<?php echo $this->getAssetsDirUrl() . '/img/logo.png' ?>">
+                    <img src="<?php echo $wpobjects_url . '/assets/img/logo.png' ?>">
                 </div>
                 <hgroup>
                     <h1><?php esc_html_e('Database','msp'); ?></h1>
@@ -49,6 +51,16 @@
                 </div>
             </div>
             <div class="clearfix"></div>
+        </div>
+        
+        <div class="row">
+            <div class="col-xs-12 text-right">
+                <p class="wpobjects-copirytes">
+                    Build on 
+                    <a target="_blank" href="https://github.com/VladislavDolgolenko/WPObjects">\WPObjects</a> 
+                    v<?php echo esc_html($this->getServiceManager()->get('wpobjects_build'));?>
+                </p>
+            </div>
         </div>
     </div>
 </div>

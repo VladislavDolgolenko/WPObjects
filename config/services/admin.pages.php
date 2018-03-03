@@ -11,6 +11,6 @@
 return array(
     
     'DatabasePage' => '\WPObjects\Data\Dashboard\Page',
-    'SettingPage' => 'WPObjects\Settings\Page\SettingPage',
+    'SettingPage' => '\WPObjects\Settings\Page\SettingPage',
     
 );

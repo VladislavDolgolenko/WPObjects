@@ -10,7 +10,7 @@
 
 namespace WPObjects\Settings;
 
-class Model extends WPObjects\Model\AbstractDataModel implements
+class Model extends \WPObjects\Model\AbstractModel implements
     \WPObjects\Service\NamespaceInterface
 {
     const TYPE_TEXT = 'text';
@@ -24,8 +24,9 @@ class Model extends WPObjects\Model\AbstractDataModel implements
     
     protected $id = '';
     protected $name = '';
-    protected $group = '';
+    protected $group = 'Other';
     protected $default = '';
+    protected $description = '';
     protected $type = self::TYPE_TEXT;
 
     protected $namespace = '';
@@ -33,6 +34,11 @@ class Model extends WPObjects\Model\AbstractDataModel implements
     public function getName()
     {
         return $this->get('name');
+    }
+    
+    public function getId()
+    {
+        return $this->id;
     }
     
     public function getDefault()
@@ -45,9 +51,30 @@ class Model extends WPObjects\Model\AbstractDataModel implements
         return $this->type;
     }
     
+    public function getGroup()
+    {
+        return $this->group;
+    }
+    
+    public function getDescription()
+    {
+        return $this->description;
+    }
+    
     public function getCurrentValue()
     {
         return \get_option($this->getWPOptionKey(), $this->getDefault());
+    }
+    
+    public function setCurrentValue($value)
+    {
+        if (is_null($value) || $value === "") {
+            \delete_option($this->getWPOptionKey());
+        } else {
+            \update_option($this->getWPOptionKey(), $value);
+        }
+        
+        return $this;
     }
     
     public function getWPOptionKey()

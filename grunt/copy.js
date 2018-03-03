@@ -37,6 +37,7 @@ module.exports = function (grunt) {
                 './LessCompiler/**/*',
                 './Loader/**/*',
                 './Session/**/*',
+                './Settings/**/*',
                 './Log/**/*',
                 './Model/**/*',
                 './Notice/**/*',
