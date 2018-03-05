@@ -35,7 +35,7 @@ return array(
     'LessParamsStorage' => function ($sm) {
         return new \WPObjects\Data\Storage(array(
             'id' => 'less-params',
-            'include' => $sm->get('wpobjects_dir_path') . 'data/less-params.php',
+            'include' => $sm->get('wpobjects_dir_path') . '/storage/less-params.php',
         ));
     },
     

@@ -66,7 +66,7 @@ return array(
         $data = new \WPObjects\Data\StorageCombine(array(
             'id' => 'post-type',
             'patches' => array(
-                $sm->get('wpobjects_dir_path') . '/data/post-types.php'
+                $sm->get('wpobjects_dir_path') . '/storage/post-types.php'
             )
         ));
         
@@ -76,14 +76,14 @@ return array(
     'DataTypeStorage' => function ($sm) {
         return new \WPObjects\Data\Storage(array(
             'id' => 'datas',
-            'include' => $sm->get('wpobjects_dir_path') . '/data/data.php'
+            'include' => $sm->get('wpobjects_dir_path') . '/storage/data.php'
         ));
     },
             
     'SettingsStorage' => function ($sm) {
         return new WPObjects\Data\Storage(array(
             'id' => 'settings',
-            'include' => $sm->get('wpobjects_dir_path') . '/data/settings.php'
+            'include' => $sm->get('wpobjects_dir_path') . '/storage/settings.php'
         ));
     },
     
