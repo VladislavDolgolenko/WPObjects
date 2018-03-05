@@ -124,7 +124,7 @@ abstract class AbstractModelType extends AbstractModel implements
         } else if (is_array($data) && isset($data[$attr_name])) {
             $id = $data[$attr_name];
         } else {
-            throw new \Exception("Model initialization without identifier.");
+            return $this->createModel($data);
         }
         
         if (isset($this->initialized[$id]) && $this->unique) {
