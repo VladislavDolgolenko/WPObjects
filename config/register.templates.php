@@ -8,8 +8,7 @@
  * @support      support@torbara.com
  */
 
-$assets_path = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'assets/custom';
-$assets_url = plugin_dir_url($assets_path);
+$assets_path = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'assets';
 
 return array(
     
@@ -19,32 +18,32 @@ return array(
     
     array(
         'TmplDashboardMainNav',
-        $assets_url . '/js/MVC/template/dashboard/main-nav.html'
+        $assets_path . '/js/MVC/template/dashboard/main-nav.html'
     ),
     
     array(
         'TmplDashboardList',
-        $assets_url . '/js/MVC/template/dashboard/list.html'
+        $assets_path . '/js/MVC/template/dashboard/list.html'
     ),
     
     array(
         'TmplDashboardLine',
-        $assets_url . '/js/MVC/template/dashboard/line.html'
+        $assets_path . '/js/MVC/template/dashboard/line.html'
     ),
     
     array(
         'TmplDashboardFilters',
-        $assets_url . '/js/MVC/template/dashboard/filters.html'
+        $assets_path . '/js/MVC/template/dashboard/filters.html'
     ),
     
     array(
         'TmplDashboardForm',
-        $assets_url . '/js/MVC/template/dashboard/form.html'
+        $assets_path . '/js/MVC/template/dashboard/form.html'
     ),
     
     array(
         'TmplDashboardField',
-        $assets_url . '/js/MVC/template/dashboard/field.html'
+        $assets_path . '/js/MVC/template/dashboard/field.html'
     ),
     
 );
