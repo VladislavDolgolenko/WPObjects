@@ -290,6 +290,12 @@ abstract class AbstractModelType extends AbstractModel implements
         return current($Result);
     }
     
+    /**
+     * Return factory of current model type
+     * 
+     * @return \WPObjects\Factory\AbstractModelFactory
+     * @throws \Exception
+     */
     public function getFactory()
     {
         if (!is_null($this->Factory)) {

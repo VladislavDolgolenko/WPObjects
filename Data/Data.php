@@ -236,6 +236,7 @@ class Data implements
         $this->updateModelStatus($Model);
         
         $this->resetCache($Storage->getId());
+        $Model->getModelType()->getFactory()->resetCache();
         
         return $this;
     }

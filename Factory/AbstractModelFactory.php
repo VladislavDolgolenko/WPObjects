@@ -226,6 +226,18 @@ abstract class AbstractModelFactory extends EventManager implements
     }
     
     /**
+     * Reset query cache
+     * 
+     * @return $this
+     */
+    public function resetCache()
+    {
+        $this->cache = array();
+        
+        return $this;
+    }
+    
+    /**
      * Create value as array if string delimiter is ','
      * 
      * @param string $string
