@@ -18,8 +18,10 @@ $metaboxes = include dirname(__FILE__) . '/services/metaboxes.php';
 $controllers = include dirname(__FILE__) . '/services/controllers.php';
 $visual_composer_addons = include dirname(__FILE__) . '/services/visual-composer.addons.php';
 $admin_pages = include dirname(__FILE__) . '/services/admin.pages.php';
+$wpobjects = include dirname(__FILE__) . '/services/wpobjects.php';
 
 return array_merge(
+    $wpobjects,
     $admin_pages,
     $visual_composer_addons,
     $controllers, 
