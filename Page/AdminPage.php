@@ -1,9 +1,13 @@
 <?php
 
 /**
- * @author Vladislav Dolgolenko <vladislavdolgolenko.com>
- * @copyright Copyright (c) torbara studio (http://codecanyon.net/user/torbara/?ref=torbara)
- * @license http://codecanyon.net/licenses/standard?ref=torbara
+ * @encoding     UTF-8
+ * @package      WPObjects
+ * @link         https://github.com/VladislavDolgolenko/WPObjects
+ * @copyright    Copyright (C) 2018 Vladislav Dolgolenko
+ * @license      MIT License
+ * @author       Vladislav Dolgolenko <vladislavdolgolenko.com>
+ * @support      <help@vladislavdolgolenko.com>
  */
 
 namespace WPObjects\Page;

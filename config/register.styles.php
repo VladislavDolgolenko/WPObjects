@@ -2,10 +2,12 @@
 
 /**
  * @encoding     UTF-8
- * @copyright    Copyright (C) 2017 Torbara (http://torbara.com). All rights reserved.
- * @license      Envato Standard License http://themeforest.net/licenses/standard?ref=torbara
+ * @package      WPObjects
+ * @link         https://github.com/VladislavDolgolenko/WPObjects
+ * @copyright    Copyright (C) 2018 Vladislav Dolgolenko
+ * @license      MIT License
  * @author       Vladislav Dolgolenko <vladislavdolgolenko.com>
- * @support      support@torbara.com
+ * @support      <help@vladislavdolgolenko.com>
  */
 
 $assets_path = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'assets/custom';
