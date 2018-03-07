@@ -20,6 +20,10 @@ class DataType extends AbstractModelType implements
      */
     protected $Storage = null;
 
+    protected $storage_service_name = null;
+    
+    protected $storage = null;
+    
     public function getId()
     {
         return $this->id;
@@ -32,7 +36,9 @@ class DataType extends AbstractModelType implements
     
     public function getStorage()
     {
-        if (is_null($this->Storage)) {
+        if (is_null($this->Storage) && $this->storage_service_name) {
+            $this->Storage = $this->getServiceManager()->get($this->storage_service_name);
+        } elseif (is_null($this->Storage) && $this->storage) {
             $this->Storage = new Storage($this->storage);
         }
         

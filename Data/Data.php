@@ -281,6 +281,7 @@ class Data implements
         unset($all_datas[$index]);
         $this->writeStorageData($Storage, $all_datas);
         $this->resetCache($Storage->getId());
+        $Model->getModelType()->getFactory()->resetCache();
         
         $this->deleteModelStatus($Model);
         

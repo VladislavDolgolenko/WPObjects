@@ -221,6 +221,14 @@ abstract class AbstractData extends AbstractModelFactory implements
         return $this;
     }
     
+    public function resetCache()
+    {
+        parent::resetCache();
+        $this->pull = null;
+        
+        return $this;
+    }
+    
     /**
      * @return array
      */
@@ -234,6 +242,8 @@ abstract class AbstractData extends AbstractModelFactory implements
     }
     
     /**
+     * Return DataAccess Objects
+     * 
      * @return \WPObjects\Data\Data
      */
     public function getData()
