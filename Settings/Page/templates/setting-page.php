@@ -89,9 +89,7 @@ $wpobjects_url = $this->getServiceManager()->get('wpobjects_dir_url');
         <div class="row">
             <div class="col-xs-12 text-right">
                 <p class="wpobjects-copirytes">
-                    Build on 
-                    <a target="_blank" href="https://github.com/VladislavDolgolenko/WPObjects">\WPObjects</a> 
-                    v<?php echo esc_html($this->getServiceManager()->get('wpobjects_build'));?>
+                    <?php include($this->getServiceManager()->get('wpobjects_dir_path') . '/View/template-parts/copyright.php'); ?>
                 </p>
             </div>
         </div>
