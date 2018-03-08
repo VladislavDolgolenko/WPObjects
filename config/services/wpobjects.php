@@ -12,7 +12,7 @@
 
 return array(
     
-    'wpobjects_build' => '1.1.1',
+    'wpobjects_build' => '1.1.2',
     
     'wpobjects_dir_path' => function () {
         return dirname( dirname( __DIR__ ) );
