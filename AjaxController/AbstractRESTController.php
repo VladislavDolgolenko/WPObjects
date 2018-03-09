@@ -103,7 +103,8 @@ abstract Class AbstractRESTController implements
         $this->setRequest($request);
         
         $method = $this->getRequest()->get_method(); 
-        $id = $this->getRequest()->get_param('id'); 
+        $url_params = $this->getRequest()->get_url_params();
+        $id = isset($url_params['id']) ? $url_params['id'] : null;
         
         $body_data = json_decode($this->getRequest()->get_body(), true);
         
