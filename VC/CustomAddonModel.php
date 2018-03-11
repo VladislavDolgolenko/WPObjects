@@ -95,6 +95,10 @@ class CustomAddonModel extends \WPObjects\Model\AbstractModel implements
             'icon' => $this->get('icon'),
             'html_template' => apply_filters($this->getNamespace() . '-addon-template-' . $this->getId(), $this->html_template),
             'params' => $this->params,
+            'as_child' => $this->get('as_child'),
+            'is_container' => $this->get('is_container'),
+            'as_parent' => $this->get('as_parent'),
+            'show_settings_on_create' => $this->get('show_settings_on_create')
         );
         
         // If setted main model type for addon, will be added special forms to addon ui editing panel

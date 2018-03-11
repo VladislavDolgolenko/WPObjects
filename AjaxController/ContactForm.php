@@ -41,6 +41,10 @@ class ContactForm extends \WPObjects\AjaxController\Controller
             }
         }
         
+        if (!wp_verify_nonce($_POST['_wpnonce'])) {
+            return false;
+        }
+        
         $this->from = isset($_POST['from']) ? $_POST['from'] : null;
         $this->subject = isset($_POST['subject']) ? $_POST['subject'] : null;
         $this->message = isset($_POST['message']) ? $_POST['message'] : null;
