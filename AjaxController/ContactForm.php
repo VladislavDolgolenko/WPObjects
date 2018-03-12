@@ -41,7 +41,7 @@ class ContactForm extends \WPObjects\AjaxController\Controller
             }
         }
         
-        if (!wp_verify_nonce($_POST['_wpnonce'])) {
+        if (!wp_verify_nonce($_POST['_wpnonce'], 'wp_rest')) {
             return false;
         }
         

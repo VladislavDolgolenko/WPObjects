@@ -24,4 +24,6 @@ return array(
     },
             
     'StorageRESTController' => '\WPObjects\Session\StorageRESTController',
+            
+    'UserSubscribeRegistrationListener' => '\WPObjects\User\Listeners\SubscribeRegistration',
 );
