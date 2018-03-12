@@ -17,5 +17,6 @@ return array(
     'LocationMetabox' => '\WPObjects\PostType\MetaBox\Location',
     'AttrsMetaBox' => '\WPObjects\PostType\MetaBox\CustomAttributes',
     'GalleryMetaBox' => '\WPObjects\PostType\MetaBox\Gallery',
+    'PageAsArchiveMetaBox' => '\WPObjects\PostType\MetaBox\PageAsArchive',
     
 );

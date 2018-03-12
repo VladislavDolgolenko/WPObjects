@@ -17,12 +17,12 @@ class SubscribeRegistration implements
 {
     public function attach()
     {
-        \add_action('login_form_register', array($this, 'process'));
+        \add_action('login_form_register', array($this, 'process'), 20);
     }
     
     public function detach()
     {
-        \remove_action('login_form_register', array($this, 'process'));
+        \remove_action('login_form_register', array($this, 'process'), 20);
     }
     
     public function process()
