@@ -17,21 +17,19 @@ class PageAsArchive extends AbstractMetaBox
     public function __construct()
     {
         $this->setId('page_as_archive');
+        $this->setTitle('Page as archive');
         $this->setPosition('side');
-        $this->setPriority('default');
+        $this->setPriority('low');
         
         $template_dir = dirname(__FILE__) . DIRECTORY_SEPARATOR . 'templates';
         $this->setTemplatePath($template_dir . DIRECTORY_SEPARATOR . 'page-as-archive.php');
     }
     
-    public function processing(\WPObjects\Model\AbstractPostModel $Post, $data)
-    {
-        return $data;
-    }
-    
     public function getPostTypesForSelect()
     {
-        $post_types = \get_post_types();
+        $post_types = \get_post_types(array(
+            'public' => true
+        ));
         
         $result = array();
         foreach ($post_types as $post_type) {

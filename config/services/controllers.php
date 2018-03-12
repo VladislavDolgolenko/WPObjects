@@ -26,4 +26,5 @@ return array(
     'StorageRESTController' => '\WPObjects\Session\StorageRESTController',
             
     'UserSubscribeRegistrationListener' => '\WPObjects\User\Listeners\SubscribeRegistration',
+    'PageAsArchiveForPostTypeListener' => '\WPObjects\PostType\Listeners\PageAsArchiveForPostType',
 );

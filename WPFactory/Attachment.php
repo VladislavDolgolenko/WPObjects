@@ -14,5 +14,8 @@ namespace WPObjects\WPFactory;
 
 class Attachment extends \WPObjects\Factory\AbstractPostModel 
 {
-    // Nothing
+    protected function buildSpecialMetaQuery()
+    {
+        $this->query['post_status'] = 'inherit';
+    }
 }
