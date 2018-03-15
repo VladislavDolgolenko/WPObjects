@@ -74,7 +74,7 @@ class ParamsFactory extends AbstractData
     
     public function getUrlForEnqueueGoogleFontsParams()
     {
-        $fonts = $this->getParamsFactory()->getUniqFontsNameAsArray();
+        $fonts = $this->getUniqFontsNameAsArray();
         
         $font_url = '';
         /*
