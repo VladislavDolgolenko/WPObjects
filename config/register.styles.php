@@ -13,10 +13,6 @@
 $assets_path = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'assets/custom';
 $assets_url = plugin_dir_url($assets_path);
 
-$SM = \WPObjects\Service\Manager::getInstance();
-$LessParamsFactory = $SM->get('LessCompileParamsFactory');
-$google_fonts_url = $LessParamsFactory->getUrlForEnqueueGoogleFontsParams();
-
 return array(
 
 /**
@@ -39,15 +35,6 @@ return array(
         true
     ),
     
-/**
- * Fonts
- */
-    array(
-        'googlefonts',
-        $google_fonts_url,
-        array(),
-    ),
-
 /**
  * UI
  */

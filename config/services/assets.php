@@ -40,5 +40,10 @@ return array(
             'include' => $sm->get('wpobjects_dir_path') . '/storage/less-params.php',
         ));
     },
+            
+    'GoogleFontsEnqueueUrl' => function ($sm) {
+        $Factory = $sm->get('LessCompileParamsFactory');
+        return $Factory->getUrlForEnqueueGoogleFontsParams();
+    },
     
 );
