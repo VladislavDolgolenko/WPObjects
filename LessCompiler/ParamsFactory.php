@@ -34,6 +34,62 @@ class ParamsFactory extends AbstractData
         return $this->getResult();
     }
     
+    /**
+     * Will return params with font type 
+     * 
+     * @return \WPObjects\LessCompiler\ParamModel
+     */
+    public function getFontsParams()
+    {
+        return $this->query(array(
+            'type' => 'font'
+        ))->getResult();
+    }
+    
+    /**
+     * Using for generate and including link for uploading in page google fonts via api.
+     * 
+     * @return array
+     */
+    public function getUniqFontsNameAsArray()
+    {
+        $Fonts = $this->getFontsParams();
+        
+        $result = array();
+        foreach ($Fonts as $Font) {
+            if (!in_array($Font->getCurrentValue(), $result)) {
+                $font_id = $Font->getCurrentValue();
+                
+                if (isset($Font->weights)) {
+                    $weights = implode(',', $Font->weights);
+                    $result[] = $font_id . ':' . $weights;
+                } else {
+                    $result[] = $font_id;
+                }
+            }
+        }
+        
+        return $result;
+    }
+    
+    public function getUrlForEnqueueGoogleFontsParams()
+    {
+        $fonts = $this->getParamsFactory()->getUniqFontsNameAsArray();
+        
+        $font_url = '';
+        /*
+            Translators: If there are characters in your language that are not supported
+            by chosen font(s), translate this to 'off'. Do not translate into your own language.
+        */
+        if ( 'off' !== _x( 'on', 'Google font: on or off', 'areathm' ) ) {
+            $fonts_quary = implode('|', $fonts);
+            
+            $font_url = add_query_arg( 'family', $fonts_quary, "https://fonts.googleapis.com/css" );
+        }
+
+        return $font_url;
+    }
+    
     public function getResultGroupped()
     {
         $colors = $this->getResult();
