@@ -13,6 +13,9 @@
 $assets_path = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'assets/custom';
 $assets_url = plugin_dir_url($assets_path);
 
+$SM = \WPObjects\Service\Manager::getInstance();
+$google_api_key = $SM->get('google_api_key');
+
 return array(
     
 /**
@@ -45,7 +48,7 @@ return array(
     
     array(
         'googleapis',
-        'http://maps.googleapis.com/maps/api/js?sensor=true&libraries=places&key=AIzaSyDlacGPR94gjsCaIUqBPLHRLLG9h2AoO6A',
+        'http://maps.googleapis.com/maps/api/js?sensor=true&libraries=places&key=' . $google_api_key,
         array(),
         ''
     ),
