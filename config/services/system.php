@@ -19,6 +19,7 @@ return array(
     'namespace' => 'WPObjects',
     'build' => '1.0.0',
     'plugin_dir_path' => '',
+    'plugin_dir_url' => '',
     'vc_addons_dir_path' => '',
     'vc_templates_dir_path' => '',
     

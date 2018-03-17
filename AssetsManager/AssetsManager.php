@@ -14,7 +14,8 @@ namespace WPObjects\AssetsManager;
 
 class AssetsManager implements
     \WPObjects\Service\NamespaceInterface,
-    \WPObjects\Service\VersionInterface
+    \WPObjects\Service\VersionInterface,
+    \WPObjects\Service\ManagerInterface
 {
     protected $namespace = '';
     protected $global_assets = array('jquery', 'backbone', 'underscore', 'jquery-ui');
@@ -22,6 +23,13 @@ class AssetsManager implements
     protected $js_templates = array();
     protected $wp_register_scripts = array();
     protected $wp_register_styles = array();
+    
+    /**
+     * Global service manager
+     * 
+     * @var \WPobjects\Service\Manager
+     */
+    protected $ServiceManager = null;
     
     public function __construct()
     {
@@ -158,6 +166,7 @@ class AssetsManager implements
             'nonce' => \wp_create_nonce('wp_rest'),
             'rest_url' => \get_rest_url() . $this->getNamespace(),
             'ajax_url' => \admin_url('admin-ajax.php'),
+            'plugin_dir_url' => $this->getServiceManager()->get('plugin_dir_url')
         ), $this->getJSTemplatesContents());
     }
     
@@ -228,6 +237,26 @@ class AssetsManager implements
     public function getVersion()
     {
         return $this->assets_version;
+    }
+    
+    public function setServiceManager(\WPObjects\Service\Manager $ServiceManager)
+    {
+        $this->ServiceManager = $ServiceManager;
+        
+        return $this;
+    }
+    
+    /**
+     * @return \WPObjects\Service\Manager
+     * @throws \Exception
+     */
+    public function getServiceManager()
+    {
+        if (is_null($this->ServiceManager)) {
+            throw new \Exception('Undefined service manager');
+        }
+        
+        return $this->ServiceManager;
     }
     
 }
