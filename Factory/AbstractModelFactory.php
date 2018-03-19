@@ -129,6 +129,24 @@ abstract class AbstractModelFactory extends EventManager implements
         return $result_ids;
     }
     
+    public function getNamesAsString($max_length = 10)
+    {
+        $Results = $this->getResult();
+        
+        $string = '';
+        foreach ($Results as $index => $model) {
+            $string .= $model->getName();
+            $string .= $index === count($Results) - 1 ? '.' : ', ';
+            
+            if ($index + 1 >= $max_length) {
+                $string .= ' and more...';
+                break;
+            }
+        }
+        
+        return $string;
+    }
+    
     /**
      * Return models from last query result
      * 
