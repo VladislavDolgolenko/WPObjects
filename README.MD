@@ -11,6 +11,10 @@
 
 [WordPress Layouts Builder](https://codecanyon.net/item/wordpress-layouts-builder/20968348)
 
+## Compatibility
+
+** WordPress 5.0-alpha-42201
+
 ## Build creation
 
 **Before begin, your must install nodejs dependencies for grunt:**
