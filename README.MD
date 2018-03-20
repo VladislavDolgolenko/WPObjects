@@ -14,6 +14,7 @@
 ## Compatibility
 
 **WordPress 5.0-alpha-42201**
+**PHP v5.3 - v7.1.15**
 
 ## Build creation
 
