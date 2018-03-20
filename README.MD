@@ -1,7 +1,7 @@
 
 ## Introduction
 
-** Use case and example plugin will be done in the nearest future.
+**Use case and example plugin will be done in the nearest future.**
 
 ## Plugins built on the WPObjects
 
@@ -13,7 +13,7 @@
 
 ## Compatibility
 
-** WordPress 5.0-alpha-42201
+**WordPress 5.0-alpha-42201**
 
 ## Build creation
 
