@@ -187,13 +187,18 @@ abstract class AbstractPostModel extends AbstractModelFactory implements
             return $this;
         }
         
-        if (strpos($orderby, '_') === 0 && strpos($orderby, 'date') !== false) {
+        if (strpos($orderby, '_') === 0 && strpos($orderby, 'date') !== false) // date meta value
+        {
             $this->query['meta_key'] = $orderby;
             $this->query['orderby'] = 'meta_value';
-        } else if (strpos($orderby, '_') == 0) {
+        } 
+        else if (strpos($orderby, '_') === 0) // number meta value
+        {
             $this->query['meta_key'] = $orderby;
             $this->query['orderby'] = 'meta_value_num';
-        } else {
+        }
+        else // default sorting types
+        {
             $this->query['orderby'] = $orderby;
         }
 
@@ -214,16 +219,40 @@ abstract class AbstractPostModel extends AbstractModelFactory implements
                 continue;
             }
             
-            $this->meta_query[] = array(
-                'key' => $attr,
-                'value' => $this->prepareStringToArray($this->filters[$attr])
-            );
+            $values = $this->filters[$attr];
+            if (!is_array($values)) {
+                $values = array($values);
+            }
+            
+            foreach ($values as $value) {
+                $this->buildMetaQueryParam($attr, $value);
+            }
         }
         
         $this->buildSpecialMetaQuery();
         
         return $this;
     }
+    
+        protected function buildMetaQueryParam($name, $value, $type = null)
+        {
+            if ($type === 'between') {
+                $minmax = explode(';', $value);
+                $this->meta_query[] = array(
+                    'key' => $name,
+                    'value' => array((int)$minmax[0], (int)$minmax[1]),
+                    'compare' => 'BETWEEN',
+                    'type' => 'NUMERIC'
+                );
+            } else {
+                $this->meta_query[] = array(
+                    'key' => $name,
+                    'value' => $this->prepareStringToArray($value)
+                );
+            }
+            
+            return $this;
+        }
     
     protected function buildSpecialMetaQuery()
     {
