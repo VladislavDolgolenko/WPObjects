@@ -174,7 +174,7 @@ class AssetsManager implements
     {
         $result = array();
         foreach ($this->js_templates as $name => $path) {
-            if (strpos($path, 'http') !== false) {
+            if (strpos($path, 'http') === 0) {
                 $result[$name] = \wp_remote_retrieve_body( \wp_remote_get($path) );
             } else if (@file_exists($path)) {
                 $result[$name] = @file_get_contents($path);
