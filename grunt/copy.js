@@ -31,6 +31,7 @@ module.exports = function (grunt) {
                 './AjaxController/**/*',
                 './AssetsManager/**/*',
                 './Data/**/*',
+                './Date/**/*',
                 './EventManager/**/*',
                 './Factory/**/*',
                 './GoogleFonts/**/*',
