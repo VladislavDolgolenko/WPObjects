@@ -52,7 +52,7 @@ abstract class AbstractPostModel extends AbstractTypicalModel
         } else {
             $post_id = \wp_insert_post( $this->exchangeToPostArray() );
             $post = \get_post($post_id);
-            $this->initFromPost($post);
+            $this->exchangeObject($post);
         }
         
         $this->saveMetas();
@@ -95,13 +95,21 @@ abstract class AbstractPostModel extends AbstractTypicalModel
     public function exchangeToPostArray()
     {
         $result = array();
-        $register_atts = $this->getDefaultAttrs();
+        $register_atts = $this->getModelType()->getDefaultAttrs();
         foreach (\get_object_vars($this) as $key => $value) {
             if (!in_array($key, $register_atts)) {
                 continue;
             }
             
             $result[$key] = $value;
+        }
+        
+        if (!isset($result['post_type'])) {
+            $result['post_type'] = $this->getModelType()->getId();
+        }
+        
+        if (!isset($result['post_status'])) {
+            $result['post_status'] = 'publish';
         }
         
         return $result;
