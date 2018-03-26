@@ -120,7 +120,7 @@ class CustomAddonModel extends \WPObjects\Model\AbstractModel implements
     
     public function enqueues()
     {
-        $scripts = apply_filters($this->getNamespace() . '-addon-js-' . $this->getName(), $this->enqueue_scripts);
+        $scripts = apply_filters($this->getNamespace() . '-addon-js-' . $this->getId(), $this->enqueue_scripts);
         if (current($scripts)) {
             \wp_localize_script(current($scripts), $this->getId(), $this->getCustomazerSettingsParams());
         }
@@ -129,7 +129,7 @@ class CustomAddonModel extends \WPObjects\Model\AbstractModel implements
             \wp_enqueue_script($script);
         }
         
-        $styles = apply_filters($this->getNamespace() . '-addon-style-' . $this->getName(), $this->enqueue_styles);
+        $styles = apply_filters($this->getNamespace() . '-addon-style-' . $this->getId(), $this->enqueue_styles);
         foreach ($styles as $style) {
             \wp_enqueue_style($style);
         }
