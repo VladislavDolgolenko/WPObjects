@@ -25,6 +25,14 @@ abstract class AbstractPostModel extends AbstractTypicalModel
      * @var array
      */
     protected $metas = array();
+    
+    public function toJSON()
+    {
+        $data = parent::toJSON();
+        $data['metas'] = $this->getMetas();
+        
+        return $data;
+    }
 
     protected function exchangeObject($post)
     {
@@ -37,8 +45,13 @@ abstract class AbstractPostModel extends AbstractTypicalModel
             $this->$key = $value;
         }
         
-        $all_metas = \get_post_meta($post->ID);
-        foreach ($all_metas as $key => $value) {
+        if (isset($post->metas) && is_array($post->metas)) {
+            $metas = $post->metas;
+        } else {
+            $metas = \get_post_meta($post->ID);
+        }
+        
+        foreach ($metas as $key => $value) {
             $this->setMeta($key, $value);
         }
         
