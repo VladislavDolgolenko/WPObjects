@@ -573,7 +573,7 @@
 }
 
 .msp-mb-gallery .image .actions-panel .button {
-    padding: 15px 16px 13px 17px;
+    padding: 25px;
     display: inline-block;
     border-radius: 50%;
     background: rgba(255, 255, 255, 0.7);
@@ -583,6 +583,8 @@
     text-align: center;
     box-shadow: none;
     text-shadow: none;
+    height: 0px;
+    width: 0px;
 }
 
 .msp-mb-gallery .image .actions-panel .button:hover {
@@ -597,4 +599,11 @@
 
 .msp-mb-gallery .image .actions-panel .button i {
     font-size: 16px;
+    display: block;
+    margin-top: -8px;
+    margin-left: -8px;
+}
+
+.msp-mb-gallery .image .actions-panel .button i.fa-times {
+    margin-left: -6px;
 }

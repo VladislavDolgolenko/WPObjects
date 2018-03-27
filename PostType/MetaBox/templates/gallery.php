@@ -28,7 +28,7 @@ if (!is_array($attachments) || count($attachments) === 0) {
 
         <div class="actions-panel">
             <div class="button">
-                <i class="fa fa-times cursor-move fa fa-arrows"></i>
+                <i class="cursor-move fa fa-arrows"></i>
             </div>
 
             <button class="button delete-attach">
@@ -53,7 +53,7 @@ if (!is_array($attachments) || count($attachments) === 0) {
 
                 <div class="actions-panel">
                     <div class="button">
-                        <i class="fa fa-times cursor-move fa fa-arrows"></i>
+                        <i class="cursor-move fa fa-arrows"></i>
                     </div>
 
                     <button class="button delete-attach">
