@@ -501,17 +501,100 @@
     Attachment files
 */
 .msp-attch-files {
-    
+    padding: 9px 3px 3px 3px;
+}
+
+.msp-attch-files .move {
+    cursor: move;
+}
+
+.msp-attch-files .remove {
+    cursor: pointer;
 }
 
 .msp-attch-files .files {
+    
+}
+
+.msp-attch-files .file {
     border: 1px solid #cecece;
     border-radius: 2px;
     background: #fff;
     font-size: 14px;
     padding: 10px;
+    margin-bottom: 10px;
 }
 
-.msp-attch-files .file {
+.msp-attch-files .file .file-info {
+    font-size: 12px;
+    color: #808080;
+}
+
+.msp-attch-files .file .file-name {
+    font-weight: bold;
+}
+
+.msp-attch-files .file .file-name img {
+    height: 16px;
+    display: inline;
+}
+
+/*
+    Gallery
+*/
+
+.msp-mb-gallery {
+    
+}
+
+.msp-mb-gallery .image {
+    position: relative;
+    height: 150px;
+    background: #fff;
+    border: 2px solid #eff0f3;
+    border-radius: 2px;
     margin-bottom: 10px;
+    padding: 20px;
+}
+
+.msp-mb-gallery .image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.msp-mb-gallery .image .actions-panel {
+    position: absolute;
+    width: 100%;
+    left: 0px;
+    top: 50%;
+    margin-top: -25px;
+    text-align: center;
+}
+
+.msp-mb-gallery .image .actions-panel .button {
+    padding: 15px 16px 13px 17px;
+    display: inline-block;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.7);
+    color: #9fa4b6;
+    border: none;
+    outline: none;
+    text-align: center;
+    box-shadow: none;
+    text-shadow: none;
+}
+
+.msp-mb-gallery .image .actions-panel .button:hover {
+    background: #6497fa;
+    color: #fff;
+    outline: none;
+}
+
+.msp-mb-gallery .image .actions-panel .button:last-child {
+    margin-left: 10px;
+}
+
+.msp-mb-gallery .image .actions-panel .button i {
+    font-size: 16px;
 }

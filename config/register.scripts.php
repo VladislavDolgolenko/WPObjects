@@ -168,4 +168,14 @@ return array(
         true
     ),
     
+/**
+ * MVC metaboxes
+ */
+    
+    array(
+        'view-attachment-files-list',
+        $assets_url . '/js/MVC/view/meta-boxes/attachment-files.js',
+        array('backbone'),
+    ),
+    
 );

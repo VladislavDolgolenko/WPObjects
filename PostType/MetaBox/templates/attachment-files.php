@@ -12,32 +12,17 @@
 
 /* @var $this \WPObjects\PostType\MetaBox\AttachmentFiles */
 
+$files_ids = $this->getPostModel()->getMeta('_attachment_files_ids');
+if (!$files_ids) {
+    $files_ids = array();
+} else if (!is_array($files_ids)) {
+    $files_ids = array($files_ids);
+}
+
+$files_ids_string = implode(',', $files_ids ? $files_ids : array());
+
 ?>
 
-<div class="msp-bootstrap-wrapper msp-form msp-attch-files">
-    
-    <div class="files">
-        <div class="file">
-            <input type="hidden" name="">
-            <div class="col-sm-1">
-                <i class="fa fa-arrows"></i>
-            </div>
-            <div class="col-sm-6">
-                Name of file
-            </div>
-            <div class="col-sm-4">
-                40mb | .doc
-            </div>
-            <div class="col-sm-1">
-                <i class="fa fa-times"></i>
-            </div>
-            
-            <div class="clearfix"></div>
-        </div>
-    </div>
-    
-    <button class="button button-default button-width">
-        Attach files
-    </button>
-    
-</div>
+<div class="js-attachment-files"
+     data-attachments-ids="<?php echo esc_attr($files_ids_string); ?>"
+></div>

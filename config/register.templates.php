@@ -48,4 +48,18 @@ return array(
         $assets_path . '/js/MVC/template/dashboard/field.html'
     ),
     
+/**
+ * MetaBoxes
+ */
+    
+    array(
+        'TmplAttachmentFilesList',
+        $assets_path . '/js/MVC/template/meta-boxes/attachment-files/list.html'
+    ),
+    
+    array(
+        'TmplAttachmentFilesFile',
+        $assets_path . '/js/MVC/template/meta-boxes/attachment-files/file.html'
+    ),
+    
 );

@@ -4,8 +4,8 @@
         
         template: _.template( $('#tmp-msp-ui-gallery-element').html() ),
         
-        tagName: 'article',
-        className: 'col-sm-2 col-md-4 col-lg-2',
+        tagName: 'div',
+        className: 'col-sm-2 col-md-4 col-lg-2 image-wrapper',
         
         initialize: function () {
             
@@ -19,7 +19,15 @@
         },
         
         events: {
-            'click .delete-attach' : 'remove'
+            'click .delete-attach' : 'removeImage'
+        },
+        
+        removeImage: function (e) {
+            e.preventDefault();
+            
+            this.remove();
+            
+            return false;
         }
         
     });
@@ -27,7 +35,7 @@
     var View = Backbone.View.extend({
         
         initialize: function () {
-            this.$('.attached-images article').each(function(index, article){
+            this.$('.attached-images .image-wrapper').each(function(index, article){
                 new ViewElement({el: article});
             });
             this.render();
@@ -66,7 +74,7 @@
             this.$('.attached-images').html(null);
             _.each(attachments, function (attachment, index) {
                 console.log(attachment);
-                var url = attachment.sizes.thumbnail !== undefined ? attachment.sizes.thumbnail.url : attachment.sizes.full.url;
+                var url = attachment.sizes.medium !== undefined ? attachment.sizes.medium.url : attachment.sizes.full.url;
                 var Element = new ViewElement();
                 self.$('.attached-images').append(Element.el);
                 Element.render(url, attachment.id);

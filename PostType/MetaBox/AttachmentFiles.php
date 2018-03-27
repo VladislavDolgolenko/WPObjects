@@ -28,6 +28,7 @@ class AttachmentFiles extends AbstractMetaBox
     public function enqueues()
     {
         parent::enqueues();
-        $this->getAssetsManager()->enqueueScript('metabox_attributes');
+        $this->getAssetsManager()
+             ->enqueueScript('view-attachment-files-list');
     }
 }

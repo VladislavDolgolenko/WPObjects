@@ -22,6 +22,31 @@ class Attachment extends \WPObjects\Model\AbstractPostModel
     
     protected $default_image_size = self::THUMBNAIL;
     
+    public function getAttachmentUrl()
+    {
+        return \wp_get_attachment_url($this->getId());
+    }
+    
+    public function getAttachmentSize()
+    {
+        return \size_format( $this->getBytesSize() );
+    }
+    
+    public function getBytesSize()
+    {
+        $attached_file = \get_attached_file( $this->getId() );
+        $filesize = $this->getMetaData('filesize');
+        if ( $filesize ) {
+            $bytes = $filesize;
+	} elseif ( file_exists( $attached_file ) ) {
+            $bytes = filesize( $attached_file );
+	} else {
+            $bytes = '';
+	}
+        
+        return $bytes;
+    }
+    
     public function getImageUrl($size_name = self::THUMBNAIL)
     {
         $size = $this->getImageSize($size_name);
