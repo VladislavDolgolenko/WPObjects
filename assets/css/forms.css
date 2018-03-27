@@ -496,3 +496,22 @@
     margin-top: -7px;
     color: #555555;
 }
+
+/*
+    Attachment files
+*/
+.msp-attch-files {
+    
+}
+
+.msp-attch-files .files {
+    border: 1px solid #cecece;
+    border-radius: 2px;
+    background: #fff;
+    font-size: 14px;
+    padding: 10px;
+}
+
+.msp-attch-files .file {
+    margin-bottom: 10px;
+}
