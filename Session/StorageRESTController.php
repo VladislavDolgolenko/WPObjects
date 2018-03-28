@@ -26,7 +26,7 @@ class StorageRESTController extends \WPObjects\AjaxController\AbstractRESTContro
         }
         
         $StorageData = $this->getSessionStorage()->getStoragesData();
-        return json_encode($StorageData);
+        return $StorageData;
     }
     
     public function get($id)
@@ -39,7 +39,7 @@ class StorageRESTController extends \WPObjects\AjaxController\AbstractRESTContro
         $data = $this->getSessionStorage()->getData();
         $data['id'] = $id;
         
-        return json_encode($data);
+        return $data;
     }
     
     public function create($data)
