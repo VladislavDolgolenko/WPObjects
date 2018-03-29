@@ -24,6 +24,8 @@ class AssetsManager implements
     protected $wp_register_scripts = array();
     protected $wp_register_styles = array();
     
+    protected $js_variables = array();
+    
     /**
      * Global service manager
      * 
@@ -160,6 +162,18 @@ class AssetsManager implements
         \wp_localize_script('backbone', $this->getNamespace(), $this->getJSObject());
     }
     
+    public function setJSVariable($key, $value)
+    {
+        $this->js_variables[$key] = $value;
+        
+        return $this;
+    }
+    
+    public function getJSVariables()
+    {
+        return $this->js_variables;
+    }
+    
     public function getJSObject()
     {
         return array_merge(array(
@@ -167,7 +181,7 @@ class AssetsManager implements
             'rest_url' => \get_rest_url() . $this->getNamespace(),
             'ajax_url' => \admin_url('admin-ajax.php'),
             'plugin_dir_url' => $this->getServiceManager()->get('plugin_dir_url')
-        ), $this->getJSTemplatesContents());
+        ), $this->getJSTemplatesContents(), $this->getJSVariables());
     }
     
     public function getJSTemplatesContents()
