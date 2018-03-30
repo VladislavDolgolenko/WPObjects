@@ -64,6 +64,11 @@ class StorageRESTController extends \WPObjects\AjaxController\AbstractRESTContro
             $this->getSessionStorage()->update();
         }
         
+        if (isset($data['property_liked_ids']) && is_array($data['property_liked_ids'])) {
+            $this->getSessionStorage()->set('property_liked_ids', $data['property_liked_ids']);
+            $this->getSessionStorage()->update();
+        }
+        
         return $this->get($id);
     }
     
