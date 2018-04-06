@@ -63,7 +63,7 @@ $wpobjects_url = $this->getServiceManager()->get('wpobjects_dir_url');
 
                         <?php foreach ($Settings as $Setting) : ?>
                         
-                            <?php if ($Setting->getType() === SettingsModel::TYPE_TEXT) { ?>
+                            <?php if ($Setting->getType() === 'text') { ?>
                                 <div class="form-group">
                                     <label><?php echo $Setting->getName(); ?></label>
                                     <div class="input-group">
@@ -74,7 +74,7 @@ $wpobjects_url = $this->getServiceManager()->get('wpobjects_dir_url');
                                         <?php echo $Setting->getDescription(); ?>
                                     </div>
                                 </div>
-                            <?php } else if ($Setting->getType() === SettingsModel::TYPE_SELECT) { ?>
+                            <?php } else if ($Setting->getType() === 'select') { ?>
                             
                                 <div class="form-group">
                                     <label><?php echo $Setting->getName(); ?></label>
