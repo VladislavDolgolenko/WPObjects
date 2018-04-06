@@ -191,7 +191,7 @@ abstract class AbstractPostModel extends AbstractModelFactory implements
             $type = isset($this->filters['orderby_type']) ? 
                     $this->filters['orderby_type'] : $this->determineMetaTypeByKey($orderby);
             
-            $order = isset($this->filters['orderby']) ? $this->filters['orderby'] : 'ASC';
+            $order = isset($this->filters['order']) ? $this->filters['order'] : 'ASC';
             
             $this->buildOrderingQuery($orderby, $type, $order);
         }
@@ -220,7 +220,7 @@ abstract class AbstractPostModel extends AbstractModelFactory implements
     {
         // If orderby is a psot meta param
         if ($this->getModelType()->validateMetaParam($orderby) === true) {
-            $this->meta_query[] = array(
+            $this->meta_query[$orderby] = array(
                 'key'     => $orderby,
                 'type'    => $type,
                 'compare' => 'EXISTS',

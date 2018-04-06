@@ -125,7 +125,7 @@ class ShorcodeParams
         $params_group = $this->getParamsGroup($ModelType->getName());
         
         $values = array(
-            __('Not sort', 'msp') => 'none',
+            __('N/A', 'msp') => '',
             __('Date publ', 'msp') => 'date',
             __('Title (name)', 'msp') => 'name',
             __('Random', 'msp') => 'rand',
@@ -162,7 +162,6 @@ class ShorcodeParams
             'param_name' => 'orderby',
             'group' => $params_group,
             'value' => $values,
-            'std' => 'date'
         );
         
         $result[] = array(
@@ -171,7 +170,10 @@ class ShorcodeParams
             'param_name' => 'orderby_type',
             'group' => $params_group,
             'value' => $orderby_types,
-            'std' => null
+            'dependency' => array(
+                'element' => 'orderby',
+                'not_empty' => true,
+            ),
         );
         
         $result[] = array(
@@ -184,8 +186,13 @@ class ShorcodeParams
                 'ASC' => 'ASC',
                 'DESC' => 'DESC',
             ),
-            'std' => 'ASC'
+            'dependency' => array(
+                'element' => 'orderby',
+                'not_empty' => true,
+            ),
         );
+        
+        // Secondary
         
         $result[] = array(
             'type' => 'dropdown',
@@ -194,12 +201,9 @@ class ShorcodeParams
             'param_name' => 'orderby_secondary',
             'group' => $params_group,
             'value' => $values,
-            'std' => null,
             'dependency' => array(
                 'element' => 'orderby',
-                'value' => array(
-                    'yes',
-                ),
+                'not_empty' => true,
             ),
         );
         
@@ -209,12 +213,9 @@ class ShorcodeParams
             'param_name' => 'orderby_secondary_type',
             'group' => $params_group,
             'value' => $orderby_types,
-            'std' => null,
             'dependency' => array(
-                'element' => 'orderby',
-                'value' => array(
-                    'yes',
-                ),
+                'element' => 'orderby_secondary',
+                'not_empty' => true,
             ),
         );
         
@@ -228,14 +229,13 @@ class ShorcodeParams
                 'ASC' => 'ASC',
                 'DESC' => 'DESC',
             ),
-            'std' => 'ASC',
             'dependency' => array(
-                'element' => 'orderby',
-                'value' => array(
-                    'yes',
-                ),
+                'element' => 'orderby_secondary',
+                'not_empty' => true,
             ),
         );
+        
+        // Max results
         
         $result[] = array(
             'type' => 'textfield',
