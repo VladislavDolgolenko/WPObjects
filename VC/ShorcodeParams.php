@@ -142,14 +142,36 @@ class ShorcodeParams
         
         $model_type_sorting = $ModelType->getFactory()->getSpecialSortingTypesForVCAddons();
         $values = array_merge($values, $special_ordering, $model_type_sorting);
+        $orderby_types = array(
+            __('N/A', 'msp') => '',
+            __('Integer numbers', 'msp') => 'NUMERIC',
+            __('Decimal', 'msp') => 'DECIMAL',
+            __('Date and time', 'msp') => 'DATETIME',
+            __('String', 'msp') => 'CHAR',
+            __('Signed', 'msp') => 'SIGNED',
+            __('Unsigned', 'msp') => 'UNSIGNED',
+            __('Binary', 'msp') => 'BINARY',
+            __('Only date', 'msp') => 'DATE',
+            __('Only time', 'msp') => 'TIME',
+        );
         
         $result[] = array(
-            'type' => "dropdown",
+            'type' => 'dropdown',
             'heading' => __('Sorted by', 'msp'),
             'description' => __('Perhaps not all of these attributes are suitable for sorting', 'msp'),
             'param_name' => 'orderby',
             'group' => $params_group,
-            'value' => $values
+            'value' => $values,
+            'std' => 'date'
+        );
+        
+        $result[] = array(
+            'type' => 'dropdown',
+            'heading' => __('Sorted value type', 'msp'),
+            'param_name' => 'orderby_type',
+            'group' => $params_group,
+            'value' => $orderby_types,
+            'std' => null
         );
         
         $result[] = array(
@@ -161,7 +183,58 @@ class ShorcodeParams
             'value' => array(
                 'ASC' => 'ASC',
                 'DESC' => 'DESC',
-            )
+            ),
+            'std' => 'ASC'
+        );
+        
+        $result[] = array(
+            'type' => 'dropdown',
+            'heading' => __('Secondary sorted by', 'msp'),
+            'description' => __('Perhaps not all of these attributes are suitable for sorting', 'msp'),
+            'param_name' => 'orderby_secondary',
+            'group' => $params_group,
+            'value' => $values,
+            'std' => null,
+            'dependency' => array(
+                'element' => 'orderby',
+                'value' => array(
+                    'yes',
+                ),
+            ),
+        );
+        
+        $result[] = array(
+            'type' => 'dropdown',
+            'heading' => __('Secondary sorted value type', 'msp'),
+            'param_name' => 'orderby_secondary_type',
+            'group' => $params_group,
+            'value' => $orderby_types,
+            'std' => null,
+            'dependency' => array(
+                'element' => 'orderby',
+                'value' => array(
+                    'yes',
+                ),
+            ),
+        );
+        
+        $result[] = array(
+            'type' => 'dropdown',
+            'heading' => __( 'Secondary order', 'msp' ),
+            'description' => __( 'DESC: 3, 2, 1, ASC: 1, 2, 3.', 'msp'),
+            'param_name' => 'order_secondary',
+            'group' => $params_group,
+            'value' => array(
+                'ASC' => 'ASC',
+                'DESC' => 'DESC',
+            ),
+            'std' => 'ASC',
+            'dependency' => array(
+                'element' => 'orderby',
+                'value' => array(
+                    'yes',
+                ),
+            ),
         );
         
         $result[] = array(

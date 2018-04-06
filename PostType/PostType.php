@@ -492,11 +492,7 @@ class PostType extends AbstractModelType implements
      */
     public function validateMetaParam($param_name)
     {
-        $register_list = array_merge($this->getRegisterMetas(), array(
-            'date',
-            'name',
-            'rand'
-        ));
+        $register_list = array_merge($this->getRegisterMetas(), array());
         
         foreach ($register_list as $name) {
             if (preg_match('/('. $name .')/', $param_name) === 1) {

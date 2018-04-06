@@ -34,6 +34,8 @@ abstract class AbstractPostModel extends AbstractModelFactory implements
      */
     protected $meta_query = array();
     
+    protected $orderby = array();
+    
     /**
      * @param $id string || integer || array
      * @return \MSP\Model\AbstractModel || null
@@ -119,10 +121,12 @@ abstract class AbstractPostModel extends AbstractModelFactory implements
     {
         $this->query = array();
         $this->meta_query = array('relation' => 'AND');
+        $this->orderby = array();
         $this->query = array(
             'post_type' => $this->getModelType()->getId(),
             'post_status' => 'publish',
             'meta_query' => &$this->meta_query,
+            'orderby' => &$this->orderby,
             'numberposts' => -1
         );
         
@@ -181,35 +185,76 @@ abstract class AbstractPostModel extends AbstractModelFactory implements
             return $this;
         }
         
-        $orderby = $this->filters['orderby'];
-        
-        if ($this->getModelType()->validateMetaParam($orderby) === false) {
-            return $this;
+        if (isset($this->filters['orderby']) && $this->filters['orderby'])
+        {
+            $orderby = $this->filters['orderby'];
+            $type = isset($this->filters['orderby_type']) ? 
+                    $this->filters['orderby_type'] : $this->determineMetaTypeByKey($orderby);
+            
+            $order = isset($this->filters['orderby']) ? $this->filters['orderby'] : 'ASC';
+            
+            $this->buildOrderingQuery($orderby, $type, $order);
         }
         
-        if (strpos($orderby, '_') === 0 && strpos($orderby, 'date') !== false) // date meta value
+        if (isset($this->filters['orderby_secondary']) && $this->filters['orderby_secondary'])
         {
-            $this->query['meta_key'] = $orderby;
-            $this->query['orderby'] = 'meta_value';
-        } 
-        else if (strpos($orderby, '_') === 0) // number meta value
-        {
-            $this->query['meta_key'] = $orderby;
-            $this->query['orderby'] = 'meta_value_num';
+            $orderby = $this->filters['orderby_secondary'];
+            $type = isset($this->filters['orderby_secondary_type']) ? 
+                    $this->filters['orderby_secondary_type'] : $this->determineMetaTypeByKey($orderby);
+            
+            $order = isset($this->filters['order_secondary']) ? $this->filters['order_secondary'] : 'ASC';
+            
+            $this->buildOrderingQuery($orderby, $type, $order);
         }
-        else // default sorting types
-        {
-            $this->query['orderby'] = $orderby;
+        
+        return $this;
+    }
+    
+    /**
+     * Build multiple ordering query params for WP_Query objects
+     * 
+     * @param array $orderby
+     * @return $this
+     */
+    protected function buildOrderingQuery($orderby, $type = 'CHAR', $order = 'ASC')
+    {
+        // If orderby is a psot meta param
+        if ($this->getModelType()->validateMetaParam($orderby) === true) {
+            $this->meta_query[] = array(
+                'key'     => $orderby,
+                'type'    => $type,
+                'compare' => 'EXISTS',
+            );
         }
-
-        $this->query['order'] = isset($this->filters['order']) ? $this->filters['order'] : 'DESC';
+        
+        $this->orderby[$orderby] = $order;
         
         return $this;
     }
     
     protected function buildDefaultOrgering()
     {
-        return;
+        return $this;
+    }
+    
+    /**
+     * This method use if meta value types is undefined
+     * 
+     * @param string $mata_key
+     * @return string type of value, used in 'meta_query' attribute 'type'.
+     */
+    protected function determineMetaTypeByKey($mata_key)
+    {
+        if (strpos($mata_key, '_') === 0 && strpos($mata_key, 'date') !== false)
+        {
+            return 'DATETIME';
+        } 
+        else if (strpos($mata_key, '_') === 0)
+        {
+            return 'NUMERIC';
+        }
+        
+        return 'CHAR';
     }
     
     protected function buildMetaQuery()
