@@ -289,6 +289,11 @@ class CustomAddonModel extends \WPObjects\Model\AbstractModel implements
         return array();
     }
     
+    public function getConfigParams()
+    {
+        return $this->params;
+    }
+    
     /**
      * Custom setting from shortcode panel editing
      * 

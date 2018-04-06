@@ -210,7 +210,7 @@ abstract class AbstractPostModel extends AbstractTypicalModel
             return $this;
         }
         
-        if ($this->getMeta($key) == $value) {
+        if ($this->getMeta($key) === $value) {
             return $this;
         }
         
