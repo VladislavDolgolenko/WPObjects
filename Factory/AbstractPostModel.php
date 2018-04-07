@@ -181,7 +181,11 @@ abstract class AbstractPostModel extends AbstractModelFactory implements
     protected function buildOrdering()
     {
         if (!isset($this->filters['orderby']) || !$this->filters['orderby']) {
-            $this->buildDefaultOrgering();
+            
+            if (!$this->query['orderby']) {
+                $this->buildDefaultOrgering();
+            }
+            
             return $this;
         }
         

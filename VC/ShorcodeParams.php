@@ -241,10 +241,10 @@ class ShorcodeParams
             'type' => 'textfield',
             'holder' => 'div',
             'heading' => __('Max results count', 'msp'),
-            'description' => __('* This option not workable with pagination', 'msp'),
+            'description' => __('* This option not workable with pagination, your can use option "posts per page"', 'msp'),
             'param_name' => 'numberposts',
             'group' => $params_group,
-            'value' => 5,
+            'value' => 5
         );
         
         return $result;
