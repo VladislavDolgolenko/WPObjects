@@ -55,7 +55,34 @@ if (MSP === undefined) {
         }
         
         
-        $(this).selectize(config_object);
+        var $selector = $(this).selectize(config_object);
+        $selector.on('change', function(){
+            if ($(this).val() === null) {
+                $selector.append('<option value="" selected>N/A</option>');
+            }
+        });
+        
+        var counter = function(){
+            if ($selector.attr('multiple') === undefined) {
+                return;
+            }
+            
+            var $wrapper = $selector.parents('.selectize-wrapper');
+            if (!$wrapper) {
+                return;
+            }
+            
+            var $counter = $wrapper.find('.selectize-multi-counter');
+            if (!$counter) {
+                return;
+            }
+            
+            var value = $selector.val() ? $selector.val().length : 0;
+            $counter.html(value);
+        };
+        
+        $selector.on('change', counter);
+        counter();
     };
     
     $('.matabox-selectors').each(function(){
