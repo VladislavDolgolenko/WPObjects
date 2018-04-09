@@ -96,7 +96,7 @@ abstract class AbstractPostModel extends AbstractTypicalModel
             foreach ($value as $value) {
                 \add_post_meta($this->getId(), $key, $value);
             }
-        } else if (!is_null($value)) {
+        } else if (!is_null($value) && $value !== "") {
             \update_post_meta($this->getId(), $key, $value);
         } else {
             \delete_post_meta($this->getId(), $key);
