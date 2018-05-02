@@ -231,6 +231,10 @@ abstract class AbstractPostModel extends AbstractModelFactory implements
             );
         }
         
+        if (!is_array($this->orderby)) {
+            $this->orderby = array();
+        }
+        
         $this->orderby[$orderby] = $order;
         
         return $this;
