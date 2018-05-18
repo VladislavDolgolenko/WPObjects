@@ -62,6 +62,15 @@ class ParamModel extends \WPObjects\Model\AbstractModel implements
         return $this;
     }
     
+    public function isLessParam()
+    {
+        if ($this->get('less') === false) {
+            return false;
+        }
+        
+        return true;
+    }
+    
     public function getCurrentValue()
     {
         $setting_name = $this->getSettingName();
