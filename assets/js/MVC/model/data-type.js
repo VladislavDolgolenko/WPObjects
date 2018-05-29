@@ -59,7 +59,7 @@
                 
                 var attr_id = this.isNew() ? '_creation_id' : this.idAttribute;
                 var id = attrs[attr_id];
-                var id_regex = /^[a-zA-Z]{1}[a-zA-Z0-9_]{0,16}$/;
+                var id_regex = /^[a-zA-Z]{1}[a-zA-Z0-9_]{0,32}$/;
                 if (id_regex.test(id) === false) {
                     return 'System id must be has length between 1-17 charts and use only chars, numbers and _.';
                 }
