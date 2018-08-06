@@ -1,7 +1,7 @@
 
 ## Introduction
 
-** Use case and example plugin will be done in the nearest future.
+**Use case and example plugin will be done in the nearest future.**
 
 ## Plugins built on the WPObjects
 
@@ -10,6 +10,12 @@
 [WordPress Demo Content Manager](https://codecanyon.net/item/wordpress-demo-content-manager/20669604)
 
 [WordPress Layouts Builder](https://codecanyon.net/item/wordpress-layouts-builder/20968348)
+
+## Compatibility
+
+**WordPress 5.0-alpha-42201**
+
+**PHP v5.3 - v7.1.15**
 
 ## Build creation
 

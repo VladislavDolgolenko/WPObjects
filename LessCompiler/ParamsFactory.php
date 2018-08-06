@@ -123,6 +123,10 @@ class ParamsFactory extends AbstractData
         
         $result = array();
         foreach ($Params as $Param) {
+            if ($Param->isLessParam() === false) {
+                continue;
+            }
+            
             $result[$Param->getId()] = $Param->getCurrentValue();
         }
         

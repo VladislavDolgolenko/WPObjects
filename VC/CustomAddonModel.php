@@ -98,7 +98,12 @@ class CustomAddonModel extends \WPObjects\Model\AbstractModel implements
             'as_child' => $this->get('as_child'),
             'is_container' => $this->get('is_container'),
             'as_parent' => $this->get('as_parent'),
-            'show_settings_on_create' => $this->get('show_settings_on_create')
+            'show_settings_on_create' => $this->get('show_settings_on_create'),
+            'admin_enqueue_js' => $this->get('admin_enqueue_js'),
+            'admin_enqueue_css' => $this->get('admin_enqueue_css'),
+            'default_content' => $this->get('default_content'),
+            'custom_markup' => $this->get('custom_markup'),
+            'js_view' => $this->get('js_view'),
         );
         
         // If setted main model type for addon, will be added special forms to addon ui editing panel
@@ -115,7 +120,7 @@ class CustomAddonModel extends \WPObjects\Model\AbstractModel implements
     
     public function enqueues()
     {
-        $scripts = apply_filters($this->getNamespace() . '-addon-js-' . $this->getName(), $this->enqueue_scripts);
+        $scripts = apply_filters($this->getNamespace() . '-addon-js-' . $this->getId(), $this->enqueue_scripts);
         if (current($scripts)) {
             \wp_localize_script(current($scripts), $this->getId(), $this->getCustomazerSettingsParams());
         }
@@ -124,7 +129,7 @@ class CustomAddonModel extends \WPObjects\Model\AbstractModel implements
             \wp_enqueue_script($script);
         }
         
-        $styles = apply_filters($this->getNamespace() . '-addon-style-' . $this->getName(), $this->enqueue_styles);
+        $styles = apply_filters($this->getNamespace() . '-addon-style-' . $this->getId(), $this->enqueue_styles);
         foreach ($styles as $style) {
             \wp_enqueue_style($style);
         }
@@ -282,6 +287,11 @@ class CustomAddonModel extends \WPObjects\Model\AbstractModel implements
         }
 
         return array();
+    }
+    
+    public function getConfigParams()
+    {
+        return $this->params;
     }
     
     /**

@@ -25,6 +25,14 @@ abstract class AbstractPostModel extends AbstractTypicalModel
      * @var array
      */
     protected $metas = array();
+    
+    public function toJSON()
+    {
+        $data = parent::toJSON();
+        $data['metas'] = $this->getMetas();
+        
+        return $data;
+    }
 
     protected function exchangeObject($post)
     {
@@ -37,8 +45,13 @@ abstract class AbstractPostModel extends AbstractTypicalModel
             $this->$key = $value;
         }
         
-        $all_metas = \get_post_meta($post->ID);
-        foreach ($all_metas as $key => $value) {
+        if (isset($post->metas) && is_array($post->metas)) {
+            $metas = $post->metas;
+        } else {
+            $metas = \get_post_meta($post->ID);
+        }
+        
+        foreach ($metas as $key => $value) {
             $this->setMeta($key, $value);
         }
         
@@ -52,7 +65,7 @@ abstract class AbstractPostModel extends AbstractTypicalModel
         } else {
             $post_id = \wp_insert_post( $this->exchangeToPostArray() );
             $post = \get_post($post_id);
-            $this->initFromPost($post);
+            $this->exchangeObject($post);
         }
         
         $this->saveMetas();
@@ -83,7 +96,7 @@ abstract class AbstractPostModel extends AbstractTypicalModel
             foreach ($value as $value) {
                 \add_post_meta($this->getId(), $key, $value);
             }
-        } else if (!is_null($value)) {
+        } else if (!is_null($value) && $value !== "") {
             \update_post_meta($this->getId(), $key, $value);
         } else {
             \delete_post_meta($this->getId(), $key);
@@ -95,13 +108,21 @@ abstract class AbstractPostModel extends AbstractTypicalModel
     public function exchangeToPostArray()
     {
         $result = array();
-        $register_atts = $this->getDefaultAttrs();
+        $register_atts = $this->getModelType()->getDefaultAttrs();
         foreach (\get_object_vars($this) as $key => $value) {
             if (!in_array($key, $register_atts)) {
                 continue;
             }
             
             $result[$key] = $value;
+        }
+        
+        if (!isset($result['post_type'])) {
+            $result['post_type'] = $this->getModelType()->getId();
+        }
+        
+        if (!isset($result['post_status'])) {
+            $result['post_status'] = 'publish';
         }
         
         return $result;
@@ -189,7 +210,7 @@ abstract class AbstractPostModel extends AbstractTypicalModel
             return $this;
         }
         
-        if ($this->getMeta($key) == $value) {
+        if ($this->getMeta($key) === $value) {
             return $this;
         }
         

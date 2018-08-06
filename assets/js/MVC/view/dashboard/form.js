@@ -77,7 +77,11 @@
         
         success: function () {
             this.readForm();
-            this.model.save(null, {success: _.bind(this.close, this)});
+            
+            console.log(this.model.isValid());
+            if (this.model.isValid()) {
+                this.model.save(null, {success: _.bind(this.close, this)});
+            }
         },
         
         updateCollection: function () {

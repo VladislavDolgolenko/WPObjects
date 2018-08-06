@@ -18,5 +18,6 @@ return array(
     'AttrsMetaBox' => '\WPObjects\PostType\MetaBox\CustomAttributes',
     'GalleryMetaBox' => '\WPObjects\PostType\MetaBox\Gallery',
     'PageAsArchiveMetaBox' => '\WPObjects\PostType\MetaBox\PageAsArchive',
+    'AttachmentFilesMetaBox' => '\WPObjects\PostType\MetaBox\AttachmentFiles'
     
 );

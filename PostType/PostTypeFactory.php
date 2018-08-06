@@ -17,9 +17,23 @@ use WPObjects\PostType\PostType as PostTypeModel;
 
 class PostTypeFactory extends AbstractData
 {
-    public function initModel($post)
+    protected $initialized = array();
+    
+    public function initModel($data)
     {
-        $Model = new PostTypeModel($post);
+        $id = $data['id'];
+        
+        if (isset($this->initialized[$id]) && $this->initialized[$id]) {
+            return $this->initialized[$id];
+        }
+        
+        $this->initialized[$id] = $this->createModel($data);
+        return $this->initialized[$id];
+    }
+    
+    public function createModel($data)
+    {
+        $Model = new PostTypeModel($data);
         return $this->getServiceManager()->inject($Model);
     }
 }

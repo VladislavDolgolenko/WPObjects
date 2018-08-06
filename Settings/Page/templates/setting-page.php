@@ -62,16 +62,42 @@ $wpobjects_url = $this->getServiceManager()->get('wpobjects_dir_url');
                         <input type="hidden" value="<?php echo esc_attr($namespace); ?>" name="setting_namespace">
 
                         <?php foreach ($Settings as $Setting) : ?>
-                        <div class="form-group">
-                            <label><?php echo $Setting->getName(); ?></label>
-                            <div class="input-group">
-                                <input name="<?php echo esc_attr($Setting->getId()); ?>" 
-                                       value="<?php echo esc_attr($Setting->getCurrentValue()); ?>" type="text" class="form-control">
-                            </div>
-                            <div class="help-block">
-                                <?php echo $Setting->getDescription(); ?>
-                            </div>
-                        </div>
+                        
+                            <?php if ($Setting->getType() === 'text') { ?>
+                                <div class="form-group">
+                                    <label><?php echo $Setting->getName(); ?></label>
+                                    <div class="input-group">
+                                        <input name="<?php echo esc_attr($Setting->getId()); ?>" 
+                                               value="<?php echo esc_attr($Setting->getCurrentValue()); ?>" type="text" class="form-control">
+                                    </div>
+                                    <div class="help-block">
+                                        <?php echo $Setting->getDescription(); ?>
+                                    </div>
+                                </div>
+                            <?php } else if ($Setting->getType() === 'select') { ?>
+                            
+                                <div class="form-group">
+                                    <label><?php echo $Setting->getName(); ?></label>
+                                    <div class="input-group">
+                                        <select name="<?php echo esc_attr($Setting->getId()); ?>" type="text" class="form-control">
+                                            
+                                            <?php foreach ($Setting->getOptions() as $label => $value) : ?>
+                                                <option 
+                                                    value="<?php echo esc_html($value); ?>" 
+                                                    <?php echo $Setting->getCurrentValue() == $value ? 'selected' : ''; ?>
+                                                >
+                                                    <?php echo esc_html($label); ?>
+                                                </option>
+                                            <?php endforeach; ?>
+                                            
+                                        </select>
+                                    </div>
+                                    <div class="help-block">
+                                        <?php echo $Setting->getDescription(); ?>
+                                    </div>
+                                </div>
+                        
+                            <?php } ?>
                         <?php endforeach; ?>
 
                         <div class="form-group">

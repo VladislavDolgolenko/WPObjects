@@ -34,6 +34,8 @@ abstract class AbstractPostModel extends AbstractModelFactory implements
      */
     protected $meta_query = array();
     
+    protected $orderby = array();
+    
     /**
      * @param $id string || integer || array
      * @return \MSP\Model\AbstractModel || null
@@ -119,10 +121,12 @@ abstract class AbstractPostModel extends AbstractModelFactory implements
     {
         $this->query = array();
         $this->meta_query = array('relation' => 'AND');
+        $this->orderby = array();
         $this->query = array(
             'post_type' => $this->getModelType()->getId(),
             'post_status' => 'publish',
             'meta_query' => &$this->meta_query,
+            'orderby' => &$this->orderby,
             'numberposts' => -1
         );
         
@@ -177,34 +181,88 @@ abstract class AbstractPostModel extends AbstractModelFactory implements
     protected function buildOrdering()
     {
         if (!isset($this->filters['orderby']) || !$this->filters['orderby']) {
-            $this->buildDefaultOrgering();
+            
+            if (!$this->query['orderby']) {
+                $this->buildDefaultOrgering();
+            }
+            
             return $this;
         }
         
-        $orderby = $this->filters['orderby'];
-        
-        if ($this->getModelType()->validateMetaParam($orderby) === false) {
-            return $this;
+        if (isset($this->filters['orderby']) && $this->filters['orderby'])
+        {
+            $orderby = $this->filters['orderby'];
+            $type = isset($this->filters['orderby_type']) ? 
+                    $this->filters['orderby_type'] : $this->determineMetaTypeByKey($orderby);
+            
+            $order = isset($this->filters['order']) ? $this->filters['order'] : 'ASC';
+            
+            $this->buildOrderingQuery($orderby, $type, $order);
         }
         
-        if (strpos($orderby, '_') === 0 && strpos($orderby, 'date') !== false) {
-            $this->query['meta_key'] = $orderby;
-            $this->query['orderby'] = 'meta_value';
-        } else if (strpos($orderby, '_') == 0) {
-            $this->query['meta_key'] = $orderby;
-            $this->query['orderby'] = 'meta_value_num';
-        } else {
-            $this->query['orderby'] = $orderby;
+        if (isset($this->filters['orderby_secondary']) && $this->filters['orderby_secondary'])
+        {
+            $orderby = $this->filters['orderby_secondary'];
+            $type = isset($this->filters['orderby_secondary_type']) ? 
+                    $this->filters['orderby_secondary_type'] : $this->determineMetaTypeByKey($orderby);
+            
+            $order = isset($this->filters['order_secondary']) ? $this->filters['order_secondary'] : 'ASC';
+            
+            $this->buildOrderingQuery($orderby, $type, $order);
         }
-
-        $this->query['order'] = isset($this->filters['order']) ? $this->filters['order'] : 'DESC';
+        
+        return $this;
+    }
+    
+    /**
+     * Build multiple ordering query params for WP_Query objects
+     * 
+     * @param array $orderby
+     * @return $this
+     */
+    protected function buildOrderingQuery($orderby, $type = 'CHAR', $order = 'ASC')
+    {
+        // If orderby is a psot meta param
+        if ($this->getModelType()->validateMetaParam($orderby) === true) {
+            $this->meta_query[$orderby] = array(
+                'key'     => $orderby,
+                'type'    => $type,
+                'compare' => 'EXISTS',
+            );
+        }
+        
+        if (!is_array($this->orderby)) {
+            $this->orderby = array();
+        }
+        
+        $this->orderby[$orderby] = $order;
         
         return $this;
     }
     
     protected function buildDefaultOrgering()
     {
-        return;
+        return $this;
+    }
+    
+    /**
+     * This method use if meta value types is undefined
+     * 
+     * @param string $mata_key
+     * @return string type of value, used in 'meta_query' attribute 'type'.
+     */
+    protected function determineMetaTypeByKey($mata_key)
+    {
+        if (strpos($mata_key, '_') === 0 && strpos($mata_key, 'date') !== false)
+        {
+            return 'DATETIME';
+        } 
+        else if (strpos($mata_key, '_') === 0)
+        {
+            return 'NUMERIC';
+        }
+        
+        return 'CHAR';
     }
     
     protected function buildMetaQuery()
@@ -214,16 +272,40 @@ abstract class AbstractPostModel extends AbstractModelFactory implements
                 continue;
             }
             
-            $this->meta_query[] = array(
-                'key' => $attr,
-                'value' => $this->prepareStringToArray($this->filters[$attr])
-            );
+            $values = $this->filters[$attr];
+            if (!is_array($values)) {
+                $values = array($values);
+            }
+            
+            foreach ($values as $value) {
+                $this->buildMetaQueryParam($attr, $value);
+            }
         }
         
         $this->buildSpecialMetaQuery();
         
         return $this;
     }
+    
+        protected function buildMetaQueryParam($name, $value, $type = null)
+        {
+            if ($type === 'between') {
+                $minmax = explode(';', $value);
+                $this->meta_query[] = array(
+                    'key' => $name,
+                    'value' => array((int)$minmax[0], (int)$minmax[1]),
+                    'compare' => 'BETWEEN',
+                    'type' => 'NUMERIC'
+                );
+            } else {
+                $this->meta_query[] = array(
+                    'key' => $name,
+                    'value' => $this->prepareStringToArray($value)
+                );
+            }
+            
+            return $this;
+        }
     
     protected function buildSpecialMetaQuery()
     {

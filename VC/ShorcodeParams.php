@@ -125,7 +125,7 @@ class ShorcodeParams
         $params_group = $this->getParamsGroup($ModelType->getName());
         
         $values = array(
-            __('Not sort', 'msp') => 'none',
+            __('N/A', 'msp') => '',
             __('Date publ', 'msp') => 'date',
             __('Title (name)', 'msp') => 'name',
             __('Random', 'msp') => 'rand',
@@ -142,14 +142,38 @@ class ShorcodeParams
         
         $model_type_sorting = $ModelType->getFactory()->getSpecialSortingTypesForVCAddons();
         $values = array_merge($values, $special_ordering, $model_type_sorting);
+        $orderby_types = array(
+            __('N/A', 'msp') => '',
+            __('Integer numbers', 'msp') => 'NUMERIC',
+            __('Decimal', 'msp') => 'DECIMAL',
+            __('Date and time', 'msp') => 'DATETIME',
+            __('String', 'msp') => 'CHAR',
+            __('Signed', 'msp') => 'SIGNED',
+            __('Unsigned', 'msp') => 'UNSIGNED',
+            __('Binary', 'msp') => 'BINARY',
+            __('Only date', 'msp') => 'DATE',
+            __('Only time', 'msp') => 'TIME',
+        );
         
         $result[] = array(
-            'type' => "dropdown",
+            'type' => 'dropdown',
             'heading' => __('Sorted by', 'msp'),
             'description' => __('Perhaps not all of these attributes are suitable for sorting', 'msp'),
             'param_name' => 'orderby',
             'group' => $params_group,
-            'value' => $values
+            'value' => $values,
+        );
+        
+        $result[] = array(
+            'type' => 'dropdown',
+            'heading' => __('Sorted value type', 'msp'),
+            'param_name' => 'orderby_type',
+            'group' => $params_group,
+            'value' => $orderby_types,
+            'dependency' => array(
+                'element' => 'orderby',
+                'not_empty' => true,
+            ),
         );
         
         $result[] = array(
@@ -161,17 +185,66 @@ class ShorcodeParams
             'value' => array(
                 'ASC' => 'ASC',
                 'DESC' => 'DESC',
-            )
+            ),
+            'dependency' => array(
+                'element' => 'orderby',
+                'not_empty' => true,
+            ),
         );
+        
+        // Secondary
+        
+        $result[] = array(
+            'type' => 'dropdown',
+            'heading' => __('Secondary sorted by', 'msp'),
+            'description' => __('Perhaps not all of these attributes are suitable for sorting', 'msp'),
+            'param_name' => 'orderby_secondary',
+            'group' => $params_group,
+            'value' => $values,
+            'dependency' => array(
+                'element' => 'orderby',
+                'not_empty' => true,
+            ),
+        );
+        
+        $result[] = array(
+            'type' => 'dropdown',
+            'heading' => __('Secondary sorted value type', 'msp'),
+            'param_name' => 'orderby_secondary_type',
+            'group' => $params_group,
+            'value' => $orderby_types,
+            'dependency' => array(
+                'element' => 'orderby_secondary',
+                'not_empty' => true,
+            ),
+        );
+        
+        $result[] = array(
+            'type' => 'dropdown',
+            'heading' => __( 'Secondary order', 'msp' ),
+            'description' => __( 'DESC: 3, 2, 1, ASC: 1, 2, 3.', 'msp'),
+            'param_name' => 'order_secondary',
+            'group' => $params_group,
+            'value' => array(
+                'ASC' => 'ASC',
+                'DESC' => 'DESC',
+            ),
+            'dependency' => array(
+                'element' => 'orderby_secondary',
+                'not_empty' => true,
+            ),
+        );
+        
+        // Max results
         
         $result[] = array(
             'type' => 'textfield',
             'holder' => 'div',
             'heading' => __('Max results count', 'msp'),
-            'description' => __('* This option not workable with pagination', 'msp'),
+            'description' => __('* This option not workable with pagination, your can use option "posts per page"', 'msp'),
             'param_name' => 'numberposts',
             'group' => $params_group,
-            'value' => 5,
+            'value' => 5
         );
         
         return $result;

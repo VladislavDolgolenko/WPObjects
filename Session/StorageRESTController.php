@@ -26,7 +26,7 @@ class StorageRESTController extends \WPObjects\AjaxController\AbstractRESTContro
         }
         
         $StorageData = $this->getSessionStorage()->getStoragesData();
-        return json_encode($StorageData);
+        return $StorageData;
     }
     
     public function get($id)
@@ -39,7 +39,7 @@ class StorageRESTController extends \WPObjects\AjaxController\AbstractRESTContro
         $data = $this->getSessionStorage()->getData();
         $data['id'] = $id;
         
-        return json_encode($data);
+        return $data;
     }
     
     public function create($data)
@@ -61,6 +61,11 @@ class StorageRESTController extends \WPObjects\AjaxController\AbstractRESTContro
         
         if (isset($data['property_compare_ids'])) {
             $this->getSessionStorage()->set('property_compare_ids', $data['property_compare_ids']);
+            $this->getSessionStorage()->update();
+        }
+        
+        if (isset($data['property_liked_ids']) && is_array($data['property_liked_ids'])) {
+            $this->getSessionStorage()->set('property_liked_ids', $data['property_liked_ids']);
             $this->getSessionStorage()->update();
         }
         

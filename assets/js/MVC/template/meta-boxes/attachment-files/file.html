@@ -1,0 +1,20 @@
+<input type="hidden" name="_attachment_files_ids[]" value="<%= File.get('id') %>">
+<div class="col-sm-1 text-left move">
+    <i class="fa fa-arrows"></i>
+</div>
+<div class="col-sm-6 file-name">
+    <% if ( File.get('icon') ) { %>
+        <img src="<%= File.get('icon') %>">
+    <% } %>
+    <%= File.get('name') %>
+</div>
+<div class="col-sm-4 file-info">
+    <b>name</b>: <%= File.get('filename') %> | 
+    <b>size</b>: <%= File.get('filesizeHumanReadable') %> | 
+    <b>type:</b> <%= File.get('type') %>
+</div>
+<div class="col-sm-1 text-right remove js-remove-file">
+    <i class="fa fa-times"></i>
+</div>
+
+<div class="clearfix"></div>

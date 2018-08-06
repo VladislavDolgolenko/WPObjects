@@ -41,9 +41,8 @@
         },
         
         changeStatus: function () {
-            var status = this.model.get('active');
-            this.model.set('active', status ? false : true);
-            this.model.save();
+            var status = this.model.get('active') ? false : true;
+            this.model.save({'active': status}, {wait: true});
         },
         
         removeModel: function () {

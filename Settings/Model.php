@@ -43,6 +43,16 @@ class Model extends \WPObjects\Settings\AbstractModel implements
         return $this;
     }
     
+    public function getType()
+    {
+        return $this->get('type');
+    }
+    
+    public function getOptions()
+    {
+        return $this->get('options');
+    }
+    
     public function getNamespace()
     {
         return $this->namespace;
