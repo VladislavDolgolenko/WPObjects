@@ -1,4 +1,5 @@
 nbproject
+.idea
 dist
 build
 node_modules/*
